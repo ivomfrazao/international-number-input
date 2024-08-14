@@ -28,8 +28,6 @@
     "eslint": "^8.57.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
-    "evenizer": "^0.1.17",
-    "image-size": "^1.1.1",
     "prettier": "^3.2.5",
     "region-flags": "https://github.com/fonttools/region-flags/archive/refs/tags/1.2.1.tar.gz",
     "sass": "^1.74.1"
