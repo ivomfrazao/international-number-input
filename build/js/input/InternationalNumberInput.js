@@ -111,7 +111,8 @@ var factoryOutput = (() => {
   // src/js/input/InternationalNumberInput.ts
   var InternationalNumberInput_exports = {};
   __export(InternationalNumberInput_exports, {
-    default: () => InternationalNumberInput_default
+    default: () => InternationalNumberInput_default,
+    internationalNumberInput: () => internationalNumberInput
   });
 
   // src/js/input/InternationalNumberInputOptions.default.ts
@@ -180,7 +181,7 @@ var factoryOutput = (() => {
       ) || window.innerWidth <= 500
     ) : false,
     //* Specify the path to the libphonenumber script to enable validation/formatting.
-    utilsScript: "",
+    utilsScriptPath: "",
     //* The number type to enforce during validation.
     validationNumberType: "NIN" /* NationalIdentificationNumber */
   };
@@ -1544,13 +1545,13 @@ var factoryOutput = (() => {
   }
 
   // src/js/input/utils/DOMUtils.ts
-  function createDOMElement(tagName, attributes, container) {
+  function createDOMElement(tagName, attributes, parentNode) {
     const el = document.createElement(tagName);
     if (attributes) {
       Object.entries(attributes).forEach(([key, value]) => el.setAttribute(key, value));
     }
-    if (container) {
-      container.appendChild(el);
+    if (parentNode) {
+      parentNode.appendChild(el);
     }
     return el;
   }
@@ -1566,6 +1567,36 @@ var factoryOutput = (() => {
     builtClass += attribute ? `--${styles[attribute]}` : "";
     return builtClass;
   }
+
+  // src/js/input/utils/InstancesUtils.ts
+  function forEachInstance(method) {
+    const { instances } = InternationalNumberInput_default;
+    Object.values(instances).forEach((instance) => instance[method]());
+  }
+  function loadUtils(path) {
+    if (!InternationalNumberInput_default.utils && !InternationalNumberInput_default.startedLoadingUtilsScript) {
+      InternationalNumberInput_default.startedLoadingUtilsScript = true;
+      return new Promise((resolve, reject) => {
+        import(path).then(({ default: utils }) => {
+          InternationalNumberInput_default.utils = utils;
+          forEachInstance("handleUtils");
+          resolve(true);
+        }).catch(() => {
+          forEachInstance("rejectUtilsScriptPromise");
+          reject();
+        });
+      });
+    }
+    return null;
+  }
+
+  // src/js/exceptions.ts
+  var ValidationError = class extends Error {
+    constructor(msg) {
+      super(msg);
+      this.name = "ValidationError";
+    }
+  };
 
   // src/js/input/InternationalNumberInput.class.ts
   var translateCursorPosition = (relevantChars, formattedValue, prevCaretPos, isDeleteForwards) => {
@@ -1585,10 +1616,6 @@ var factoryOutput = (() => {
       }
     }
     return formattedValue.length;
-  };
-  var forEachInstance = (method) => {
-    const { instances } = InternationalNumberInput_default;
-    Object.values(instances).forEach((instance) => instance[method]());
   };
   var Ini = class {
     constructor(input, customOptions = {}) {
@@ -1718,7 +1745,12 @@ var factoryOutput = (() => {
       if (!useFullscreenPopup) {
         parentClass += ` ${buildAttributeClass(styles, "attributeInlineDropdownClass" /* InlineDropdown */)}`;
       }
-      const wrapper = createDOMElement("div", { class: parentClass });
+      const wrapper = createDOMElement(
+        "div",
+        {
+          class: parentClass
+        }
+      );
       this.numberInput.parentNode?.insertBefore(wrapper, this.numberInput);
       if (allowDropdown || showFlags) {
         this.countryContainer = createDOMElement(
@@ -1929,23 +1961,15 @@ var factoryOutput = (() => {
       const inputValue = this.numberInput.value;
       const useAttribute = attributeValue && attributeValue.charAt(0) === "+" && (!inputValue || inputValue.charAt(0) !== "+");
       const val = useAttribute ? attributeValue : inputValue;
-      const dialCode = "";
-      const isRegionlessNanpNumber = true;
       const { initialCountry, geoIpLookup } = this.options;
       const isAutoCountry = initialCountry === "auto" && geoIpLookup;
-      if (dialCode && !isRegionlessNanpNumber) {
-        this._updateCountryFromNumber(val);
-      } else if (!isAutoCountry || overrideAutoCountry) {
+      if (!isAutoCountry || overrideAutoCountry) {
         const lowerInitialCountry = initialCountry ? initialCountry.toLowerCase() : "";
         const isValidInitialCountry = lowerInitialCountry && this._getCountryData(lowerInitialCountry, true);
         if (isValidInitialCountry) {
           this._setCountry(lowerInitialCountry);
         } else {
-          if (dialCode && isRegionlessNanpNumber) {
-            this._setCountry("us");
-          } else {
-            this._setCountry();
-          }
+          this._setCountry();
         }
       }
       if (val) {
@@ -2014,7 +2038,18 @@ var factoryOutput = (() => {
     }
     //* Init many requests: utils script / geo ip lookup.
     _initRequests() {
-      const { initialCountry, geoIpLookup } = this.options;
+      const { utilsScriptPath, initialCountry, geoIpLookup } = this.options;
+      if (utilsScriptPath && !InternationalNumberInput_default.utils) {
+        if (InternationalNumberInput_default.documentReady()) {
+          InternationalNumberInput_default.loadUtils(utilsScriptPath);
+        } else {
+          window.addEventListener("load", () => {
+            InternationalNumberInput_default.loadUtils(utilsScriptPath);
+          });
+        }
+      } else {
+        this.resolveUtilsScriptPromise();
+      }
       const isAutoCountry = initialCountry === "auto" && geoIpLookup;
       if (isAutoCountry && !this.selectedCountryData.iso2) {
         this._loadAutoCountry();
@@ -2380,7 +2415,25 @@ var factoryOutput = (() => {
     }
     //* Update the maximum valid number length for the currently selected country.
     _updateMaxLength() {
-      this.getNumber();
+      const { strictMode, placeholderNumberType, validationNumberType } = this.options;
+      if (strictMode && InternationalNumberInput_default.utils) {
+        if (this.selectedCountryData.iso2) {
+          const numberType = InternationalNumberInput_default.utils.numberType[placeholderNumberType];
+          let exampleNumber = InternationalNumberInput_default.utils.getExampleNumber(
+            this.selectedCountryData.iso2,
+            numberType
+          );
+          let validNumber = exampleNumber;
+          while (InternationalNumberInput_default.utils.isPossibleNumber(exampleNumber, this.selectedCountryData.iso2, validationNumberType)) {
+            validNumber = exampleNumber;
+            exampleNumber += "0";
+          }
+          const coreNumber = InternationalNumberInput_default.utils.getCoreNumber(validNumber, this.selectedCountryData.iso2);
+          this.maxCoreNumberLength = coreNumber.length;
+        } else {
+          this.maxCoreNumberLength = null;
+        }
+      }
     }
     _setSelectedCountryTitleAttribute(iso2 = null) {
       if (!this.selectedCountry) {
@@ -2415,7 +2468,25 @@ var factoryOutput = (() => {
     }
     //* Update the input placeholder to an example number from the currently selected country.
     _updatePlaceholder() {
-      this.numberInput.value = "0";
+      const {
+        autoPlaceholder,
+        placeholderNumberType,
+        nationalMode,
+        customPlaceholder
+      } = this.options;
+      const shouldSetPlaceholder = autoPlaceholder === "aggressive" || !this.hadInitialPlaceholder && autoPlaceholder === "polite";
+      if (InternationalNumberInput_default.utils && shouldSetPlaceholder) {
+        const numberType = InternationalNumberInput_default.utils.numberType[placeholderNumberType];
+        let placeholder = this.selectedCountryData.iso2 ? InternationalNumberInput_default.utils.getExampleNumber(
+          this.selectedCountryData.iso2,
+          numberType
+        ) : "";
+        placeholder = this._beforeSetNumber(placeholder);
+        if (typeof customPlaceholder === "function") {
+          placeholder = customPlaceholder(placeholder, this.selectedCountryData);
+        }
+        this.numberInput.setAttribute("placeholder", placeholder);
+      }
     }
     //* Called when the user selects a list item from the dropdown.
     _selectListItem(listItem) {
@@ -2496,7 +2567,9 @@ var factoryOutput = (() => {
     }
     //* Format the number as the user types.
     _formatNumberAsYouType() {
-      return this.defaultCountry;
+      const val = this._getFullNumber();
+      const result = InternationalNumberInput_default.utils ? InternationalNumberInput_default.utils.formatNumberAsYouType(val, this.selectedCountryData.iso2) : val;
+      return result;
     }
     //**************************
     //*  SECRET PUBLIC METHODS
@@ -2514,24 +2587,67 @@ var factoryOutput = (() => {
     }
     //* This is called when the utils request completes.
     handleUtils() {
-      this.numberInput.value = "0";
+      if (InternationalNumberInput_default.utils) {
+        if (this.numberInput.value) {
+          this._updateValFromNumber(this.numberInput.value);
+        }
+        if (this.selectedCountryData.iso2) {
+          this._updatePlaceholder();
+          this._updateMaxLength();
+        }
+      }
+      this.resolveUtilsScriptPromise();
     }
     //********************
     //*  PUBLIC METHODS
     //********************
     //* Remove plugin.
     destroy() {
-      this._closeDropdown();
+      const { allowDropdown } = this.options;
+      if (allowDropdown) {
+        this._closeDropdown();
+        this.selectedCountry.removeEventListener(
+          "click",
+          this._handleClickSelectedCountry
+        );
+        this.countryContainer.removeEventListener(
+          "keydown",
+          this._handleCountryContainerKeydown
+        );
+        const label = this.numberInput.closest("label");
+        if (label) {
+          label.removeEventListener("click", this._handleLabelClick);
+        }
+      }
+      const { form } = this.numberInput;
+      if (this._handleHiddenInputSubmit && form) {
+        form.removeEventListener("submit", this._handleHiddenInputSubmit);
+      }
+      this.numberInput.removeEventListener("input", this._handleInputEvent);
+      if (this._handleKeydownEvent) {
+        this.numberInput.removeEventListener("keydown", this._handleKeydownEvent);
+      }
+      this.numberInput.removeAttribute("data-international-number-input-id");
+      const wrapper = this.numberInput.parentNode;
+      wrapper?.parentNode?.insertBefore(this.numberInput, wrapper);
+      wrapper?.parentNode?.removeChild(wrapper);
+      delete InternationalNumberInput_default.instances[this.id];
     }
     //* Format the number to the given format.
     getNumber(format) {
-      this.numberInput.value = "0";
-      return format.toString();
+      if (InternationalNumberInput_default.utils) {
+        const { iso2 } = this.selectedCountryData;
+        return InternationalNumberInput_default.utils.formatNumber(
+          this._getFullNumber(),
+          iso2,
+          format
+        );
+      }
+      return "";
     }
-    //* Get the type of the entered number e.g. landline/mobile.
+    //* Get the type of the entered number
     getNumberType() {
-      this.getNumber();
-      return 0;
+      return "NIN" /* NationalIdentificationNumber */;
     }
     //* Get the country data for the currently selected country.
     getSelectedCountryData() {
@@ -2539,15 +2655,28 @@ var factoryOutput = (() => {
     }
     //* Get the validation error.
     getValidationError() {
-      return this.getNumberType();
+      if (InternationalNumberInput_default.utils) {
+        const { iso2 } = this.selectedCountryData;
+        return InternationalNumberInput_default.utils.getValidationError(this._getFullNumber(), iso2);
+      }
+      return { isValid: false, error: new ValidationError("An unknown error occurred") };
+      ;
     }
     //* Validate the input val
     isValidNumber() {
-      return this.defaultCountry === "";
+      const val = this._getFullNumber();
+      if (/\p{L}/u.test(val)) {
+        return false;
+      }
+      return InternationalNumberInput_default.utils ? InternationalNumberInput_default.utils.isPossibleNumber(val, this.selectedCountryData.iso2, this.options.validationNumberType) : null;
     }
     //* Validate the input val (precise)
     isValidNumberPrecise() {
-      return this.defaultCountry === "";
+      const val = this._getFullNumber();
+      if (/\p{L}/u.test(val)) {
+        return false;
+      }
+      return InternationalNumberInput_default.utils ? InternationalNumberInput_default.utils.isValidNumber(val, this.selectedCountryData.iso2) : null;
     }
     //* Update the selected country, and update the input val accordingly.
     setCountry(iso2) {
@@ -2586,11 +2715,11 @@ var factoryOutput = (() => {
   // src/js/input/InternationalNumberInput.ts
   var internationalNumberInput = Object.assign(
     (input, options) => {
-      const iti = new Ini(input, options);
-      iti._init();
-      input.setAttribute("data-international-number-input-id", iti.id.toString());
-      internationalNumberInput.instances[iti.id] = iti;
-      return iti;
+      const ini = new Ini(input, options);
+      ini._init();
+      input.setAttribute("data-international-number-input-id", ini.id.toString());
+      internationalNumberInput.instances[ini.id] = ini;
+      return ini;
     },
     {
       defaults,
@@ -2605,6 +2734,7 @@ var factoryOutput = (() => {
       },
       //* A map from instance ID to instance object.
       instances: {},
+      loadUtils,
       version: "0.1.0"
     }
   );

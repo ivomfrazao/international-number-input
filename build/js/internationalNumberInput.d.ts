@@ -415,6 +415,10 @@ declare module "input/InternationalNumberInputOptions" {
             noCountrySelected?: string;
             zeroSearchResults?: string;
         };
+        /**
+         * The ISO2 code of the initial country to be selected.
+         * It can also be set as `auto`, the component will try to automatically infer the value.
+         */
         initialCountry: string;
         nationalMode: boolean;
         /**
@@ -426,7 +430,7 @@ declare module "input/InternationalNumberInputOptions" {
         showFlags: boolean;
         strictMode: boolean;
         useFullscreenPopup: boolean;
-        utilsScript: string;
+        utilsScriptPath: string;
         validationNumberType: NumberType | null;
     }
     export type SomeStyleOptions = Partial<AllStyleOptions>;
@@ -1030,10 +1034,10 @@ declare module "input/utils/DOMUtils" {
      * Creates a DOM element, sets its attributes and appends in a container element in a single atomic action.
      * @param tagName The name of an element.
      * @param attributes An object of key/value pairs of attributes to set to the element.
-     * @param container The container where we want to place the element created.
+     * @param parentNode The node where we want to place the element created.
      * @returns The new element.
      */
-    export function createDOMElement(tagName: string, attributes: object | null, container?: HTMLElement): HTMLElement;
+    export function createDOMElement(tagName: string, attributes: object | null, parentNode?: HTMLElement): HTMLElement;
 }
 declare module "input/utils/StyleUtils" {
     import { AllStyleOptions } from "input/InternationalNumberInputOptions";
@@ -1056,8 +1060,12 @@ declare module "input/utils/StyleUtils" {
         ShowFlags = "attributeShowFlagsClass"
     }
 }
+declare module "input/utils/InstancesUtils" {
+    export function forEachInstance(method: string): void;
+    export function loadUtils(path: string): Promise<unknown> | null;
+}
 declare module "input/InternationalNumberInput.class" {
-    import { NumberType } from "types";
+    import { NumberType, ValidateReturn } from "types";
     import { SomeOptions } from "input/InternationalNumberInputOptions";
     import { Country } from "input/international-number-input/data";
     type SelectedCountryData = Country | {
@@ -1156,9 +1164,9 @@ declare module "input/InternationalNumberInput.class" {
         handleUtils(): void;
         destroy(): void;
         getNumber(format?: number): string;
-        getNumberType(): number;
+        getNumberType(): NumberType;
         getSelectedCountryData(): SelectedCountryData;
-        getValidationError(): number;
+        getValidationError(): ValidateReturn;
         isValidNumber(): boolean | null;
         isValidNumberPrecise(): boolean | null;
         setCountry(iso2: string): void;
@@ -1168,7 +1176,7 @@ declare module "input/InternationalNumberInput.class" {
     }
 }
 declare module "input/InternationalNumberInput" {
-    import { NumberType } from "types";
+    import { NumberType, ValidateReturn } from "types";
     import { AllOptions, SomeOptions } from "input/InternationalNumberInputOptions";
     import { Country } from "input/international-number-input/data";
     import { Ini } from "input/InternationalNumberInput.class";
@@ -1182,6 +1190,7 @@ declare module "input/InternationalNumberInput" {
         instances: {
             [key: string]: Ini;
         };
+        loadUtils: (path: string) => Promise<unknown> | null;
         startedLoadingAutoCountry?: boolean;
         startedLoadingUtilsScript?: boolean;
         version: string | undefined;
@@ -1192,10 +1201,11 @@ declare module "input/InternationalNumberInput" {
         formatNumberAsYouType(number: string, countryISO2: string | undefined): string;
         getCoreNumber(number: string, countryISO2: string | undefined): string;
         getExampleNumber(countryISO2: string | undefined, numberType: NumberType): string;
-        getValidationError(number: string, countryISO2: string | undefined): number;
-        isPossibleNumber(number: string, countryISO2: string | undefined, numberType?: string): boolean;
+        getValidationError(number: string, countryISO2: string | undefined): ValidateReturn;
+        isPossibleNumber(number: string, countryISO2: string | undefined, numberType?: NumberType): boolean;
         isValidNumber: (number: string, countryISO2: string | undefined) => boolean;
+        numberType: NumberType;
     };
-    const internationalNumberInput: InternationalNumberInputInterface;
+    export const internationalNumberInput: InternationalNumberInputInterface;
     export default internationalNumberInput;
 }

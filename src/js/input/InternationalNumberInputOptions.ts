@@ -278,6 +278,10 @@ export interface AllOptions {
 		noCountrySelected?: string;
 		zeroSearchResults?: string;
 	};
+	/**
+	 * The ISO2 code of the initial country to be selected.
+	 * It can also be set as `auto`, the component will try to automatically infer the value.
+	 */
 	initialCountry: string;
 	nationalMode: boolean;
 	/**
@@ -289,7 +293,7 @@ export interface AllOptions {
 	showFlags: boolean;
 	strictMode: boolean;
 	useFullscreenPopup: boolean;
-	utilsScript: string;
+	utilsScriptPath: string;
 	validationNumberType: NumberType | null;
 }
 

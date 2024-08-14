@@ -11,14 +11,22 @@
 	<body>
 		<h1>International Number Input</h1>
 		<form>
-			<input id="phone" name="phone" type="tel" value="" />
+			<div>
+				<label for="number1">Number</label>
+				<input id="number1" name="number1" type="text" value="" />
+			</div>
+			<div>
+				<label for="number2">Number</label>
+				<input id="number2" name="number2" type="text" value="PT123456789" />
+			</div>
 			<button class="button" type="submit">Submit</button>
 		</form>
 
 		<script src="build/js/input/InternationalNumberInput.js"></script>
 		<script>
-			const input = document.querySelector("#phone");
-			const ini = window.internationalNumberInput(input, {
+			const input1 = document.querySelector("#number1");
+			const input2 = document.querySelector("#number2");
+			const ini1 = window.internationalNumberInput(input1, {
 				// allowDropdown: false,
 				// autoPlaceholder: "off",
 				// containerClass: "test",
@@ -48,10 +56,16 @@
 				// separateDialCode: true,
 				// strictMode: true,
 				// useFullscreenPopup: true,
-				// utilsScript: "/build/js/utils.js", // leading slash (and http-server) required for this to work in chrome
+				// utilsScriptPath: "./build/js/input/utils/InstancesUtils.js", // leading slash (and http-server) required for this to work in chrome
 				// validationNumberType: null,
 			});
-			window.ini = ini; // useful for testing
+			const ini2 = window.internationalNumberInput(input2, {
+				countryOrder: ["pt", "us"],
+				onlyCountries: ['us', 'gb', 'ch', 'ca', 'do', 'pt'],
+				// utilsScriptPath: "./build/js/input/utils/InstancesUtils.js", // leading slash (and http-server) required for this to work in chrome
+			});
+			window.ini1 = ini1; // useful for testing
+			window.ini2 = ini2; // useful for testing
 		</script>
 	</body>
 </html>

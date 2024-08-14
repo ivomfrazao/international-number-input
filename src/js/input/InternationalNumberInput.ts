@@ -1,8 +1,9 @@
-import { NumberType } from "../types";
+import { NumberType, ValidateReturn } from "../types";
 import { AllOptions, SomeOptions } from "./InternationalNumberInputOptions";
 import { defaults } from "./InternationalNumberInputOptions.default";
 import allCountries, { Country } from "./international-number-input/data";
 import { Ini } from "./InternationalNumberInput.class";
+import { loadUtils } from "./utils/InstancesUtils";
 
 interface InternationalNumberInputInterface {
 	(input: HTMLInputElement, options?: SomeOptions): Ini;
@@ -12,6 +13,7 @@ interface InternationalNumberInputInterface {
 	getCountryData: () => Country[];
 	getInstance: (input: HTMLInputElement) => Ini | null;
 	instances: { [key: string]: Ini };
+	loadUtils: (path: string) => Promise<unknown> | null;
 	startedLoadingAutoCountry?: boolean;
 	startedLoadingUtilsScript?: boolean;
 	version: string | undefined;
@@ -23,19 +25,21 @@ type IniUtils = {
 	formatNumberAsYouType(number: string, countryISO2: string | undefined): string;
 	getCoreNumber(number: string, countryISO2: string | undefined): string;
 	getExampleNumber(countryISO2: string | undefined, numberType: NumberType): string;
-	getValidationError(number: string, countryISO2: string | undefined): number;
-	isPossibleNumber(number: string, countryISO2: string | undefined, numberType?: string): boolean;
+	getValidationError(number: string, countryISO2: string | undefined): ValidateReturn;
+	isPossibleNumber(number: string, countryISO2: string | undefined, numberType?: NumberType): boolean;
 	isValidNumber: (number: string, countryISO2: string | undefined) => boolean;
+
+	numberType: NumberType;
 };
 
 //* Convenience wrapper.
-const internationalNumberInput: InternationalNumberInputInterface = Object.assign(
+export const internationalNumberInput: InternationalNumberInputInterface = Object.assign(
 	(input: HTMLInputElement, options?: SomeOptions): Ini => {
-		const iti = new Ini(input, options);
-		iti._init();
-		input.setAttribute("data-international-number-input-id", iti.id.toString());
-		internationalNumberInput.instances[iti.id] = iti;
-		return iti;
+		const ini = new Ini(input, options);
+		ini._init();
+		input.setAttribute("data-international-number-input-id", ini.id.toString());
+		internationalNumberInput.instances[ini.id] = ini;
+		return ini;
 	},
 	{
 		defaults,
@@ -50,6 +54,7 @@ const internationalNumberInput: InternationalNumberInputInterface = Object.assig
 		},
 		//* A map from instance ID to instance object.
 		instances: {},
+		loadUtils,
 		version: process.env.VERSION,
 	},
 );

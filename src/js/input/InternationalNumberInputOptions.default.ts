@@ -69,7 +69,7 @@ export const defaults: AllOptions = {
 			) || window.innerWidth <= 500
 			: false,
 	//* Specify the path to the libphonenumber script to enable validation/formatting.
-	utilsScript: "",
+	utilsScriptPath: "",
 	//* The number type to enforce during validation.
 	validationNumberType: NumberType.NationalIdentificationNumber,
 };

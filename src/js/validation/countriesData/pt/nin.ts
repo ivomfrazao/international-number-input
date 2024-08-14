@@ -48,17 +48,17 @@ const validator: Validator = {
 		const [value, error] = clean(input);
 
 		if (error) {
-		return { isValid: false, error };
+			return { isValid: false, error };
 		}
 		if (value.length !== 12) {
-		return { isValid: false, error: new exceptions.InvalidLength() };
+			return { isValid: false, error: new exceptions.InvalidLength() };
 		}
 		if (!validRe.test(value)) {
-		return { isValid: false, error: new exceptions.InvalidFormat() };
+			return { isValid: false, error: new exceptions.InvalidFormat() };
 		}
 
 		if (!luhnChecksumValidate(value, ALPHABET)) {
-		return { isValid: false, error: new exceptions.InvalidChecksum() };
+			return { isValid: false, error: new exceptions.InvalidChecksum() };
 		}
 
 		return {
