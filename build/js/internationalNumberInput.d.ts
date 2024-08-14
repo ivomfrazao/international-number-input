@@ -1,3 +1,455 @@
+declare module "exceptions" {
+    /**
+     * Collection of exceptions.
+     * The validation functions should raise one of the below exceptions
+     * when validation of the number fails.
+     */
+    /**
+     * Top-level error for validating numbers.
+     *
+     * This exception should normally not be raised, only subclasses of this
+     * exception.
+     */
+    export class ValidationError extends Error {
+        constructor(msg: string);
+    }
+    /**
+     *  Something is wrong with the format of the number.
+     *
+     *  This generally means characters or delimiters that are not allowed are
+     *  part of the number or required parts are missing.
+     */
+    export class InvalidFormat extends ValidationError {
+        constructor(msg?: string);
+    }
+    /**
+     * The number's internal checksum or check digit does not match.
+     */
+    export class InvalidChecksum extends ValidationError {
+        constructor(msg?: string);
+    }
+    /**
+     * The length of the number is wrong
+     */
+    export class InvalidLength extends ValidationError {
+        constructor(msg?: string);
+    }
+    /**
+     * One of the parts of the number has an invalid reference.
+     *
+     * Some part of the number refers to some external entity like a country
+     * code, a date or a predefined collection of values. The number contains
+     * some invalid reference.
+     */
+    export class InvalidComponent extends ValidationError {
+        constructor(msg?: string);
+    }
+}
+declare module "types" {
+    import { ValidationError } from "exceptions";
+    interface ValidateSuccess {
+        /**
+         * Identification is valid
+         */
+        isValid: true;
+        /**
+         * Compact version of the Identification
+         */
+        compact: string;
+        /**
+         * This ID identifies an individual
+         *
+         * Note: An ID may not positivily identify an individual or entity
+         */
+        isIndividual: boolean;
+        /**
+         * This ID identifies an entity
+         *
+         * Note: An ID may not positivily identify an individual or entity
+         */
+        isCompany: boolean;
+    }
+    interface ValidateFail {
+        /**
+         * Identification is not valid
+         */
+        isValid: false;
+        /**
+         * The validation error
+         */
+        error: ValidationError;
+    }
+    export type ValidateReturn = {
+        error?: ValidationError;
+    } & (ValidateSuccess | ValidateFail);
+    export enum NumberType {
+        NationalIdentificationNumber = "NIN",
+        TaxpayerIdentificationNumber = "TIN"
+    }
+    export interface Validator {
+        /**
+         * The type of number being validated
+         */
+        type: NumberType;
+        /**
+         * The validator name, or ID's expansion name in English
+         */
+        name: string;
+        /**
+         * The validator name, or ID's expansion name its local name
+         */
+        localName: string;
+        /**
+         * The short/acronym or abbreviation of the validator
+         */
+        abbreviation?: string;
+        /**
+         * The placeholder for the number type.
+         */
+        placeholder?: string;
+        /**
+         * Convert the number to the minimal representation.
+         * This strips the number of any valid separators and removes surrounding
+         * whitespace.
+         */
+        compact(value: string): string;
+        /**
+         * Reformat the number to the standard presentation format.
+         */
+        format(value: string): string;
+        /**
+         * Validate with error throws subclass of ValidationError
+         */
+        validate(value: string): ValidateReturn;
+    }
+    export interface CountryValidator {
+        /**
+         * The ISO2 code of the country
+         */
+        iso2: string;
+        /**
+         * The list of validations possible for the country
+         */
+        validators: Validator[];
+    }
+}
+declare module "input/InternationalNumberInputOptions" {
+    import { NumberType } from "types";
+    export type SomeOptions = Partial<AllOptions>;
+    export interface AllOptions {
+        allowDropdown: boolean;
+        autoPlaceholder: string;
+        styles: AllStyleOptions;
+        countryOrder: string[];
+        countrySearch: boolean;
+        customPlaceholder: ((selectedCountryPlaceholder: string, selectedCountryData: object) => string) | null;
+        dropdownContainer: HTMLElement | null;
+        excludeCountries: string[];
+        fixDropdownWidth: boolean;
+        formatAsYouType: boolean;
+        formatOnDisplay: boolean;
+        geoIpLookup: ((success: (iso2: string) => void, failure: () => void) => void) | null;
+        hiddenInput: ((numberInputName: string) => {
+            phone: string;
+            country?: string;
+        }) | null;
+        i18n: {
+            af?: string;
+            al?: string;
+            dz?: string;
+            as?: string;
+            ad?: string;
+            ao?: string;
+            ai?: string;
+            ag?: string;
+            ar?: string;
+            am?: string;
+            aw?: string;
+            ac?: string;
+            au?: string;
+            at?: string;
+            az?: string;
+            bs?: string;
+            bh?: string;
+            bd?: string;
+            bb?: string;
+            by?: string;
+            be?: string;
+            bz?: string;
+            bj?: string;
+            bm?: string;
+            bt?: string;
+            bo?: string;
+            ba?: string;
+            bw?: string;
+            br?: string;
+            io?: string;
+            vg?: string;
+            bn?: string;
+            bg?: string;
+            bf?: string;
+            bi?: string;
+            kh?: string;
+            cm?: string;
+            ca?: string;
+            cv?: string;
+            bq?: string;
+            ky?: string;
+            cf?: string;
+            td?: string;
+            cl?: string;
+            cn?: string;
+            cx?: string;
+            cc?: string;
+            co?: string;
+            km?: string;
+            cg?: string;
+            cd?: string;
+            ck?: string;
+            cr?: string;
+            hr?: string;
+            cu?: string;
+            cw?: string;
+            cy?: string;
+            cz?: string;
+            ci?: string;
+            dk?: string;
+            dj?: string;
+            dm?: string;
+            do?: string;
+            ec?: string;
+            eg?: string;
+            sv?: string;
+            gq?: string;
+            er?: string;
+            ee?: string;
+            sz?: string;
+            et?: string;
+            fk?: string;
+            fo?: string;
+            fj?: string;
+            fi?: string;
+            fr?: string;
+            gf?: string;
+            pf?: string;
+            ga?: string;
+            gm?: string;
+            ge?: string;
+            de?: string;
+            gh?: string;
+            gi?: string;
+            gr?: string;
+            gl?: string;
+            gd?: string;
+            gp?: string;
+            gu?: string;
+            gt?: string;
+            gg?: string;
+            gn?: string;
+            gw?: string;
+            gy?: string;
+            ht?: string;
+            hn?: string;
+            hk?: string;
+            hu?: string;
+            is?: string;
+            in?: string;
+            id?: string;
+            ir?: string;
+            iq?: string;
+            ie?: string;
+            im?: string;
+            il?: string;
+            it?: string;
+            jm?: string;
+            jp?: string;
+            je?: string;
+            jo?: string;
+            kz?: string;
+            ke?: string;
+            ki?: string;
+            xk?: string;
+            kw?: string;
+            kg?: string;
+            la?: string;
+            lv?: string;
+            lb?: string;
+            ls?: string;
+            lr?: string;
+            ly?: string;
+            li?: string;
+            lt?: string;
+            lu?: string;
+            mo?: string;
+            mg?: string;
+            mw?: string;
+            my?: string;
+            mv?: string;
+            ml?: string;
+            mt?: string;
+            mh?: string;
+            mq?: string;
+            mr?: string;
+            mu?: string;
+            yt?: string;
+            mx?: string;
+            fm?: string;
+            md?: string;
+            mc?: string;
+            mn?: string;
+            me?: string;
+            ms?: string;
+            ma?: string;
+            mz?: string;
+            mm?: string;
+            na?: string;
+            nr?: string;
+            np?: string;
+            nl?: string;
+            nc?: string;
+            nz?: string;
+            ni?: string;
+            ne?: string;
+            ng?: string;
+            nu?: string;
+            nf?: string;
+            kp?: string;
+            mk?: string;
+            mp?: string;
+            no?: string;
+            om?: string;
+            pk?: string;
+            pw?: string;
+            ps?: string;
+            pa?: string;
+            pg?: string;
+            py?: string;
+            pe?: string;
+            ph?: string;
+            pl?: string;
+            pt?: string;
+            pr?: string;
+            qa?: string;
+            ro?: string;
+            ru?: string;
+            rw?: string;
+            re?: string;
+            ws?: string;
+            sm?: string;
+            sa?: string;
+            sn?: string;
+            rs?: string;
+            sc?: string;
+            sl?: string;
+            sg?: string;
+            sx?: string;
+            sk?: string;
+            si?: string;
+            sb?: string;
+            so?: string;
+            za?: string;
+            kr?: string;
+            ss?: string;
+            es?: string;
+            lk?: string;
+            bl?: string;
+            sh?: string;
+            kn?: string;
+            lc?: string;
+            mf?: string;
+            pm?: string;
+            vc?: string;
+            sd?: string;
+            sr?: string;
+            sj?: string;
+            se?: string;
+            ch?: string;
+            sy?: string;
+            st?: string;
+            tw?: string;
+            tj?: string;
+            tz?: string;
+            th?: string;
+            tl?: string;
+            tg?: string;
+            tk?: string;
+            to?: string;
+            tt?: string;
+            tn?: string;
+            tr?: string;
+            tm?: string;
+            tc?: string;
+            tv?: string;
+            vi?: string;
+            ug?: string;
+            ua?: string;
+            ae?: string;
+            gb?: string;
+            us?: string;
+            uy?: string;
+            uz?: string;
+            vu?: string;
+            va?: string;
+            ve?: string;
+            vn?: string;
+            wf?: string;
+            eh?: string;
+            ye?: string;
+            zm?: string;
+            zw?: string;
+            ax?: string;
+            selectedCountryAriaLabel?: string;
+            searchPlaceholder?: string;
+            countryListAriaLabel?: string;
+            oneSearchResult?: string;
+            multipleSearchResults?: string;
+            noCountrySelected?: string;
+            zeroSearchResults?: string;
+        };
+        initialCountry: string;
+        nationalMode: boolean;
+        onlyCountries: string[];
+        placeholderNumberType: NumberType;
+        showFlags: boolean;
+        strictMode: boolean;
+        useFullscreenPopup: boolean;
+        utilsScript: string;
+        validationNumberType: NumberType | null;
+    }
+    export type SomeStyleOptions = Partial<AllStyleOptions>;
+    export interface AllStyleOptions {
+        elementAccessibilityText: string;
+        elementContainerClass: string;
+        elementCountryContainerClass: string;
+        elementDropdownArrow: string;
+        elementNumberInputClass: string;
+        elementParentClass: string;
+        elementSearchInputClass: string;
+        elementSelectedCountryClass: string;
+        elementSelectedCountryPrimary: string;
+        attributeAllowDropdownClass: string;
+        attributeFlexibleDropdownWidthClass: string;
+        attributeInlineDropdownClass: string;
+        attributeShowFlagsClass: string;
+    }
+}
+declare module "input/InternationalNumberInputOptions.default" {
+    import { AllOptions } from "input/InternationalNumberInputOptions";
+    export const defaults: AllOptions;
+    export default defaults;
+}
+declare module "input/international-number-input/data" {
+    export type Country = {
+        name: string;
+        iso2: string;
+        dialCode: string;
+        priority: number;
+        areaCodes: string[] | null;
+        nodeById: object;
+    };
+    const allCountries: Country[];
+    export default allCountries;
+}
 declare module "input/i18n/en/countries" {
     const _default: {
         ad: string;
@@ -532,446 +984,6 @@ declare module "input/i18n/en/index" {
     };
     export default _default_2;
 }
-declare module "exceptions" {
-    /**
-     * Collection of exceptions.
-     * The validation functions should raise one of the below exceptions
-     * when validation of the number fails.
-     */
-    /**
-     * Top-level error for validating numbers.
-     *
-     * This exception should normally not be raised, only subclasses of this
-     * exception.
-     */
-    export class ValidationError extends Error {
-        constructor(msg: string);
-    }
-    /**
-     *  Something is wrong with the format of the number.
-     *
-     *  This generally means characters or delimiters that are not allowed are
-     *  part of the number or required parts are missing.
-     */
-    export class InvalidFormat extends ValidationError {
-        constructor(msg?: string);
-    }
-    /**
-     * The number's internal checksum or check digit does not match.
-     */
-    export class InvalidChecksum extends ValidationError {
-        constructor(msg?: string);
-    }
-    /**
-     * The length of the number is wrong
-     */
-    export class InvalidLength extends ValidationError {
-        constructor(msg?: string);
-    }
-    /**
-     * One of the parts of the number has an invalid reference.
-     *
-     * Some part of the number refers to some external entity like a country
-     * code, a date or a predefined collection of values. The number contains
-     * some invalid reference.
-     */
-    export class InvalidComponent extends ValidationError {
-        constructor(msg?: string);
-    }
-}
-declare module "types" {
-    import { ValidationError } from "exceptions";
-    interface ValidateSuccess {
-        /**
-         * Identification is valid
-         */
-        isValid: true;
-        /**
-         * Compact version of the Identification
-         */
-        compact: string;
-        /**
-         * This ID identifies an individual
-         *
-         * Note: An ID may not positivily identify an individual or entity
-         */
-        isIndividual: boolean;
-        /**
-         * This ID identifies an entity
-         *
-         * Note: An ID may not positivily identify an individual or entity
-         */
-        isCompany: boolean;
-    }
-    interface ValidateFail {
-        /**
-         * Identification is not valid
-         */
-        isValid: false;
-        /**
-         * The validation error
-         */
-        error: ValidationError;
-    }
-    export type ValidateReturn = {
-        error?: ValidationError;
-    } & (ValidateSuccess | ValidateFail);
-    export enum NumberType {
-        NationalIdentificationNumber = "NIN",
-        TaxpayerIdentificationNumber = "TIN"
-    }
-    export interface Validator {
-        /**
-         * The type of number being validated
-         */
-        type: NumberType;
-        /**
-         * The validator name, or ID's expansion name in English
-         */
-        name: string;
-        /**
-         * The validator name, or ID's expansion name its local name
-         */
-        localName: string;
-        /**
-         * The short/acronym or abbreviation of the validator
-         */
-        abbreviation?: string;
-        /**
-         * The placeholder for the number type.
-         */
-        placeholder?: string;
-        /**
-         * Convert the number to the minimal representation.
-         * This strips the number of any valid separators and removes surrounding
-         * whitespace.
-         */
-        compact(value: string): string;
-        /**
-         * Reformat the number to the standard presentation format.
-         */
-        format(value: string): string;
-        /**
-         * Validate with error throws subclass of ValidationError
-         */
-        validate(value: string): ValidateReturn;
-    }
-    export interface CountryValidator {
-        /**
-         * The ISO2 code of the country
-         */
-        iso2: string;
-        /**
-         * The list of validations possible for the country
-         */
-        validators: Validator[];
-    }
-}
-declare module "input/InternationalNumberInputOptions" {
-    import { NumberType } from "types";
-    export type SomeOptions = Partial<AllOptions>;
-    export interface AllOptions {
-        allowDropdown: boolean;
-        autoPlaceholder: string;
-        styles: AllStyleOptions;
-        countryOrder: string[];
-        countrySearch: boolean;
-        customPlaceholder: ((selectedCountryPlaceholder: string, selectedCountryData: object) => string) | null;
-        dropdownContainer: HTMLElement | null;
-        excludeCountries: string[];
-        fixDropdownWidth: boolean;
-        formatAsYouType: boolean;
-        formatOnDisplay: boolean;
-        geoIpLookup: ((success: (iso2: string) => void, failure: () => void) => void) | null;
-        hiddenInput: ((numberInputName: string) => {
-            phone: string;
-            country?: string;
-        }) | null;
-        i18n: {
-            af?: string;
-            al?: string;
-            dz?: string;
-            as?: string;
-            ad?: string;
-            ao?: string;
-            ai?: string;
-            ag?: string;
-            ar?: string;
-            am?: string;
-            aw?: string;
-            ac?: string;
-            au?: string;
-            at?: string;
-            az?: string;
-            bs?: string;
-            bh?: string;
-            bd?: string;
-            bb?: string;
-            by?: string;
-            be?: string;
-            bz?: string;
-            bj?: string;
-            bm?: string;
-            bt?: string;
-            bo?: string;
-            ba?: string;
-            bw?: string;
-            br?: string;
-            io?: string;
-            vg?: string;
-            bn?: string;
-            bg?: string;
-            bf?: string;
-            bi?: string;
-            kh?: string;
-            cm?: string;
-            ca?: string;
-            cv?: string;
-            bq?: string;
-            ky?: string;
-            cf?: string;
-            td?: string;
-            cl?: string;
-            cn?: string;
-            cx?: string;
-            cc?: string;
-            co?: string;
-            km?: string;
-            cg?: string;
-            cd?: string;
-            ck?: string;
-            cr?: string;
-            hr?: string;
-            cu?: string;
-            cw?: string;
-            cy?: string;
-            cz?: string;
-            ci?: string;
-            dk?: string;
-            dj?: string;
-            dm?: string;
-            do?: string;
-            ec?: string;
-            eg?: string;
-            sv?: string;
-            gq?: string;
-            er?: string;
-            ee?: string;
-            sz?: string;
-            et?: string;
-            fk?: string;
-            fo?: string;
-            fj?: string;
-            fi?: string;
-            fr?: string;
-            gf?: string;
-            pf?: string;
-            ga?: string;
-            gm?: string;
-            ge?: string;
-            de?: string;
-            gh?: string;
-            gi?: string;
-            gr?: string;
-            gl?: string;
-            gd?: string;
-            gp?: string;
-            gu?: string;
-            gt?: string;
-            gg?: string;
-            gn?: string;
-            gw?: string;
-            gy?: string;
-            ht?: string;
-            hn?: string;
-            hk?: string;
-            hu?: string;
-            is?: string;
-            in?: string;
-            id?: string;
-            ir?: string;
-            iq?: string;
-            ie?: string;
-            im?: string;
-            il?: string;
-            it?: string;
-            jm?: string;
-            jp?: string;
-            je?: string;
-            jo?: string;
-            kz?: string;
-            ke?: string;
-            ki?: string;
-            xk?: string;
-            kw?: string;
-            kg?: string;
-            la?: string;
-            lv?: string;
-            lb?: string;
-            ls?: string;
-            lr?: string;
-            ly?: string;
-            li?: string;
-            lt?: string;
-            lu?: string;
-            mo?: string;
-            mg?: string;
-            mw?: string;
-            my?: string;
-            mv?: string;
-            ml?: string;
-            mt?: string;
-            mh?: string;
-            mq?: string;
-            mr?: string;
-            mu?: string;
-            yt?: string;
-            mx?: string;
-            fm?: string;
-            md?: string;
-            mc?: string;
-            mn?: string;
-            me?: string;
-            ms?: string;
-            ma?: string;
-            mz?: string;
-            mm?: string;
-            na?: string;
-            nr?: string;
-            np?: string;
-            nl?: string;
-            nc?: string;
-            nz?: string;
-            ni?: string;
-            ne?: string;
-            ng?: string;
-            nu?: string;
-            nf?: string;
-            kp?: string;
-            mk?: string;
-            mp?: string;
-            no?: string;
-            om?: string;
-            pk?: string;
-            pw?: string;
-            ps?: string;
-            pa?: string;
-            pg?: string;
-            py?: string;
-            pe?: string;
-            ph?: string;
-            pl?: string;
-            pt?: string;
-            pr?: string;
-            qa?: string;
-            ro?: string;
-            ru?: string;
-            rw?: string;
-            re?: string;
-            ws?: string;
-            sm?: string;
-            sa?: string;
-            sn?: string;
-            rs?: string;
-            sc?: string;
-            sl?: string;
-            sg?: string;
-            sx?: string;
-            sk?: string;
-            si?: string;
-            sb?: string;
-            so?: string;
-            za?: string;
-            kr?: string;
-            ss?: string;
-            es?: string;
-            lk?: string;
-            bl?: string;
-            sh?: string;
-            kn?: string;
-            lc?: string;
-            mf?: string;
-            pm?: string;
-            vc?: string;
-            sd?: string;
-            sr?: string;
-            sj?: string;
-            se?: string;
-            ch?: string;
-            sy?: string;
-            st?: string;
-            tw?: string;
-            tj?: string;
-            tz?: string;
-            th?: string;
-            tl?: string;
-            tg?: string;
-            tk?: string;
-            to?: string;
-            tt?: string;
-            tn?: string;
-            tr?: string;
-            tm?: string;
-            tc?: string;
-            tv?: string;
-            vi?: string;
-            ug?: string;
-            ua?: string;
-            ae?: string;
-            gb?: string;
-            us?: string;
-            uy?: string;
-            uz?: string;
-            vu?: string;
-            va?: string;
-            ve?: string;
-            vn?: string;
-            wf?: string;
-            eh?: string;
-            ye?: string;
-            zm?: string;
-            zw?: string;
-            ax?: string;
-            selectedCountryAriaLabel?: string;
-            searchPlaceholder?: string;
-            countryListAriaLabel?: string;
-            oneSearchResult?: string;
-            multipleSearchResults?: string;
-            noCountrySelected?: string;
-            zeroSearchResults?: string;
-        };
-        initialCountry: string;
-        nationalMode: boolean;
-        onlyCountries: string[];
-        placeholderNumberType: NumberType;
-        showFlags: boolean;
-        strictMode: boolean;
-        useFullscreenPopup: boolean;
-        utilsScript: string;
-        validationNumberType: NumberType | null;
-    }
-    export type SomeStyleOptions = Partial<AllStyleOptions>;
-    export interface AllStyleOptions {
-        elementAccessibilityText: string;
-        elementContainerClass: string;
-        elementCountryContainerClass: string;
-        elementDropdownArrow: string;
-        elementNumberInputClass: string;
-        elementParentClass: string;
-        elementSearchInputClass: string;
-        elementSelectedCountryClass: string;
-        elementSelectedCountryPrimary: string;
-        attributeAllowDropdownClass: string;
-        attributeFlexibleDropdownWidthClass: string;
-        attributeInlineDropdownClass: string;
-        attributeShowFlagsClass: string;
-    }
-}
-declare module "input/InternationalNumberInputOptions.default" {
-    import { AllOptions } from "input/InternationalNumberInputOptions";
-    const defaults: AllOptions;
-    export default defaults;
-}
 declare module "input/utils/KeyboardKey.enum" {
     /**
      * Enumeration of keys used in events
@@ -1030,18 +1042,6 @@ declare module "input/utils/StyleUtils" {
         InlineDropdown = "attributeInlineDropdownClass",
         ShowFlags = "attributeShowFlagsClass"
     }
-}
-declare module "input/international-number-input/data" {
-    export type Country = {
-        name: string;
-        iso2: string;
-        dialCode: string;
-        priority: number;
-        areaCodes: string[] | null;
-        nodeById: object;
-    };
-    const allCountries: Country[];
-    export default allCountries;
 }
 declare module "input/InternationalNumberInput.class" {
     import { NumberType } from "types";
@@ -1153,4 +1153,35 @@ declare module "input/InternationalNumberInput.class" {
         setPlaceholderNumberType(type: NumberType): void;
         setDisabled(disabled: boolean): void;
     }
+}
+declare module "input/InternationalNumberInput" {
+    import { NumberType } from "types";
+    import { AllOptions, SomeOptions } from "input/InternationalNumberInputOptions";
+    import { Country } from "input/international-number-input/data";
+    import { Ini } from "input/InternationalNumberInput.class";
+    interface InternationalNumberInputInterface {
+        (input: HTMLInputElement, options?: SomeOptions): Ini;
+        defaults: AllOptions;
+        documentReady: () => boolean;
+        getCountryData: () => Country[];
+        getInstance: (input: HTMLInputElement) => Ini | null;
+        instances: {
+            [key: string]: Ini;
+        };
+        startedLoadingAutoCountry?: boolean;
+        startedLoadingUtilsScript?: boolean;
+        version: string | undefined;
+        utils?: IniUtils;
+    }
+    type IniUtils = {
+        formatNumber(number: string, countryISO2: string | undefined, format?: number): string;
+        formatNumberAsYouType(number: string, countryISO2: string | undefined): string;
+        getCoreNumber(number: string, countryISO2: string | undefined): string;
+        getExampleNumber(countryISO2: string | undefined, numberType: NumberType): string;
+        getValidationError(number: string, countryISO2: string | undefined): number;
+        isPossibleNumber(number: string, countryISO2: string | undefined, numberType?: string): boolean;
+        isValidNumber: (number: string, countryISO2: string | undefined) => boolean;
+    };
+    const internationalNumberInput: InternationalNumberInputInterface;
+    export default internationalNumberInput;
 }

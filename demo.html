@@ -15,10 +15,10 @@
 			<button class="button" type="submit">Submit</button>
 		</form>
 
-		<script src="build/js/input/InternationalNumberInput.class.js"></script>
+		<script src="build/js/input/InternationalNumberInput.js"></script>
 		<script>
 			const input = document.querySelector("#phone");
-			const ini = window.InternationalNumberInput(input, {
+			const ini = window.internationalNumberInput(input, {
 				// allowDropdown: false,
 				// autoPlaceholder: "off",
 				// containerClass: "test",
@@ -42,7 +42,7 @@
 				// i18n: { 'de': 'Deutschland' },
 				initialCountry: "pt",
 				// nationalMode: false,
-				// onlyCountries: ['us', 'gb', 'ch', 'ca', 'do'],
+				onlyCountries: ['us', 'gb', 'ch', 'ca', 'do', 'pt'],
 				// placeholderNumberType: "MOBILE",
 				// showFlags: false,
 				// separateDialCode: true,

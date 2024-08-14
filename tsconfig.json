@@ -11,6 +11,6 @@
 		"allowJs": false, // allow importing .mjs files e.g. i18n files
 	},
 	"include": [
-		"src/js/input/InternationalNumberInput.class.ts",
+		"src/js/input/InternationalNumberInput.ts",
 	],
 }

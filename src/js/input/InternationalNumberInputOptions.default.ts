@@ -18,7 +18,7 @@ const styleDefaults: AllStyleOptions = {
 	attributeShowFlagsClass: "show-flags",
 }
 
-const defaults: AllOptions = {
+export const defaults: AllOptions = {
 	//* Whether or not to allow the dropdown.
 	allowDropdown: true,
 	//* Add a placeholder in the input with an example number for the selected country.

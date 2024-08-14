@@ -43,9 +43,9 @@ build({
 	banner: {
 		js: getBanner("internationalNumberInput"),
 	},
-	entryPoints: ["src/js/input/InternationalNumberInput.class.ts"],
+	entryPoints: ["src/js/input/InternationalNumberInput.ts"],
 	minify: false,
-	outfile: "build/js/input/InternationalNumberInput.class.ts",
+	outfile: "build/js/input/InternationalNumberInput.js",
 });
 
 //* build/js/internationalNumberInput.min.js
@@ -54,9 +54,9 @@ build({
 	banner: {
 		js: getBanner("internationalNumberInput"),
 	},
-	entryPoints: ["src/js/input/InternationalNumberInput.class.ts"],
+	entryPoints: ["src/js/input/InternationalNumberInput.ts"],
 	minify: true,
-	outfile: "tmp/input/built.min.js",
+	outfile: "build/js/input/InternationalNumberInput.min.js",
 });
 
 //* build/js/data.js

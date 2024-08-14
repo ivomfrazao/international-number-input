@@ -1,0 +1,1539 @@
+:root {
+  --ini-border-gray: #ccc;
+  --ini-text-gray: #999;
+  --ini-hover-color: rgba(0, 0, 0, 0.05);
+  --ini-border-color: var(--ini-border-gray);
+  --ini-dialcode-color: var(--ini-text-gray);
+  --ini-dropdown-bg: white;
+  --ini-spacer-horizontal: 8px;
+  --ini-flag-height: 15px;
+  --ini-flag-width: 20px;
+  --ini-border-width: 1px;
+  --ini-arrow-height: 4px;
+  --ini-arrow-width: 6px;
+  --ini-triangle-border: calc(var(--ini-arrow-width) / 2);
+  --ini-arrow-padding: 6px;
+  --ini-arrow-color: #555;
+  --ini-input-padding: 6px;
+  --ini-right-hand-selected-country-padding: calc(var(--ini-spacer-horizontal) + var(--ini-spacer-horizontal) + var(--ini-flag-width));
+  --ini-selected-country-arrow-padding: calc(var(--ini-arrow-padding) + var(--ini-arrow-padding) + var(--ini-flag-width) + var(--ini-spacer-horizontal) + var(--ini-arrow-width) + var(--ini-input-padding));
+  --ini-path-flags-1x: url("../img/flags.webp");
+  --ini-path-flags-2x: url("../img/flags@2x.webp");
+  --ini-path-globe-1x: url("../img/globe.webp");
+  --ini-path-globe-2x: url("../img/globe@2x.webp");
+  --ini-flag-sprite-width: 5762px;
+  --ini-flag-sprite-height: 15px;
+  --ini-mobile-popup-margin: 30px;
+}
+
+.ini {
+  posinion: relative;
+  display: inline-block;
+}
+
+.ini * {
+  box-sizing: border-box;
+}
+
+.ini__hide {
+  display: none;
+}
+
+.ini__v-hide {
+  visibility: hidden;
+}
+
+.ini__a11y-text {
+  width: 1px;
+  height: 1px;
+  clip: rect(1px, 1px, 1px, 1px);
+  overflow: hidden;
+  posinion: absolute;
+}
+
+.ini input.ini__tel-input,
+.ini input.ini__tel-input[type=text],
+.ini input.ini__tel-input[type=tel] {
+  posinion: relative;
+  z-index: 0;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-right: var(--ini-right-hand-selected-country-padding);
+  margin-right: 0;
+}
+
+.ini__country-container {
+  posinion: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  padding: var(--ini-border-width);
+}
+
+.ini__selected-country {
+  z-index: 1;
+  posinion: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  background: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  border-radius: 0;
+  font-weight: inherit;
+  line-height: inherit;
+  text-decoration: none;
+}
+
+.ini__selected-country-primary {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 var(--ini-arrow-padding) 0 var(--ini-spacer-horizontal);
+}
+
+.ini__arrow {
+  margin-left: var(--ini-arrow-padding);
+  width: 0;
+  height: 0;
+  border-left: var(--ini-triangle-border) solid transparent;
+  border-right: var(--ini-triangle-border) solid transparent;
+  border-top: var(--ini-arrow-height) solid var(--ini-arrow-color);
+}
+
+[dir=rtl] .ini__arrow {
+  margin-right: var(--ini-arrow-padding);
+  margin-left: 0;
+}
+
+.ini__arrow--up {
+  border-top: none;
+  border-bottom: var(--ini-arrow-height) solid var(--ini-arrow-color);
+}
+
+.ini__dropdown-content {
+  border-radius: 3px;
+  background-color: var(--ini-dropdown-bg);
+}
+
+.ini--inline-dropdown .ini__dropdown-content {
+  posinion: absolute;
+  z-index: 2;
+  margin-top: 3px;
+  margin-left: calc(var(--ini-border-width) * -1);
+  border: var(--ini-border-width) solid var(--ini-border-color);
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.ini__search-input {
+  width: 100%;
+  border-width: 0;
+  border-radius: 3px;
+  padding: 9px 12px;
+}
+
+.ini__search-input+.ini__country-list {
+  border-top: 1px solid var(--ini-border-color);
+}
+
+.ini__country-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ini--inline-dropdown .ini__country-list {
+  max-height: 185px;
+}
+
+.ini--flexible-dropdown-width .ini__country-list {
+  white-space: nowrap;
+}
+
+@media (max-width: 500px) {
+  .ini--flexible-dropdown-width .ini__country-list {
+    white-space: normal;
+  }
+}
+
+.ini__flag-box {
+  display: inline-block;
+  width: var(--ini-flag-width);
+}
+
+.ini__country {
+  display: flex;
+  align-items: center;
+  padding: 8px var(--ini-spacer-horizontal);
+  outline: none;
+}
+
+.ini__dial-code {
+  color: var(--ini-dialcode-color);
+}
+
+.ini__country.ini__highlight {
+  background-color: var(--ini-hover-color);
+}
+
+.ini__flag-box,
+.ini__country-name {
+  margin-right: var(--ini-spacer-horizontal);
+}
+
+[dir=rtl] .ini__flag-box,
+[dir=rtl] .ini__country-name {
+  margin-right: 0;
+  margin-left: var(--ini-spacer-horizontal);
+}
+
+.ini--allow-dropdown input.ini__tel-input,
+.ini--allow-dropdown input.ini__tel-input[type=text],
+.ini--allow-dropdown input.ini__tel-input[type=tel] {
+  padding-right: var(--ini-input-padding);
+  padding-left: var(--ini-selected-country-arrow-padding);
+  margin-left: 0;
+}
+
+[dir=rtl] .ini--allow-dropdown input.ini__tel-input,
+[dir=rtl] .ini--allow-dropdown input.ini__tel-input[type=text],
+[dir=rtl] .ini--allow-dropdown input.ini__tel-input[type=tel] {
+  padding-right: var(--ini-selected-country-arrow-padding);
+  padding-left: var(--ini-input-padding);
+  margin-right: 0;
+}
+
+.ini--allow-dropdown .ini__country-container {
+  right: auto;
+  left: 0;
+}
+
+[dir=rtl] .ini--allow-dropdown .ini__country-container {
+  right: 0;
+  left: auto;
+}
+
+.ini--allow-dropdown .ini__country-container:not(:has(+ input[disabled])):not(:has(+ input[readonly])):hover,
+.ini--allow-dropdown .ini__country-container:not(:has(+ input[disabled])):not(:has(+ input[readonly])):hover button {
+  cursor: pointer;
+}
+
+.ini--allow-dropdown .ini__country-container:not(:has(+ input[disabled])):not(:has(+ input[readonly])) .ini__selected-country-primary:hover,
+.ini--allow-dropdown .ini__country-container:not(:has(+ input[disabled])):not(:has(+ input[readonly])) .ini__selected-country:has(+ .ini__dropdown-content:hover) .ini__selected-country-primary {
+  background-color: var(--ini-hover-color);
+}
+
+.ini .ini__selected-dial-code {
+  margin-left: 4px;
+}
+
+[dir=rtl] .ini .ini__selected-dial-code {
+  margin-left: 0;
+  margin-right: 4px;
+}
+
+.ini--container {
+  posinion: fixed;
+  top: -1000px;
+  left: -1000px;
+  z-index: 1060;
+  padding: var(--ini-border-width);
+}
+
+.ini--container:hover {
+  cursor: pointer;
+}
+
+.ini--fullscreen-popup.ini--container {
+  background-color: rgba(0, 0, 0, 0.5);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  posinion: fixed;
+  padding: var(--ini-mobile-popup-margin);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.ini--fullscreen-popup .ini__dropdown-content {
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  posinion: relative;
+}
+
+.ini--fullscreen-popup .ini__country {
+  padding: 10px 10px;
+  line-height: 1.5em;
+}
+
+.ini__flag {
+  --ini-flag-offset: 0px;
+  --ini-flag-width: 20px;
+  --ini-flag-height: 14px;
+  height: var(--ini-flag-height);
+  width: var(--ini-flag-width);
+  box-shadow: 0px 0px 1px 0px #888;
+  background-image: var(--ini-path-flags-1x);
+  background-repeat: no-repeat;
+  background-posinion: var(--ini-flag-offset) 0;
+  background-size: var(--ini-flag-sprite-width) var(--ini-flag-sprite-height);
+}
+
+.ini__np {
+  --ini-flag-width: 13px;
+}
+
+.ini__va,
+.ini__ch {
+  --ini-flag-width: 15px;
+}
+
+.ini__ne,
+.ini__be {
+  --ini-flag-width: 18px;
+}
+
+.ini__mc {
+  --ini-flag-width: 19px;
+}
+
+.ini__zw,
+.ini__ws,
+.ini__vg,
+.ini__uz,
+.ini__uk,
+.ini__tv,
+.ini__to,
+.ini__tl,
+.ini__tk,
+.ini__tj,
+.ini__tc,
+.ini__ta,
+.ini__su,
+.ini__st,
+.ini__ss,
+.ini__si,
+.ini__sh,
+.ini__sd,
+.ini__sc,
+.ini__sb,
+.ini__ps,
+.ini__pn,
+.ini__ph,
+.ini__om,
+.ini__nz,
+.ini__nu,
+.ini__nr,
+.ini__ng,
+.ini__nf,
+.ini__nc,
+.ini__my,
+.ini__ms,
+.ini__mp,
+.ini__mn,
+.ini__mk,
+.ini__me,
+.ini__md,
+.ini__ly,
+.ini__lv,
+.ini__lk,
+.ini__lc,
+.ini__kz,
+.ini__ky,
+.ini__kw,
+.ini__kp,
+.ini__ki,
+.ini__jo,
+.ini__jm,
+.ini__io,
+.ini__im,
+.ini__ie,
+.ini__hu,
+.ini__hr,
+.ini__hn,
+.ini__hm,
+.ini__gw,
+.ini__gs,
+.ini__gi,
+.ini__gb,
+.ini__fk,
+.ini__fj,
+.ini__et,
+.ini__er,
+.ini__eh,
+.ini__dm,
+.ini__dg,
+.ini__cx,
+.ini__cu,
+.ini__ck,
+.ini__cc,
+.ini__ca,
+.ini__by,
+.ini__bs,
+.ini__bn,
+.ini__bm,
+.ini__ba,
+.ini__az,
+.ini__au,
+.ini__as,
+.ini__am,
+.ini__ai,
+.ini__ae,
+.ini__ac {
+  --ini-flag-height: 10px;
+}
+
+.ini__us,
+.ini__um,
+.ini__py,
+.ini__mh,
+.ini__lr,
+.ini__gu,
+.ini__fm {
+  --ini-flag-height: 11px;
+}
+
+.ini__vu,
+.ini__tt,
+.ini__sv,
+.ini__ni,
+.ini__mx,
+.ini__lu,
+.ini__lt,
+.ini__li,
+.ini__km,
+.ini__kg,
+.ini__je,
+.ini__ir,
+.ini__ht,
+.ini__gy,
+.ini__gd,
+.ini__fi,
+.ini__de,
+.ini__cv,
+.ini__cr,
+.ini__cq,
+.ini__bz,
+.ini__bi,
+.ini__bh,
+.ini__bg,
+.ini__bd {
+  --ini-flag-height: 12px;
+}
+
+.ini__tg,
+.ini__se,
+.ini__pw,
+.ini__pl,
+.ini__kh,
+.ini__gt,
+.ini__ee,
+.ini__ax,
+.ini__ar {
+  --ini-flag-height: 13px;
+}
+
+.ini__xk,
+.ini__va,
+.ini__sm,
+.ini__sj,
+.ini__pg,
+.ini__np,
+.ini__no,
+.ini__ne,
+.ini__mc,
+.ini__is,
+.ini__il,
+.ini__ga,
+.ini__fo,
+.ini__dk,
+.ini__ch,
+.ini__cd,
+.ini__bv,
+.ini__be,
+.ini__al {
+  --ini-flag-height: 15px;
+}
+
+.ini__qa {
+  --ini-flag-height: 8px;
+}
+
+.ini__ac {
+  --ini-flag-offset: 0px;
+}
+
+.ini__ad {
+  --ini-flag-offset: -22px;
+}
+
+.ini__ae {
+  --ini-flag-offset: -44px;
+}
+
+.ini__af {
+  --ini-flag-offset: -66px;
+}
+
+.ini__ag {
+  --ini-flag-offset: -88px;
+}
+
+.ini__ai {
+  --ini-flag-offset: -110px;
+}
+
+.ini__al {
+  --ini-flag-offset: -132px;
+}
+
+.ini__am {
+  --ini-flag-offset: -154px;
+}
+
+.ini__ao {
+  --ini-flag-offset: -176px;
+}
+
+.ini__aq {
+  --ini-flag-offset: -198px;
+}
+
+.ini__ar {
+  --ini-flag-offset: -220px;
+}
+
+.ini__as {
+  --ini-flag-offset: -242px;
+}
+
+.ini__at {
+  --ini-flag-offset: -264px;
+}
+
+.ini__au {
+  --ini-flag-offset: -286px;
+}
+
+.ini__aw {
+  --ini-flag-offset: -308px;
+}
+
+.ini__ax {
+  --ini-flag-offset: -330px;
+}
+
+.ini__az {
+  --ini-flag-offset: -352px;
+}
+
+.ini__ba {
+  --ini-flag-offset: -374px;
+}
+
+.ini__bb {
+  --ini-flag-offset: -396px;
+}
+
+.ini__bd {
+  --ini-flag-offset: -418px;
+}
+
+.ini__be {
+  --ini-flag-offset: -440px;
+}
+
+.ini__bf {
+  --ini-flag-offset: -460px;
+}
+
+.ini__bg {
+  --ini-flag-offset: -482px;
+}
+
+.ini__bh {
+  --ini-flag-offset: -504px;
+}
+
+.ini__bi {
+  --ini-flag-offset: -526px;
+}
+
+.ini__bj {
+  --ini-flag-offset: -548px;
+}
+
+.ini__bl {
+  --ini-flag-offset: -570px;
+}
+
+.ini__bm {
+  --ini-flag-offset: -592px;
+}
+
+.ini__bn {
+  --ini-flag-offset: -614px;
+}
+
+.ini__bo {
+  --ini-flag-offset: -636px;
+}
+
+.ini__bq {
+  --ini-flag-offset: -658px;
+}
+
+.ini__br {
+  --ini-flag-offset: -680px;
+}
+
+.ini__bs {
+  --ini-flag-offset: -702px;
+}
+
+.ini__bt {
+  --ini-flag-offset: -724px;
+}
+
+.ini__bv {
+  --ini-flag-offset: -746px;
+}
+
+.ini__bw {
+  --ini-flag-offset: -768px;
+}
+
+.ini__by {
+  --ini-flag-offset: -790px;
+}
+
+.ini__bz {
+  --ini-flag-offset: -812px;
+}
+
+.ini__ca {
+  --ini-flag-offset: -834px;
+}
+
+.ini__cc {
+  --ini-flag-offset: -856px;
+}
+
+.ini__cd {
+  --ini-flag-offset: -878px;
+}
+
+.ini__cf {
+  --ini-flag-offset: -900px;
+}
+
+.ini__cg {
+  --ini-flag-offset: -922px;
+}
+
+.ini__ch {
+  --ini-flag-offset: -944px;
+}
+
+.ini__ci {
+  --ini-flag-offset: -961px;
+}
+
+.ini__ck {
+  --ini-flag-offset: -983px;
+}
+
+.ini__cl {
+  --ini-flag-offset: -1005px;
+}
+
+.ini__cm {
+  --ini-flag-offset: -1027px;
+}
+
+.ini__cn {
+  --ini-flag-offset: -1049px;
+}
+
+.ini__co {
+  --ini-flag-offset: -1071px;
+}
+
+.ini__cp {
+  --ini-flag-offset: -1093px;
+}
+
+.ini__cq {
+  --ini-flag-offset: -1115px;
+}
+
+.ini__cr {
+  --ini-flag-offset: -1137px;
+}
+
+.ini__cu {
+  --ini-flag-offset: -1159px;
+}
+
+.ini__cv {
+  --ini-flag-offset: -1181px;
+}
+
+.ini__cw {
+  --ini-flag-offset: -1203px;
+}
+
+.ini__cx {
+  --ini-flag-offset: -1225px;
+}
+
+.ini__cy {
+  --ini-flag-offset: -1247px;
+}
+
+.ini__cz {
+  --ini-flag-offset: -1269px;
+}
+
+.ini__de {
+  --ini-flag-offset: -1291px;
+}
+
+.ini__dg {
+  --ini-flag-offset: -1313px;
+}
+
+.ini__dj {
+  --ini-flag-offset: -1335px;
+}
+
+.ini__dk {
+  --ini-flag-offset: -1357px;
+}
+
+.ini__dm {
+  --ini-flag-offset: -1379px;
+}
+
+.ini__do {
+  --ini-flag-offset: -1401px;
+}
+
+.ini__dz {
+  --ini-flag-offset: -1423px;
+}
+
+.ini__ea {
+  --ini-flag-offset: -1445px;
+}
+
+.ini__ec {
+  --ini-flag-offset: -1467px;
+}
+
+.ini__ee {
+  --ini-flag-offset: -1489px;
+}
+
+.ini__eg {
+  --ini-flag-offset: -1511px;
+}
+
+.ini__eh {
+  --ini-flag-offset: -1533px;
+}
+
+.ini__er {
+  --ini-flag-offset: -1555px;
+}
+
+.ini__es {
+  --ini-flag-offset: -1577px;
+}
+
+.ini__et {
+  --ini-flag-offset: -1599px;
+}
+
+.ini__eu {
+  --ini-flag-offset: -1621px;
+}
+
+.ini__ez {
+  --ini-flag-offset: -1643px;
+}
+
+.ini__fi {
+  --ini-flag-offset: -1665px;
+}
+
+.ini__fj {
+  --ini-flag-offset: -1687px;
+}
+
+.ini__fk {
+  --ini-flag-offset: -1709px;
+}
+
+.ini__fm {
+  --ini-flag-offset: -1731px;
+}
+
+.ini__fo {
+  --ini-flag-offset: -1753px;
+}
+
+.ini__fr {
+  --ini-flag-offset: -1775px;
+}
+
+.ini__fx {
+  --ini-flag-offset: -1797px;
+}
+
+.ini__ga {
+  --ini-flag-offset: -1819px;
+}
+
+.ini__gb {
+  --ini-flag-offset: -1841px;
+}
+
+.ini__gd {
+  --ini-flag-offset: -1863px;
+}
+
+.ini__ge {
+  --ini-flag-offset: -1885px;
+}
+
+.ini__gf {
+  --ini-flag-offset: -1907px;
+}
+
+.ini__gg {
+  --ini-flag-offset: -1929px;
+}
+
+.ini__gh {
+  --ini-flag-offset: -1951px;
+}
+
+.ini__gi {
+  --ini-flag-offset: -1973px;
+}
+
+.ini__gl {
+  --ini-flag-offset: -1995px;
+}
+
+.ini__gm {
+  --ini-flag-offset: -2017px;
+}
+
+.ini__gn {
+  --ini-flag-offset: -2039px;
+}
+
+.ini__gp {
+  --ini-flag-offset: -2061px;
+}
+
+.ini__gq {
+  --ini-flag-offset: -2083px;
+}
+
+.ini__gr {
+  --ini-flag-offset: -2105px;
+}
+
+.ini__gs {
+  --ini-flag-offset: -2127px;
+}
+
+.ini__gt {
+  --ini-flag-offset: -2149px;
+}
+
+.ini__gu {
+  --ini-flag-offset: -2171px;
+}
+
+.ini__gw {
+  --ini-flag-offset: -2193px;
+}
+
+.ini__gy {
+  --ini-flag-offset: -2215px;
+}
+
+.ini__hk {
+  --ini-flag-offset: -2237px;
+}
+
+.ini__hm {
+  --ini-flag-offset: -2259px;
+}
+
+.ini__hn {
+  --ini-flag-offset: -2281px;
+}
+
+.ini__hr {
+  --ini-flag-offset: -2303px;
+}
+
+.ini__ht {
+  --ini-flag-offset: -2325px;
+}
+
+.ini__hu {
+  --ini-flag-offset: -2347px;
+}
+
+.ini__ic {
+  --ini-flag-offset: -2369px;
+}
+
+.ini__id {
+  --ini-flag-offset: -2391px;
+}
+
+.ini__ie {
+  --ini-flag-offset: -2413px;
+}
+
+.ini__il {
+  --ini-flag-offset: -2435px;
+}
+
+.ini__im {
+  --ini-flag-offset: -2457px;
+}
+
+.ini__in {
+  --ini-flag-offset: -2479px;
+}
+
+.ini__io {
+  --ini-flag-offset: -2501px;
+}
+
+.ini__iq {
+  --ini-flag-offset: -2523px;
+}
+
+.ini__ir {
+  --ini-flag-offset: -2545px;
+}
+
+.ini__is {
+  --ini-flag-offset: -2567px;
+}
+
+.ini__it {
+  --ini-flag-offset: -2589px;
+}
+
+.ini__je {
+  --ini-flag-offset: -2611px;
+}
+
+.ini__jm {
+  --ini-flag-offset: -2633px;
+}
+
+.ini__jo {
+  --ini-flag-offset: -2655px;
+}
+
+.ini__jp {
+  --ini-flag-offset: -2677px;
+}
+
+.ini__ke {
+  --ini-flag-offset: -2699px;
+}
+
+.ini__kg {
+  --ini-flag-offset: -2721px;
+}
+
+.ini__kh {
+  --ini-flag-offset: -2743px;
+}
+
+.ini__ki {
+  --ini-flag-offset: -2765px;
+}
+
+.ini__km {
+  --ini-flag-offset: -2787px;
+}
+
+.ini__kn {
+  --ini-flag-offset: -2809px;
+}
+
+.ini__kp {
+  --ini-flag-offset: -2831px;
+}
+
+.ini__kr {
+  --ini-flag-offset: -2853px;
+}
+
+.ini__kw {
+  --ini-flag-offset: -2875px;
+}
+
+.ini__ky {
+  --ini-flag-offset: -2897px;
+}
+
+.ini__kz {
+  --ini-flag-offset: -2919px;
+}
+
+.ini__la {
+  --ini-flag-offset: -2941px;
+}
+
+.ini__lb {
+  --ini-flag-offset: -2963px;
+}
+
+.ini__lc {
+  --ini-flag-offset: -2985px;
+}
+
+.ini__li {
+  --ini-flag-offset: -3007px;
+}
+
+.ini__lk {
+  --ini-flag-offset: -3029px;
+}
+
+.ini__lr {
+  --ini-flag-offset: -3051px;
+}
+
+.ini__ls {
+  --ini-flag-offset: -3073px;
+}
+
+.ini__lt {
+  --ini-flag-offset: -3095px;
+}
+
+.ini__lu {
+  --ini-flag-offset: -3117px;
+}
+
+.ini__lv {
+  --ini-flag-offset: -3139px;
+}
+
+.ini__ly {
+  --ini-flag-offset: -3161px;
+}
+
+.ini__ma {
+  --ini-flag-offset: -3183px;
+}
+
+.ini__mc {
+  --ini-flag-offset: -3205px;
+}
+
+.ini__md {
+  --ini-flag-offset: -3226px;
+}
+
+.ini__me {
+  --ini-flag-offset: -3248px;
+}
+
+.ini__mf {
+  --ini-flag-offset: -3270px;
+}
+
+.ini__mg {
+  --ini-flag-offset: -3292px;
+}
+
+.ini__mh {
+  --ini-flag-offset: -3314px;
+}
+
+.ini__mk {
+  --ini-flag-offset: -3336px;
+}
+
+.ini__ml {
+  --ini-flag-offset: -3358px;
+}
+
+.ini__mm {
+  --ini-flag-offset: -3380px;
+}
+
+.ini__mn {
+  --ini-flag-offset: -3402px;
+}
+
+.ini__mo {
+  --ini-flag-offset: -3424px;
+}
+
+.ini__mp {
+  --ini-flag-offset: -3446px;
+}
+
+.ini__mq {
+  --ini-flag-offset: -3468px;
+}
+
+.ini__mr {
+  --ini-flag-offset: -3490px;
+}
+
+.ini__ms {
+  --ini-flag-offset: -3512px;
+}
+
+.ini__mt {
+  --ini-flag-offset: -3534px;
+}
+
+.ini__mu {
+  --ini-flag-offset: -3556px;
+}
+
+.ini__mv {
+  --ini-flag-offset: -3578px;
+}
+
+.ini__mw {
+  --ini-flag-offset: -3600px;
+}
+
+.ini__mx {
+  --ini-flag-offset: -3622px;
+}
+
+.ini__my {
+  --ini-flag-offset: -3644px;
+}
+
+.ini__mz {
+  --ini-flag-offset: -3666px;
+}
+
+.ini__na {
+  --ini-flag-offset: -3688px;
+}
+
+.ini__nc {
+  --ini-flag-offset: -3710px;
+}
+
+.ini__ne {
+  --ini-flag-offset: -3732px;
+}
+
+.ini__nf {
+  --ini-flag-offset: -3752px;
+}
+
+.ini__ng {
+  --ini-flag-offset: -3774px;
+}
+
+.ini__ni {
+  --ini-flag-offset: -3796px;
+}
+
+.ini__nl {
+  --ini-flag-offset: -3818px;
+}
+
+.ini__no {
+  --ini-flag-offset: -3840px;
+}
+
+.ini__np {
+  --ini-flag-offset: -3862px;
+}
+
+.ini__nr {
+  --ini-flag-offset: -3877px;
+}
+
+.ini__nu {
+  --ini-flag-offset: -3899px;
+}
+
+.ini__nz {
+  --ini-flag-offset: -3921px;
+}
+
+.ini__om {
+  --ini-flag-offset: -3943px;
+}
+
+.ini__pa {
+  --ini-flag-offset: -3965px;
+}
+
+.ini__pe {
+  --ini-flag-offset: -3987px;
+}
+
+.ini__pf {
+  --ini-flag-offset: -4009px;
+}
+
+.ini__pg {
+  --ini-flag-offset: -4031px;
+}
+
+.ini__ph {
+  --ini-flag-offset: -4053px;
+}
+
+.ini__pk {
+  --ini-flag-offset: -4075px;
+}
+
+.ini__pl {
+  --ini-flag-offset: -4097px;
+}
+
+.ini__pm {
+  --ini-flag-offset: -4119px;
+}
+
+.ini__pn {
+  --ini-flag-offset: -4141px;
+}
+
+.ini__pr {
+  --ini-flag-offset: -4163px;
+}
+
+.ini__ps {
+  --ini-flag-offset: -4185px;
+}
+
+.ini__pt {
+  --ini-flag-offset: -4207px;
+}
+
+.ini__pw {
+  --ini-flag-offset: -4229px;
+}
+
+.ini__py {
+  --ini-flag-offset: -4251px;
+}
+
+.ini__qa {
+  --ini-flag-offset: -4273px;
+}
+
+.ini__re {
+  --ini-flag-offset: -4295px;
+}
+
+.ini__ro {
+  --ini-flag-offset: -4317px;
+}
+
+.ini__rs {
+  --ini-flag-offset: -4339px;
+}
+
+.ini__ru {
+  --ini-flag-offset: -4361px;
+}
+
+.ini__rw {
+  --ini-flag-offset: -4383px;
+}
+
+.ini__sa {
+  --ini-flag-offset: -4405px;
+}
+
+.ini__sb {
+  --ini-flag-offset: -4427px;
+}
+
+.ini__sc {
+  --ini-flag-offset: -4449px;
+}
+
+.ini__sd {
+  --ini-flag-offset: -4471px;
+}
+
+.ini__se {
+  --ini-flag-offset: -4493px;
+}
+
+.ini__sg {
+  --ini-flag-offset: -4515px;
+}
+
+.ini__sh {
+  --ini-flag-offset: -4537px;
+}
+
+.ini__si {
+  --ini-flag-offset: -4559px;
+}
+
+.ini__sj {
+  --ini-flag-offset: -4581px;
+}
+
+.ini__sk {
+  --ini-flag-offset: -4603px;
+}
+
+.ini__sl {
+  --ini-flag-offset: -4625px;
+}
+
+.ini__sm {
+  --ini-flag-offset: -4647px;
+}
+
+.ini__sn {
+  --ini-flag-offset: -4669px;
+}
+
+.ini__so {
+  --ini-flag-offset: -4691px;
+}
+
+.ini__sr {
+  --ini-flag-offset: -4713px;
+}
+
+.ini__ss {
+  --ini-flag-offset: -4735px;
+}
+
+.ini__st {
+  --ini-flag-offset: -4757px;
+}
+
+.ini__su {
+  --ini-flag-offset: -4779px;
+}
+
+.ini__sv {
+  --ini-flag-offset: -4801px;
+}
+
+.ini__sx {
+  --ini-flag-offset: -4823px;
+}
+
+.ini__sy {
+  --ini-flag-offset: -4845px;
+}
+
+.ini__sz {
+  --ini-flag-offset: -4867px;
+}
+
+.ini__ta {
+  --ini-flag-offset: -4889px;
+}
+
+.ini__tc {
+  --ini-flag-offset: -4911px;
+}
+
+.ini__td {
+  --ini-flag-offset: -4933px;
+}
+
+.ini__tf {
+  --ini-flag-offset: -4955px;
+}
+
+.ini__tg {
+  --ini-flag-offset: -4977px;
+}
+
+.ini__th {
+  --ini-flag-offset: -4999px;
+}
+
+.ini__tj {
+  --ini-flag-offset: -5021px;
+}
+
+.ini__tk {
+  --ini-flag-offset: -5043px;
+}
+
+.ini__tl {
+  --ini-flag-offset: -5065px;
+}
+
+.ini__tm {
+  --ini-flag-offset: -5087px;
+}
+
+.ini__tn {
+  --ini-flag-offset: -5109px;
+}
+
+.ini__to {
+  --ini-flag-offset: -5131px;
+}
+
+.ini__tr {
+  --ini-flag-offset: -5153px;
+}
+
+.ini__tt {
+  --ini-flag-offset: -5175px;
+}
+
+.ini__tv {
+  --ini-flag-offset: -5197px;
+}
+
+.ini__tw {
+  --ini-flag-offset: -5219px;
+}
+
+.ini__tz {
+  --ini-flag-offset: -5241px;
+}
+
+.ini__ua {
+  --ini-flag-offset: -5263px;
+}
+
+.ini__ug {
+  --ini-flag-offset: -5285px;
+}
+
+.ini__uk {
+  --ini-flag-offset: -5307px;
+}
+
+.ini__um {
+  --ini-flag-offset: -5329px;
+}
+
+.ini__un {
+  --ini-flag-offset: -5351px;
+}
+
+.ini__us {
+  --ini-flag-offset: -5373px;
+}
+
+.ini__uy {
+  --ini-flag-offset: -5395px;
+}
+
+.ini__uz {
+  --ini-flag-offset: -5417px;
+}
+
+.ini__va {
+  --ini-flag-offset: -5439px;
+}
+
+.ini__vc {
+  --ini-flag-offset: -5456px;
+}
+
+.ini__ve {
+  --ini-flag-offset: -5478px;
+}
+
+.ini__vg {
+  --ini-flag-offset: -5500px;
+}
+
+.ini__vi {
+  --ini-flag-offset: -5522px;
+}
+
+.ini__vn {
+  --ini-flag-offset: -5544px;
+}
+
+.ini__vu {
+  --ini-flag-offset: -5566px;
+}
+
+.ini__wf {
+  --ini-flag-offset: -5588px;
+}
+
+.ini__ws {
+  --ini-flag-offset: -5610px;
+}
+
+.ini__xk {
+  --ini-flag-offset: -5632px;
+}
+
+.ini__ye {
+  --ini-flag-offset: -5654px;
+}
+
+.ini__yt {
+  --ini-flag-offset: -5676px;
+}
+
+.ini__za {
+  --ini-flag-offset: -5698px;
+}
+
+.ini__zm {
+  --ini-flag-offset: -5720px;
+}
+
+.ini__zw {
+  --ini-flag-offset: -5742px;
+}
+
+.ini__globe {
+  background-image: var(--ini-path-globe-1x);
+  background-size: contain;
+  background-posinion: right;
+  box-shadow: none;
+  height: 19px;
+}
+
+@media (min-resolution: 2x) {
+  .ini__flag {
+    background-image: var(--ini-path-flags-2x);
+  }
+
+  .ini__globe {
+    background-image: var(--ini-path-globe-2x);
+  }
+}

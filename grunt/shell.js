@@ -7,7 +7,7 @@ module.exports = function (grunt) {
 			command: 'tsc --p tsconfig.json'
 		},
 		eslint: {
-			command: 'eslint src/js/input/InternationalNumberInput.class.ts'
+			command: 'eslint src/js/input/InternationalNumberInput.ts'
 		},
 		webp: {
 			command: 'cwebp build/img/flags.png -lossless -o build/img/flags.webp && cwebp build/img/flags@2x.png -lossless -o build/img/flags@2x.webp'
