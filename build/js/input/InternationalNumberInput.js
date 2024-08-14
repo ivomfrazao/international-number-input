@@ -1777,7 +1777,7 @@ var factoryOutput = (() => {
           const extraClasses = fixDropdownWidth ? "" : buildAttributeClass(styles, "attributeFlexibleDropdownWidthClass" /* FlexibleDropdownWidth */);
           this.dropdownContent = createDOMElement("div", {
             id: `ini-${this.id}__dropdown-content`,
-            class: `ini__dropdown-content iti__hide ${extraClasses}`
+            class: `ini__dropdown-content ini__hide ${extraClasses}`
           });
           if (countrySearch) {
             this.searchInput = createDOMElement(
@@ -1797,7 +1797,9 @@ var factoryOutput = (() => {
             );
             this.searchResultsA11yText = createDOMElement(
               "span",
-              { class: buildElementClass(this.options.styles, "elementAccessibilityText" /* AccessibilityText */) },
+              {
+                class: buildElementClass(this.options.styles, "elementAccessibilityText" /* AccessibilityText */)
+              },
               this.dropdownContent
             );
           }
@@ -1822,7 +1824,12 @@ var factoryOutput = (() => {
             } else {
               dropdownClasses += " ini--inline-dropdown";
             }
-            this.dropdown = createDOMElement("div", { class: dropdownClasses });
+            this.dropdown = createDOMElement(
+              "div",
+              {
+                class: dropdownClasses
+              }
+            );
             this.dropdown.appendChild(this.dropdownContent);
           } else {
             this.countryContainer.appendChild(this.dropdownContent);
@@ -1857,23 +1864,21 @@ var factoryOutput = (() => {
     }
     //* For each country: add a country list item <li> to the countryList <ul> container.
     _appendListItems() {
-      for (let i = 0; i < this.countries.length; i++) {
-        const c = this.countries[i];
-        const extraClass = i === 0 ? "ini__highlight" : "";
+      this.countries.forEach((country, index) => {
+        const extraClass = index === 0 ? "ini__highlight" : "";
         const listItem = createDOMElement(
           "li",
           {
-            id: `ini-${this.id}__item-${c.iso2}`,
+            id: `ini-${this.id}__item-${country.iso2}`,
             class: `ini__country ${extraClass}`,
             tabindex: "-1",
             role: "option",
-            "data-country-code": c.iso2,
+            "data-country-code": country.iso2,
             "aria-selected": "false"
           },
           this.countryList
         );
-        c.nodeById[this.id] = listItem;
-        let flagElement;
+        country.nodeById[this.id] = listItem;
         if (this.options.showFlags) {
           const flagBoxElement = createDOMElement(
             "div",
@@ -1881,11 +1886,15 @@ var factoryOutput = (() => {
               class: "ini__flag-box"
             }
           );
-          flagElement = createDOMElement(
+          createDOMElement(
             "div",
             {
-              class: `ini__flag ini__${c.iso2}`
+              class: `ini__flag ini__${country.iso2}`
             },
+            flagBoxElement
+          );
+          listItem.insertAdjacentElement(
+            "beforeend",
             flagBoxElement
           );
         }
@@ -1893,18 +1902,17 @@ var factoryOutput = (() => {
           "span",
           {
             class: "ini__country-name"
-          },
-          flagElement
+          }
         );
         content.insertAdjacentText(
           "beforeend",
-          `${c.name}`
+          `${country.name}`
         );
         listItem.insertAdjacentElement(
           "beforeend",
           content
         );
-      }
+      });
     }
     //* Set the initial state of the input value and the selected country by:
     //* 1. Using explicit initialCountry

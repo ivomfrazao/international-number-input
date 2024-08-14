@@ -19,6 +19,7 @@ input,
   font-size: 100%;
   color: inherit;
 }
+
 input[disabled],
 .button[disabled] {
   background-color: #eee;
@@ -40,6 +41,7 @@ input::placeholder {
   border: 1px solid #357ebd;
   margin-left: 5px;
 }
+
 .button:hover {
   background-color: #3276b1;
   border-color: #285e8e;
@@ -51,23 +53,28 @@ input::placeholder {
 }
 
 @media (prefers-color-scheme: dark) {
-  body, input {
+
+  body,
+  input {
     color: white;
     background-color: #0d1117;
   }
+
   input {
     border-color: #5b5b5b;
   }
+
   input::placeholder {
     color: #8d96a0;
   }
-  .iti {
-    --iti-border-color: #5b5b5b;
-    --iti-dialcode-color: #999999;
-    --iti-dropdown-bg: #0d1117;
-    --iti-arrow-color: #aaaaaa;
-    --iti-hover-color: #30363d;
-    --iti-path-globe-1x: url("../img/globe_light.webp");
-    --iti-path-globe-2x: url("../img/globe_light@2x.webp");
+
+  .ini {
+    --ini-border-color: #5b5b5b;
+    --ini-dialcode-color: #999999;
+    --ini-dropdown-bg: #0d1117;
+    --ini-arrow-color: #aaaaaa;
+    --ini-hover-color: #30363d;
+    --ini-path-globe-1x: url("../img/globe_light.webp");
+    --ini-path-globe-2x: url("../img/globe_light@2x.webp");
   }
 }

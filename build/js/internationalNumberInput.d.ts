@@ -140,10 +140,19 @@ declare module "input/InternationalNumberInputOptions" {
         allowDropdown: boolean;
         autoPlaceholder: string;
         styles: AllStyleOptions;
+        /**
+         * List of countries specifying their order.
+         * Countries not provided in the list will be ordered alphabetically.
+         * If not set, the entire list will be ordered alphabetically.
+         */
         countryOrder: string[];
         countrySearch: boolean;
         customPlaceholder: ((selectedCountryPlaceholder: string, selectedCountryData: object) => string) | null;
         dropdownContainer: HTMLElement | null;
+        /**
+         * List of countries to **not** be displayed.
+         * Ignored if {@link onlyCountries} is defined
+         */
         excludeCountries: string[];
         fixDropdownWidth: boolean;
         formatAsYouType: boolean;
@@ -408,6 +417,10 @@ declare module "input/InternationalNumberInputOptions" {
         };
         initialCountry: string;
         nationalMode: boolean;
+        /**
+         * List of countries to exclusively be displayed, instead of using all countries.
+         * If set, it will supersede the {@link excludeCountries} parameter.
+         */
         onlyCountries: string[];
         placeholderNumberType: NumberType;
         showFlags: boolean;

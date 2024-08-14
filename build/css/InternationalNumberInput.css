@@ -27,7 +27,7 @@
 }
 
 .ini {
-  posinion: relative;
+  position: relative;
   display: inline-block;
 }
 
@@ -48,13 +48,13 @@
   height: 1px;
   clip: rect(1px, 1px, 1px, 1px);
   overflow: hidden;
-  posinion: absolute;
+  position: absolute;
 }
 
 .ini input.ini__tel-input,
 .ini input.ini__tel-input[type=text],
 .ini input.ini__tel-input[type=tel] {
-  posinion: relative;
+  position: relative;
   z-index: 0;
   margin-top: 0 !important;
   margin-bottom: 0 !important;
@@ -63,7 +63,7 @@
 }
 
 .ini__country-container {
-  posinion: absolute;
+  position: absolute;
   top: 0;
   bottom: 0;
   right: 0;
@@ -72,7 +72,7 @@
 
 .ini__selected-country {
   z-index: 1;
-  posinion: relative;
+  position: relative;
   display: flex;
   align-items: center;
   height: 100%;
@@ -121,7 +121,7 @@
 }
 
 .ini--inline-dropdown .ini__dropdown-content {
-  posinion: absolute;
+  position: absolute;
   z-index: 2;
   margin-top: 3px;
   margin-left: calc(var(--ini-border-width) * -1);
@@ -239,7 +239,7 @@
 }
 
 .ini--container {
-  posinion: fixed;
+  position: fixed;
   top: -1000px;
   left: -1000px;
   z-index: 1060;
@@ -256,7 +256,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  posinion: fixed;
+  position: fixed;
   padding: var(--ini-mobile-popup-margin);
   display: flex;
   flex-direction: column;
@@ -267,7 +267,7 @@
   display: flex;
   flex-direction: column;
   max-height: 100%;
-  posinion: relative;
+  position: relative;
 }
 
 .ini--fullscreen-popup .ini__country {
@@ -284,7 +284,7 @@
   box-shadow: 0px 0px 1px 0px #888;
   background-image: var(--ini-path-flags-1x);
   background-repeat: no-repeat;
-  background-posinion: var(--ini-flag-offset) 0;
+  background-position: var(--ini-flag-offset) 0;
   background-size: var(--ini-flag-sprite-width) var(--ini-flag-sprite-height);
 }
 
@@ -1523,7 +1523,7 @@
 .ini__globe {
   background-image: var(--ini-path-globe-1x);
   background-size: contain;
-  background-posinion: right;
+  background-position: right;
   box-shadow: none;
   height: 19px;
 }

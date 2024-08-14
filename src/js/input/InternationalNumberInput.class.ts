@@ -156,14 +156,14 @@ export class Ini {
 	
 		//* Utils script, and auto country.
 		this._initRequests();
-		}
+	}
 	
-		//********************
-		//*  PRIVATE METHODS
-		//********************
-	
-		//* Prepare all of the country data, including onlyCountries, excludeCountries, countryOrder options.
-		private _processCountryData(): void {
+	//********************
+	//*  PRIVATE METHODS
+	//********************
+
+	//* Prepare all of the country data, including onlyCountries, excludeCountries, countryOrder options.
+	private _processCountryData(): void {
 		//* Process onlyCountries or excludeCountries array if present.
 		this._processAllCountries();
 	
@@ -172,10 +172,10 @@ export class Ini {
 	
 		//* Sort countries by countryOrder option (if present), then name.
 		this._sortCountries();
-		}
+	}
 		
 		//* Sort countries by countryOrder option (if present), then name.
-		private _sortCountries() {
+	private _sortCountries() {
 		if (this.options.countryOrder) {
 			this.options.countryOrder = this.options.countryOrder.map((country) => country.toLowerCase());
 		}
@@ -183,16 +183,16 @@ export class Ini {
 			//* Primary sort: countryOrder option.
 			const { countryOrder } = this.options;
 			if (countryOrder) {
-			const aIndex = countryOrder.indexOf(a.iso2);
-			const bIndex = countryOrder.indexOf(b.iso2);
-			const aIndexExists = aIndex > -1;
-			const bIndexExists = bIndex > -1;
-			if (aIndexExists || bIndexExists) {
-				if (aIndexExists && bIndexExists) {
-				return aIndex - bIndex;
+				const aIndex = countryOrder.indexOf(a.iso2);
+				const bIndex = countryOrder.indexOf(b.iso2);
+				const aIndexExists = aIndex > -1;
+				const bIndexExists = bIndex > -1;
+				if (aIndexExists || bIndexExists) {
+					if (aIndexExists && bIndexExists) {
+						return aIndex - bIndex;
+					}
+					return aIndexExists ? -1 : 1;
 				}
-				return aIndexExists ? -1 : 1;
-			}
 			}
 			
 			//* Secondary sort: country name.
@@ -205,7 +205,7 @@ export class Ini {
 		const { onlyCountries, excludeCountries } = this.options;
 		if (onlyCountries.length) {
 			const lowerCaseOnlyCountries = onlyCountries.map((country) =>
-			country.toLowerCase(),
+				country.toLowerCase(),
 			);
 			this.countries = allCountries.filter(
 				(country) => lowerCaseOnlyCountries.indexOf(country.iso2) > -1,
@@ -351,7 +351,7 @@ export class Ini {
 				const extraClasses = fixDropdownWidth ? "" : buildAttributeClass(styles, StyleAttribute.FlexibleDropdownWidth);
 				this.dropdownContent = createDOMElement("div", {
 					id: `ini-${this.id}__dropdown-content`,
-					class: `ini__dropdown-content iti__hide ${extraClasses}`,
+					class: `ini__dropdown-content ini__hide ${extraClasses}`,
 				});
 		
 				if (countrySearch) {
@@ -372,7 +372,9 @@ export class Ini {
 					) as HTMLInputElement;
 					this.searchResultsA11yText = createDOMElement(
 						"span",
-						{ class: buildElementClass(this.options.styles, StyleElement.AccessibilityText) },
+						{
+							class: buildElementClass(this.options.styles, StyleElement.AccessibilityText)
+						},
 						this.dropdownContent,
 					);
 				}
@@ -400,7 +402,12 @@ export class Ini {
 					} else {
 						dropdownClasses += " ini--inline-dropdown";
 					}
-					this.dropdown = createDOMElement("div", { class: dropdownClasses });
+					this.dropdown = createDOMElement(
+						"div",
+						{
+							class: dropdownClasses
+						},
+					);
 					this.dropdown.appendChild(this.dropdownContent);
 				} else {
 					this.countryContainer.appendChild(this.dropdownContent);
@@ -442,27 +449,25 @@ export class Ini {
   
 	//* For each country: add a country list item <li> to the countryList <ul> container.
 	private _appendListItems(): void {
-		for (let i = 0; i < this.countries.length; i++) {
-			const c = this.countries[i];
+		this.countries.forEach((country, index) => {
 			//* Start by highlighting the first item (useful when countrySearch disabled).
-			const extraClass = i === 0 ? "ini__highlight" : "";
+			const extraClass = index === 0 ? "ini__highlight" : "";
 	
 			const listItem = createDOMElement(
 				"li",
 				{
-					id: `ini-${this.id}__item-${c.iso2}`,
+					id: `ini-${this.id}__item-${country.iso2}`,
 					class: `ini__country ${extraClass}`,
 					tabindex: "-1",
 					role: "option",
-					"data-country-code": c.iso2,
+					"data-country-code": country.iso2,
 					"aria-selected": "false",
 				},
 				this.countryList,
 			);
 			//* Store this for later use e.g. country search filtering.
-			c.nodeById[this.id] = listItem;
+			country.nodeById[this.id] = listItem;
 	
-			let flagElement;
 			//* Add the flag.
 			if (this.options.showFlags) {
 				const flagBoxElement = createDOMElement(
@@ -471,31 +476,34 @@ export class Ini {
 						class: "ini__flag-box",
 					},
 				);
-				flagElement = createDOMElement(
+				createDOMElement(
 					"div",
 					{
-						class: `ini__flag ini__${c.iso2}`,
+						class: `ini__flag ini__${country.iso2}`,
 					},
 					flagBoxElement,
 				);
+				listItem.insertAdjacentElement(
+					"beforeend",
+					flagBoxElement,
+				);
 			}
+
 			const content = createDOMElement(
 				"span",
 				{
 					class: "ini__country-name",
 				},
-				flagElement,
 			);
 			content.insertAdjacentText(
 				"beforeend",
-				`${c.name}`,
+				`${country.name}`,
 			);
-
 			listItem.insertAdjacentElement(
 				"beforeend",
 				content,
 			);
-		}
+		});
 	}
   
 	//* Set the initial state of the input value and the selected country by:
