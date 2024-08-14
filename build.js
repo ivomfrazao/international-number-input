@@ -56,7 +56,7 @@ build({
 	},
 	entryPoints: ["src/js/input/InternationalNumberInput.class.ts"],
 	minify: true,
-	outfile: "tmp/built.min.js",
+	outfile: "tmp/input/built.min.js",
 });
 
 //* build/js/data.js
@@ -65,9 +65,9 @@ build({
 	banner: {
 		js: getBanner("allCountries"),
 	},
-	entryPoints: ["src/js/international-number-input/data.ts"],
+	entryPoints: ["src/js/input/international-number-input/data.ts"],
 	minify: false,
-	outfile: "build/js/data.js",
+	outfile: "build/js/input/data.js",
 });
 
 //* build/js/data.min.js
@@ -76,29 +76,29 @@ build({
 	banner: {
 		js: getBanner("allCountries"),
 	},
-	entryPoints: ["src/js/international-number-input/data.ts"],
+	entryPoints: ["src/js/input/international-number-input/data.ts"],
 	minify: true,
-	outfile: "build/js/data.min.js",
+	outfile: "build/js/input/data.min.js",
 });
 
-//* build/js/internationalNumberInputWithUtils.js
-build({
-	...shared,
-	banner: {
-		js: getBanner("internationalNumberInput"),
-	},
-	entryPoints: ["src/js/international-number-input/internationalNumberInputWithUtils.ts"],
-	minify: false,
-	outfile: "build/js/internationalNumberInputWithUtils.js",
-});
+//* build/js/input/internationalNumberInputWithUtils.js
+// build({
+// 	...shared,
+// 	banner: {
+// 		js: getBanner("internationalNumberInput"),
+// 	},
+// 	entryPoints: ["src/js/input/international-number-input/internationalNumberInputWithUtils.ts"],
+// 	minify: false,
+// 	outfile: "build/js/input/internationalNumberInputWithUtils.js",
+// });
 
-//* build/js/internationalNumberInputWithUtils.min.js
-build({
-	...shared,
-	banner: {
-		js: getBanner("internationalNumberInput"),
-	},
-	entryPoints: ["src/js/international-number-input/internationalNumberInputWithUtils.ts"],
-	minify: true,
-	outfile: "build/js/internationalNumberInputWithUtils.min.js",
-});
+// //* build/js/internationalNumberInputWithUtils.min.js
+// build({
+// 	...shared,
+// 	banner: {
+// 		js: getBanner("internationalNumberInput"),
+// 	},
+// 	entryPoints: ["src/js/input/international-number-input/internationalNumberInputWithUtils.ts"],
+// 	minify: true,
+// 	outfile: "build/js/input/internationalNumberInputWithUtils.min.js",
+// });

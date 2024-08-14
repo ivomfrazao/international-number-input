@@ -1,15 +1,15 @@
-import { Guid } from 'guid-typescript'
+import { Guid } from "guid-typescript";
 import defaultEnglishStrings from "./i18n/en";
 import { NumberType } from "../types";
 import { SomeOptions, AllOptions } from "./InternationalNumberInputOptions";
 import defaults from "./InternationalNumberInputOptions.default";
 import { KeyboardKey } from "./utils/KeyboardKey.enum";
-import { normaliseString } from './utils/StringUtils';
-import { createDOMElement } from './utils/DOMutils';
-import { buildAttributeClass, buildElementClass, StyleAttribute, StyleElement } from './utils/StyleUtils';
+import { normaliseString } from "./utils/StringUtils";
+import { createDOMElement } from "./utils/DOMUtils";
+import { buildAttributeClass, buildElementClass, StyleAttribute, StyleElement } from "./utils/StyleUtils";
 
 // TODO Remove next import and type
-import allCountries, { Country } from './international-number-input/data'
+import allCountries, { Country } from "./international-number-input/data";
 type SelectedCountryData = Country | { name?: string, iso2?: string, dialCode?: string };
 
 // TODO Check if translateCursorPosition is really necessary. If yes, move to utilities
@@ -96,14 +96,14 @@ export class Ini {
 	private rejectUtilsScriptPromise: (reason?: unknown) => void;
   
 	constructor(input: HTMLInputElement, customOptions: SomeOptions = {}) {
-	  this.id = Guid.create().toString();
-	  this.numberInput = input;
-  
-	  this.highlightedItem = null;
-  
-	  //* Process specified options / defaults.
-	  this.options = Object.assign({}, defaults, customOptions);
-	  this.hadInitialPlaceholder = Boolean(input.getAttribute("placeholder"));
+		this.id = Guid.create().toString();
+		this.numberInput = input;
+	
+		this.highlightedItem = null;
+	
+		//* Process specified options / defaults.
+		this.options = Object.assign({}, defaults, customOptions);
+		this.hadInitialPlaceholder = Boolean(input.getAttribute("placeholder"));
 	}
   
 	//* Can't be private as it's called from internationalNumberInput convenience wrapper.
@@ -325,7 +325,7 @@ export class Ini {
 				{
 					class: buildElementClass(this.options.styles, StyleElement.SelectedCountryPrimary),
 				},
-				this.selectedCountry
+				this.selectedCountry,
 			);
 	
 			//* This is where we will add the selected flag (or globe) class later
@@ -333,21 +333,17 @@ export class Ini {
 			this.selectedCountryA11yText = createDOMElement(
 				"span",
 				{
-					class: buildElementClass(this.options.styles, StyleElement.AccessibilityText)
+					class: buildElementClass(this.options.styles, StyleElement.AccessibilityText),
 				},
 				this.selectedCountryInner,
 			);
-	
-			if (allowDropdown) {
-				
-			}
 	
 			if (allowDropdown) {
 				this.dropdownArrow = createDOMElement(
 					"div",
 					{
 						class: buildElementClass(this.options.styles, StyleElement.DropdownArrow),
-						"aria-hidden": "true"
+						"aria-hidden": "true",
 					},
 					selectedCountryPrimary,
 				);
@@ -425,7 +421,7 @@ export class Ini {
 					{
 						type: "hidden",
 						name: names.phone,
-					}
+					},
 				) as HTMLInputElement;
 				wrapper.appendChild(this.hiddenInput);
 			}
@@ -437,7 +433,7 @@ export class Ini {
 					{
 						type: "hidden",
 						name: names.country,
-					}
+					},
 				) as HTMLInputElement;
 				wrapper.appendChild(this.hiddenInputCountry);
 			}
@@ -473,31 +469,31 @@ export class Ini {
 					"div",
 					{
 						class: "ini__flag-box",
-					}
+					},
 				);
 				flagElement = createDOMElement(
 					"div",
 					{
 						class: `ini__flag ini__${c.iso2}`,
 					},
-					flagBoxElement
+					flagBoxElement,
 				);
 			}
 			const content = createDOMElement(
 				"span",
 				{
-					class: "ini__country-name"
+					class: "ini__country-name",
 				},
-				flagElement
+				flagElement,
 			);
 			content.insertAdjacentText(
 				"beforeend",
-				`${c.name}`
+				`${c.name}`,
 			);
 
 			listItem.insertAdjacentElement(
 				"beforeend",
-				content
+				content,
 			);
 		}
 	}
@@ -611,6 +607,7 @@ export class Ini {
 	//* Init many requests: utils script / geo ip lookup.
 	private _initRequests(): void {
 		// TODO
+		this.defaultCountry;
 		// const { utilsScript, initialCountry, geoIpLookup } = this.options;
 		// //* If the user has specified the path to the utils script, fetch it on window.load, else resolve.
 		// if (utilsScript && !internationalNumberInput.utils) {
@@ -638,6 +635,7 @@ export class Ini {
   
 	//* Perform the geo ip lookup.
 	private _loadAutoCountry(): void {
+		this.numberInput.value = "0";
 		// TODO
 		// //* 3 options:
 		// //* 1) Already loaded (we're done)
@@ -739,10 +737,10 @@ export class Ini {
 					const isInitialPlus = this.numberInput.selectionStart === 0 && e.key === "+";
 					const isNumeric = /^[0-9]$/.test(e.key);
 					const isAllowedChar = isInitialPlus || isNumeric;
-					const fullNumber = this._getFullNumber();
+					// const fullNumber = this._getFullNumber();
 					// TODO Set coreNumber
 					// const coreNumber = internationalNumberInput.utils.getCoreNumber(fullNumber, this.selectedCountryData.iso2);
-					const coreNumber = "123"
+					const coreNumber = "123";
 					const hasReachedMaxLength = this.maxCoreNumberLength && coreNumber.length >= this.maxCoreNumberLength;
 					const selectedText = this.numberInput.value.substring(this.numberInput.selectionStart, this.numberInput.selectionEnd);
 					const hasSelectedDigit = /\d/.test(selectedText);
@@ -1035,6 +1033,8 @@ export class Ini {
 	//* NOTE: this is called from _setInitialState, handleUtils and setNumber.
 	private _updateValFromNumber(fullNumber: string): void {
 		// TODO
+		fullNumber.length;
+		this.numberInput.value = "0"; 
 		// let number = fullNumber;
 		// if (
 		// 	this.options.formatOnDisplay &&
@@ -1060,7 +1060,8 @@ export class Ini {
 	//* Note: called from _setInitialState, keyup handler, setNumber.
 	private _updateCountryFromNumber(fullNumber: string): boolean {
 		// TODO
-		return false;
+		this.numberInput.value = "0";
+		return fullNumber === "";
 		// const plusIndex = fullNumber.indexOf("+");
 		// //* If it contains a plus, discard any chars before it e.g. accidental space char.
 		// //* This keeps the selected country auto-updating correctly, which we want as
@@ -1075,40 +1076,40 @@ export class Ini {
   
 	//* Remove highlighting from other list items and highlight the given item.
 	private _highlightListItem(listItem: HTMLElement | null, shouldFocus: boolean): void {
-	  const prevItem = this.highlightedItem;
-	  if (prevItem) {
-		prevItem.classList.remove("ini__highlight");
-		prevItem.setAttribute("aria-selected", "false");
-	  }
-	  //* Set this, even if it's null, as it will clear the highlight.
-	  this.highlightedItem = listItem;
-	  if (this.highlightedItem) {
-		this.highlightedItem.classList.add("ini__highlight");
-		this.highlightedItem.setAttribute("aria-selected", "true");
-		const activeDescendant = this.highlightedItem.getAttribute("id") || "";
-		this.selectedCountry.setAttribute("aria-activedescendant", activeDescendant);
-		if (this.options.countrySearch) {
-		  this.searchInput.setAttribute("aria-activedescendant", activeDescendant);
+		const prevItem = this.highlightedItem;
+		if (prevItem) {
+			prevItem.classList.remove("ini__highlight");
+			prevItem.setAttribute("aria-selected", "false");
 		}
-	  }
-  
-	  if (shouldFocus) {
-		this.highlightedItem.focus();
-	  }
+		//* Set this, even if it's null, as it will clear the highlight.
+		this.highlightedItem = listItem;
+		if (this.highlightedItem) {
+			this.highlightedItem.classList.add("ini__highlight");
+			this.highlightedItem.setAttribute("aria-selected", "true");
+			const activeDescendant = this.highlightedItem.getAttribute("id") || "";
+			this.selectedCountry.setAttribute("aria-activedescendant", activeDescendant);
+			if (this.options.countrySearch) {
+				this.searchInput.setAttribute("aria-activedescendant", activeDescendant);
+			}
+		}
+	
+		if (shouldFocus) {
+			this.highlightedItem.focus();
+		}
 	}
   
 	//* Find the country data for the given iso2 code
 	//* the ignoreOnlyCountriesOption is only used during init() while parsing the onlyCountries array
 	private _getCountryData(iso2: string, allowFail: boolean): Country | null {
-	  for (let i = 0; i < this.countries.length; i++) {
-		if (this.countries[i].iso2 === iso2) {
-		  return this.countries[i];
+		for (let i = 0; i < this.countries.length; i++) {
+			if (this.countries[i].iso2 === iso2) {
+				return this.countries[i];
+			}
 		}
-	  }
-	  if (allowFail) {
-		return null;
-	  }
-	  throw new Error(`No country data for '${iso2}'`);
+		if (allowFail) {
+			return null;
+		}
+		throw new Error(`No country data for '${iso2}'`);
 	}
   
 	//* Update the selected country, dial code (if separateDialCode), placeholder, title, and active list item.
@@ -1156,6 +1157,7 @@ export class Ini {
   
 	//* Update the maximum valid number length for the currently selected country.
 	private _updateMaxLength(): void {
+		this.getNumber();
 		// TODO
 		// const { strictMode, placeholderNumberType, validationNumberType } = this.options;
 		// if (strictMode && internationalNumberInput.utils) {
@@ -1224,6 +1226,7 @@ export class Ini {
 	//* Update the input placeholder to an example number from the currently selected country.
 	private _updatePlaceholder(): void {
 		// TODO
+		this.numberInput.value = "0";
 		// const {
 		// 	autoPlaceholder,
 		// 	placeholderNumberType,
@@ -1271,45 +1274,45 @@ export class Ini {
   
 	//* Close the dropdown and unbind any listeners.
 	private _closeDropdown(): void {
-	  this.dropdownContent.classList.add("ini__hide");
-	  this.selectedCountry.setAttribute("aria-expanded", "false");
-	  this.selectedCountry.removeAttribute("aria-activedescendant");
-	  if (this.highlightedItem) {
-		this.highlightedItem.setAttribute("aria-selected", "false");
-	  }
-	  if (this.options.countrySearch) {
-		this.searchInput.removeAttribute("aria-activedescendant");
-	  }
-  
-	  //* Update the arrow.
-	  this.dropdownArrow.classList.remove("ini__arrow--up");
-  
-	  //* Unbind key events.
-	  document.removeEventListener("keydown", this._handleKeydownOnDropdown);
-	  if (this.options.countrySearch) {
-		this.searchInput.removeEventListener("input", this._handleSearchChange);
-	  }
-	  document.documentElement.removeEventListener(
-		"click",
-		this._handleClickOffToClose,
-	  );
-	  this.countryList.removeEventListener(
-		"mouseover",
-		this._handleMouseoverCountryList,
-	  );
-	  this.countryList.removeEventListener("click", this._handleClickCountryList);
-  
-	  //* Remove menu from container.
-	  if (this.options.dropdownContainer) {
-		if (!this.options.useFullscreenPopup) {
-		  window.removeEventListener("scroll", this._handleWindowScroll);
+		this.dropdownContent.classList.add("ini__hide");
+		this.selectedCountry.setAttribute("aria-expanded", "false");
+		this.selectedCountry.removeAttribute("aria-activedescendant");
+		if (this.highlightedItem) {
+			this.highlightedItem.setAttribute("aria-selected", "false");
 		}
-		if (this.dropdown.parentNode) {
-		  this.dropdown.parentNode.removeChild(this.dropdown);
+		if (this.options.countrySearch) {
+			this.searchInput.removeAttribute("aria-activedescendant");
 		}
-	  }
-  
-	  this._trigger("close:countrydropdown");
+	
+		//* Update the arrow.
+		this.dropdownArrow.classList.remove("ini__arrow--up");
+	
+		//* Unbind key events.
+		document.removeEventListener("keydown", this._handleKeydownOnDropdown);
+		if (this.options.countrySearch) {
+			this.searchInput.removeEventListener("input", this._handleSearchChange);
+		}
+		document.documentElement.removeEventListener(
+			"click",
+			this._handleClickOffToClose,
+		);
+		this.countryList.removeEventListener(
+			"mouseover",
+			this._handleMouseoverCountryList,
+		);
+		this.countryList.removeEventListener("click", this._handleClickCountryList);
+	
+		//* Remove menu from container.
+		if (this.options.dropdownContainer) {
+			if (!this.options.useFullscreenPopup) {
+				window.removeEventListener("scroll", this._handleWindowScroll);
+			}
+			if (this.dropdown.parentNode) {
+				this.dropdown.parentNode.removeChild(this.dropdown);
+			}
+		}
+	
+		this._trigger("close:countrydropdown");
 	}
   
 	//* Check if an element is visible within it's container, else scroll until it is.
@@ -1348,13 +1351,13 @@ export class Ini {
   
 	//* Trigger the 'countrychange' event.
 	private _triggerCountryChange(): void {
-	  	this._trigger("countrychange");
+		this._trigger("countrychange");
 	}
   
 	//* Format the number as the user types.
 	private _formatNumberAsYouType(): string {
 		// TODO
-		return "";
+		return this.defaultCountry;
 	//   const val = this._getFullNumber();
 	//   const result = internationalNumberInput.utils
 	// 	? internationalNumberInput.utils.formatNumberAsYouType(val, this.selectedCountryData.iso2)
@@ -1369,6 +1372,7 @@ export class Ini {
 	//* This is called when the geoip call returns.
 	handleAutoCountry(): void {
 		// TODO
+		this.numberInput.value = "0";
 		// if (this.options.initialCountry === "auto" && internationalNumberInput.autoCountry) {
 		// 	//* We must set this even if there is an initial val in the input: in case the initial val is
 		// 	//* invalid and they delete it - they should see their auto country.
@@ -1384,6 +1388,7 @@ export class Ini {
   
 	//* This is called when the utils request completes.
 	handleUtils(): void {
+		this.numberInput.value = "0";
 		// TODO
 	//   //* If the request was successful
 	//   if (internationalNumberInput.utils) {
@@ -1406,6 +1411,7 @@ export class Ini {
 	//* Remove plugin.
 	destroy(): void {
 		// TODO
+		this._closeDropdown();
 		// const { allowDropdown } = this.options;
 		// if (allowDropdown) {
 		// 	//* Make sure the dropdown is closed (and unbind listeners).
@@ -1451,7 +1457,8 @@ export class Ini {
 	//* Format the number to the given format.
 	getNumber(format?: number): string {
 		// TODO
-		return "";
+		this.numberInput.value = "0";
+		return format.toString();
 		// if (internationalNumberInput.utils) {
 		// 	const { iso2 } = this.selectedCountryData;
 		// 	return internationalNumberInput.utils.formatNumber(
@@ -1466,6 +1473,7 @@ export class Ini {
 	//* Get the type of the entered number e.g. landline/mobile.
 	getNumberType(): number {
 		// TODO
+		this.getNumber();
 		return 0;
 		// if (internationalNumberInput.utils) {
 		// 	return internationalNumberInput.utils.getNumberType(
@@ -1484,7 +1492,7 @@ export class Ini {
 	//* Get the validation error.
 	getValidationError(): number {
 		// TODO
-		return 0;
+		return this.getNumberType();
 		// if (internationalNumberInput.utils) {
 		// 	const { iso2 } = this.selectedCountryData;
 		// 	return internationalNumberInput.utils.getValidationError(this._getFullNumber(), iso2);
@@ -1495,7 +1503,7 @@ export class Ini {
 	//* Validate the input val
 	isValidNumber(): boolean | null {
 		// TODO
-		return false;
+		return this.defaultCountry === "";
 		// const val = this._getFullNumber();
 		// //* Return false for any alpha chars.
 		// if (/\p{L}/u.test(val)) {
@@ -1509,7 +1517,7 @@ export class Ini {
 	//* Validate the input val (precise)
 	isValidNumberPrecise(): boolean | null {
 		// TODO
-		return false;
+		return this.defaultCountry === "";
 		// const val = this._getFullNumber();
 		// //* Return false for any alpha chars.
 		// if (/\p{L}/u.test(val)) {

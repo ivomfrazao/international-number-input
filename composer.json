@@ -1,0 +1,24 @@
+{
+	"name": "ivomfrazao/international-number-input",
+	"version": "0.1.0",
+	"description": "A JavaScript plugin for entering and validating international standard numbers",
+	"keywords": [
+		"international",
+		"i18n",
+		"country",
+		"number",
+		"input",
+		"flag"
+	],
+	"homepage": "https://github.com/ivomfrazao/international-number-input",
+	"type": "library",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Ivo Frazão",
+			"homepage": ""
+		}
+	],
+	"minimum-stability": "stable",
+	"prefer-stable": true
+}
