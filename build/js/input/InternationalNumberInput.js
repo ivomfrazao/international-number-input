@@ -1586,6 +1586,10 @@ var factoryOutput = (() => {
     }
     return formattedValue.length;
   };
+  var forEachInstance = (method) => {
+    const { instances } = InternationalNumberInput_default;
+    Object.values(instances).forEach((instance) => instance[method]());
+  };
   var Ini = class {
     constructor(input, customOptions = {}) {
       this.id = import_guid_typescript.Guid.create().toString();
@@ -1757,7 +1761,11 @@ var factoryOutput = (() => {
           },
           this.selectedCountry
         );
-        this.selectedCountryInner = createDOMElement("div", null, selectedCountryPrimary);
+        this.selectedCountryInner = createDOMElement(
+          "div",
+          null,
+          selectedCountryPrimary
+        );
         this.selectedCountryA11yText = createDOMElement(
           "span",
           {
@@ -1916,12 +1924,30 @@ var factoryOutput = (() => {
     }
     //* Set the initial state of the input value and the selected country by:
     //* 1. Using explicit initialCountry
-    // private _setInitialState(overrideAutoCountry: boolean = false): void {
-    _setInitialState() {
+    _setInitialState(overrideAutoCountry = false) {
       const attributeValue = this.numberInput.getAttribute("value");
       const inputValue = this.numberInput.value;
       const useAttribute = attributeValue && attributeValue.charAt(0) === "+" && (!inputValue || inputValue.charAt(0) !== "+");
       const val = useAttribute ? attributeValue : inputValue;
+      const dialCode = "";
+      const isRegionlessNanpNumber = true;
+      const { initialCountry, geoIpLookup } = this.options;
+      const isAutoCountry = initialCountry === "auto" && geoIpLookup;
+      if (dialCode && !isRegionlessNanpNumber) {
+        this._updateCountryFromNumber(val);
+      } else if (!isAutoCountry || overrideAutoCountry) {
+        const lowerInitialCountry = initialCountry ? initialCountry.toLowerCase() : "";
+        const isValidInitialCountry = lowerInitialCountry && this._getCountryData(lowerInitialCountry, true);
+        if (isValidInitialCountry) {
+          this._setCountry(lowerInitialCountry);
+        } else {
+          if (dialCode && isRegionlessNanpNumber) {
+            this._setCountry("us");
+          } else {
+            this._setCountry();
+          }
+        }
+      }
       if (val) {
         this._updateValFromNumber(val);
       }
@@ -1988,11 +2014,40 @@ var factoryOutput = (() => {
     }
     //* Init many requests: utils script / geo ip lookup.
     _initRequests() {
-      this.defaultCountry;
+      const { initialCountry, geoIpLookup } = this.options;
+      const isAutoCountry = initialCountry === "auto" && geoIpLookup;
+      if (isAutoCountry && !this.selectedCountryData.iso2) {
+        this._loadAutoCountry();
+      } else {
+        this.resolveAutoCountryPromise();
+      }
     }
     //* Perform the geo ip lookup.
     _loadAutoCountry() {
-      this.numberInput.value = "0";
+      if (InternationalNumberInput_default.autoCountry) {
+        this.handleAutoCountry();
+      } else if (!InternationalNumberInput_default.startedLoadingAutoCountry) {
+        InternationalNumberInput_default.startedLoadingAutoCountry = true;
+        if (typeof this.options.geoIpLookup === "function") {
+          this.options.geoIpLookup(
+            (iso2 = "") => {
+              const iso2Lower = iso2.toLowerCase();
+              const isValidIso2 = iso2Lower && this._getCountryData(iso2Lower, true);
+              if (isValidIso2) {
+                InternationalNumberInput_default.autoCountry = iso2Lower;
+                setTimeout(() => forEachInstance("handleAutoCountry"));
+              } else {
+                this._setInitialState();
+                forEachInstance("rejectAutoCountryPromise");
+              }
+            },
+            () => {
+              this._setInitialState();
+              forEachInstance("rejectAutoCountryPromise");
+            }
+          );
+        }
+      }
     }
     //* Initialize the number input listeners.
     _initNumberInputListeners() {
@@ -2096,7 +2151,7 @@ var factoryOutput = (() => {
     //* We only bind dropdown listeners when the dropdown is open.
     _bindDropdownListeners() {
       this._handleMouseoverCountryList = (e) => {
-        const listItem = e.target?.closest(".iti__country");
+        const listItem = e.target?.closest(".ini__country");
         if (listItem) {
           this._highlightListItem(listItem, false);
         }
@@ -2106,7 +2161,7 @@ var factoryOutput = (() => {
         this._handleMouseoverCountryList
       );
       this._handleClickCountryList = (e) => {
-        const listItem = e.target?.closest(".iti__country");
+        const listItem = e.target?.closest(".ini__country");
         if (listItem) {
           this._selectListItem(listItem);
         }
@@ -2245,14 +2300,23 @@ var factoryOutput = (() => {
     //* Update the input's value to the given val (format first if possible)
     //* NOTE: this is called from _setInitialState, handleUtils and setNumber.
     _updateValFromNumber(fullNumber) {
-      fullNumber.length;
-      this.numberInput.value = "0";
+      let number = fullNumber;
+      number = this._beforeSetNumber(number);
+      this.numberInput.value = number;
     }
     //* Check if need to select a new country based on the given number
     //* Note: called from _setInitialState, keyup handler, setNumber.
     _updateCountryFromNumber(fullNumber) {
-      this.numberInput.value = "0";
-      return fullNumber === "";
+      const plusIndex = fullNumber.indexOf("+");
+      let number = plusIndex ? fullNumber.substring(plusIndex) : fullNumber;
+      let iso2 = null;
+      if (!this.selectedCountryData.iso2) {
+        iso2 = this.defaultCountry;
+      }
+      if (iso2 !== null) {
+        return this._setCountry(iso2);
+      }
+      return false;
     }
     //* Remove highlighting from other list items and highlight the given item.
     _highlightListItem(listItem, shouldFocus) {
@@ -2301,10 +2365,10 @@ var factoryOutput = (() => {
         let flagClass = "";
         let a11yText = "";
         if (iso2 && showFlags) {
-          flagClass = `ini__flag iti__${iso2}`;
-          a11yText = `${this.selectedCountryData.name} +${this.selectedCountryData.dialCode}`;
+          flagClass = `ini__flag ini__${iso2}`;
+          a11yText = `${this.selectedCountryData.name}`;
         } else {
-          flagClass = "ini__flag iti__globe";
+          flagClass = "ini__flag ini__globe";
           a11yText = i18n.noCountrySelected;
         }
         this.selectedCountryInner.className = flagClass;
@@ -2422,7 +2486,6 @@ var factoryOutput = (() => {
       const val = this.numberInput.value.trim();
       return val;
     }
-    //* Remove the dial code if separateDialCode is enabled also cap the length if the input has a maxlength attribute
     _beforeSetNumber(fullNumber) {
       const number = fullNumber;
       return this._cap(number);
@@ -2440,7 +2503,14 @@ var factoryOutput = (() => {
     //**************************
     //* This is called when the geoip call returns.
     handleAutoCountry() {
-      this.numberInput.value = "0";
+      if (this.options.initialCountry === "auto" && InternationalNumberInput_default.autoCountry) {
+        this.defaultCountry = InternationalNumberInput_default.autoCountry;
+        const hasSelectedCountryOrGlobe = this.selectedCountryData.iso2 || this.selectedCountryInner.classList.contains("ini__globe");
+        if (!hasSelectedCountryOrGlobe) {
+          this.setCountry(this.defaultCountry);
+        }
+        this.resolveAutoCountryPromise();
+      }
     }
     //* This is called when the utils request completes.
     handleUtils() {

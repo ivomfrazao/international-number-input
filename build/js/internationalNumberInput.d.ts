@@ -1174,6 +1174,7 @@ declare module "input/InternationalNumberInput" {
     import { Ini } from "input/InternationalNumberInput.class";
     interface InternationalNumberInputInterface {
         (input: HTMLInputElement, options?: SomeOptions): Ini;
+        autoCountry?: string;
         defaults: AllOptions;
         documentReady: () => boolean;
         getCountryData: () => Country[];

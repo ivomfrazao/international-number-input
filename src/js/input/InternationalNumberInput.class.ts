@@ -10,6 +10,7 @@ import { buildAttributeClass, buildElementClass, StyleAttribute, StyleElement } 
 
 // TODO Remove next import and type
 import allCountries, { Country } from "./international-number-input/data";
+import internationalNumberInput from "./InternationalNumberInput";
 type SelectedCountryData = Country | { name?: string, iso2?: string, dialCode?: string };
 
 // TODO Check if translateCursorPosition is really necessary. If yes, move to utilities
@@ -42,6 +43,12 @@ const translateCursorPosition = (
 		}
 	}
 	return formattedValue.length;
+};
+
+// TODO Check if really necessary to have forEachInstance here. If yes, move to utils
+const forEachInstance = (method: string): void => {
+	const { instances } = internationalNumberInput;
+	Object.values(instances).forEach((instance) => instance[method]());
 };
 
 //* This is our plugin class that we will create an instance of
@@ -329,7 +336,11 @@ export class Ini {
 			);
 	
 			//* This is where we will add the selected flag (or globe) class later
-			this.selectedCountryInner = createDOMElement("div", null, selectedCountryPrimary);
+			this.selectedCountryInner = createDOMElement(
+				"div",
+				null,
+				selectedCountryPrimary
+			);
 			this.selectedCountryA11yText = createDOMElement(
 				"span",
 				{
@@ -508,8 +519,7 @@ export class Ini {
   
 	//* Set the initial state of the input value and the selected country by:
 	//* 1. Using explicit initialCountry
-	// private _setInitialState(overrideAutoCountry: boolean = false): void {
-	private _setInitialState(): void {
+	private _setInitialState(overrideAutoCountry: boolean = false): void {
 		//* Fix firefox bug: when first load page (with input with value set to number with intl dial code)
 		//* and initialising plugin removes the dial code from the input, then refresh page,
 		//* and we try to init plugin again but this time on number without dial code so show globe icon.
@@ -520,7 +530,34 @@ export class Ini {
 			attributeValue.charAt(0) === "+" &&
 			(!inputValue || inputValue.charAt(0) !== "+");
 		const val = useAttribute ? attributeValue : inputValue;
-	
+		const dialCode = "";
+		const isRegionlessNanpNumber = true;
+		const { initialCountry, geoIpLookup } = this.options;
+		const isAutoCountry = initialCountry === "auto" && geoIpLookup;
+
+		//* If we already have a dial code, and it's not a regionlessNanp, we can go ahead and set the
+		//* country, else fall back to the default country.
+		if (dialCode && !isRegionlessNanpNumber) {
+			this._updateCountryFromNumber(val);
+		} else if (!isAutoCountry || overrideAutoCountry) {
+			const lowerInitialCountry = initialCountry ? initialCountry.toLowerCase() : "";
+			const isValidInitialCountry = lowerInitialCountry && this._getCountryData(lowerInitialCountry, true);
+			//* See if we should select a country.
+			if (isValidInitialCountry) {
+				this._setCountry(lowerInitialCountry);
+			} else {
+				if (dialCode && isRegionlessNanpNumber) {
+					//* Has intl dial code, is regionless nanp, and no initialCountry, so default to US.
+					this._setCountry("us");
+				} else {
+					//* Display the empty state (globe icon).
+					this._setCountry();
+				}
+			}
+		}
+		//* NOTE: if initialCountry is set to auto, that will be handled separately.
+
+		//* Format - note this wont be run after _updateDialCode as that's only called if no val.
 		if (val) {
 			this._updateValFromNumber(val);
 		}
@@ -615,7 +652,7 @@ export class Ini {
 	//* Init many requests: utils script / geo ip lookup.
 	private _initRequests(): void {
 		// TODO
-		this.defaultCountry;
+		const { initialCountry, geoIpLookup } = this.options;
 		// const { utilsScript, initialCountry, geoIpLookup } = this.options;
 		// //* If the user has specified the path to the utils script, fetch it on window.load, else resolve.
 		// if (utilsScript && !internationalNumberInput.utils) {
@@ -632,57 +669,55 @@ export class Ini {
 		// 	this.resolveUtilsScriptPromise();
 		// }
 	
-		// //* Don't bother with IP lookup if we already have a selected country.
-		// const isAutoCountry = initialCountry === "auto" && geoIpLookup;
-		// if (isAutoCountry && !this.selectedCountryData.iso2) {
-		// 	this._loadAutoCountry();
-		// } else {
-		// 	this.resolveAutoCountryPromise();
-		// }
+		//* Don't bother with IP lookup if we already have a selected country.
+		const isAutoCountry = initialCountry === "auto" && geoIpLookup;
+		if (isAutoCountry && !this.selectedCountryData.iso2) {
+			this._loadAutoCountry();
+		} else {
+			this.resolveAutoCountryPromise();
+		}
 	}
   
 	//* Perform the geo ip lookup.
 	private _loadAutoCountry(): void {
-		this.numberInput.value = "0";
-		// TODO
-		// //* 3 options:
-		// //* 1) Already loaded (we're done)
-		// //* 2) Not already started loading (start)
-		// //* 3) Already started loading (do nothing - just wait for loading callback to fire)
-		// if (internationalNumberInput.autoCountry) {
-		// 	this.handleAutoCountry();
-		// } else if (!internationalNumberInput.startedLoadingAutoCountry) {
-		// 	//* Don't do this twice!
-		// 	internationalNumberInput.startedLoadingAutoCountry = true;
+		//* 3 options:
+		//* 1) Already loaded (we're done)
+		//* 2) Not already started loading (start)
+		//* 3) Already started loading (do nothing - just wait for loading callback to fire)
+		if (internationalNumberInput.autoCountry) {
+			this.handleAutoCountry();
+		} else if (!internationalNumberInput.startedLoadingAutoCountry) {
+			//* Don't do this twice!
+			internationalNumberInput.startedLoadingAutoCountry = true;
 	
-		// 	if (typeof this.options.geoIpLookup === "function") {
-		// 	this.options.geoIpLookup(
-		// 		(iso2 = "") => {
-		// 		const iso2Lower = iso2.toLowerCase();
-		// 		const isValidIso2 = iso2Lower && this._getCountryData(iso2Lower, true);
-		// 		if (isValidIso2) {
-		// 			internationalNumberInput.autoCountry = iso2Lower;
-		// 			//* Tell all instances the auto country is ready.
-		// 			//TODO: this should just be the current instances
-		// 			//* UPDATE: use setTimeout in case their geoIpLookup function calls this callback straight
-		// 			//* away (e.g. if they have already done the geo ip lookup somewhere else). Using
-		// 			//* setTimeout means that the current thread of execution will finish before executing
-		// 			//* this, which allows the plugin to finish initialising.
-		// 			setTimeout(() => forEachInstance("handleAutoCountry"));
-		// 		} else {
-		// 			// this._setInitialState(true);
-		// 			this._setInitialState();
-		// 			forEachInstance("rejectAutoCountryPromise");
-		// 		}
-		// 		},
-		// 		() => {
-		// 			// this._setInitialState(true);
-		// 			this._setInitialState();
-		// 			forEachInstance("rejectAutoCountryPromise");
-		// 		},
-		// 	);
-		// 	}
-		// }
+			if (typeof this.options.geoIpLookup === "function") {
+				this.options.geoIpLookup(
+					(iso2 = "") => {
+					const iso2Lower = iso2.toLowerCase();
+					const isValidIso2 = iso2Lower && this._getCountryData(iso2Lower, true);
+					if (isValidIso2) {
+						internationalNumberInput.autoCountry = iso2Lower;
+						//* Tell all instances the auto country is ready.
+						//TODO: this should just be the current instances
+						//* UPDATE: use setTimeout in case their geoIpLookup function calls this callback straight
+						//* away (e.g. if they have already done the geo ip lookup somewhere else). Using
+						//* setTimeout means that the current thread of execution will finish before executing
+						//* this, which allows the plugin to finish initialising.
+						setTimeout(() => forEachInstance("handleAutoCountry"));
+					} else {
+						// this._setInitialState(true);
+						this._setInitialState();
+						forEachInstance("rejectAutoCountryPromise");
+					}
+					},
+					() => {
+						// this._setInitialState(true);
+						this._setInitialState();
+						forEachInstance("rejectAutoCountryPromise");
+					},
+				);
+			}
+		}
 	}
   
 	//* Initialize the number input listeners.
@@ -839,7 +874,7 @@ export class Ini {
 		//* we add the class "highlight", so if they hit "enter" we know which one to select.
 		this._handleMouseoverCountryList = (e): void => {
 			//* Handle event delegation, as we're listening for this event on the countryList.
-			const listItem: HTMLElement | null = (e.target as HTMLElement)?.closest(".iti__country");
+			const listItem: HTMLElement | null = (e.target as HTMLElement)?.closest(".ini__country");
 			if (listItem) {
 			this._highlightListItem(listItem, false);
 			}
@@ -851,7 +886,7 @@ export class Ini {
 	
 		//* Listen for country selection.
 		this._handleClickCountryList = (e): void => {
-		const listItem: HTMLElement | null = (e.target as HTMLElement)?.closest(".iti__country");
+		const listItem: HTMLElement | null = (e.target as HTMLElement)?.closest(".ini__country");
 			if (listItem) {
 			this._selectListItem(listItem);
 			}
@@ -1040,13 +1075,9 @@ export class Ini {
 	//* Update the input's value to the given val (format first if possible)
 	//* NOTE: this is called from _setInitialState, handleUtils and setNumber.
 	private _updateValFromNumber(fullNumber: string): void {
-		// TODO
-		fullNumber.length;
-		this.numberInput.value = "0"; 
-		// let number = fullNumber;
+		let number = fullNumber;
 		// if (
 		// 	this.options.formatOnDisplay &&
-		// 	internationalNumberInput.utils &&
 		// 	this.selectedCountryData
 		// ) {
 		// 	const useNational =
@@ -1060,26 +1091,30 @@ export class Ini {
 		// 	);
 		// }
 	
-		// number = this._beforeSetNumber(number);
-		// this.numberInput.value = number;
+		number = this._beforeSetNumber(number);
+		this.numberInput.value = number;
 	}
   
 	//* Check if need to select a new country based on the given number
 	//* Note: called from _setInitialState, keyup handler, setNumber.
 	private _updateCountryFromNumber(fullNumber: string): boolean {
-		// TODO
-		this.numberInput.value = "0";
-		return fullNumber === "";
-		// const plusIndex = fullNumber.indexOf("+");
-		// //* If it contains a plus, discard any chars before it e.g. accidental space char.
-		// //* This keeps the selected country auto-updating correctly, which we want as
-		// //* libphonenumber's validation/getNumber methods will ignore these chars anyway.
-		// let number = plusIndex ? fullNumber.substring(plusIndex) : fullNumber;
-	
-		// if (iso2 !== null) {
-		// 	return this._setCountry(iso2);
-		// }
-		// return false;
+		const plusIndex = fullNumber.indexOf("+");
+		//* If it contains a plus, discard any chars before it e.g. accidental space char.
+		//* This keeps the selected country auto-updating correctly, which we want as
+		//* libphonenumber's validation/getNumber methods will ignore these chars anyway.
+		let number = plusIndex ? fullNumber.substring(plusIndex) : fullNumber;
+		let iso2: string | null = null;
+
+		if (!this.selectedCountryData.iso2) {
+			//* If no selected country, then show default.
+			iso2 = this.defaultCountry;
+		}
+
+		if (iso2 !== null) {
+			return this._setCountry(iso2);
+		}
+
+		return false;
 	}
   
 	//* Remove highlighting from other list items and highlight the given item.
@@ -1143,10 +1178,10 @@ export class Ini {
 			let flagClass = "";
 			let a11yText = "";
 			if (iso2 && showFlags) {
-				flagClass = `ini__flag iti__${iso2}`;
-				a11yText = `${this.selectedCountryData.name} +${this.selectedCountryData.dialCode}`;
+				flagClass = `ini__flag ini__${iso2}`;
+				a11yText = `${this.selectedCountryData.name}`;
 			} else {
-				flagClass = "ini__flag iti__globe";
+				flagClass = "ini__flag ini__globe";
 				a11yText = i18n.noCountrySelected;
 			}
 			this.selectedCountryInner.className = flagClass;
@@ -1351,7 +1386,6 @@ export class Ini {
 		return val;
 	}
   
-	//* Remove the dial code if separateDialCode is enabled also cap the length if the input has a maxlength attribute
 	private _beforeSetNumber(fullNumber: string): string {
 		const number = fullNumber;
 		return this._cap(number);
@@ -1379,19 +1413,17 @@ export class Ini {
   
 	//* This is called when the geoip call returns.
 	handleAutoCountry(): void {
-		// TODO
-		this.numberInput.value = "0";
-		// if (this.options.initialCountry === "auto" && internationalNumberInput.autoCountry) {
-		// 	//* We must set this even if there is an initial val in the input: in case the initial val is
-		// 	//* invalid and they delete it - they should see their auto country.
-		// 	this.defaultCountry = internationalNumberInput.autoCountry;
-		// 	const hasSelectedCountryOrGlobe = this.selectedCountryData.iso2 || this.selectedCountryInner.classList.contains("ini__globe");
-		// 	//* If no country/globe currently selected, then update the country.
-		// 	if (!hasSelectedCountryOrGlobe) {
-		// 		this.setCountry(this.defaultCountry);
-		// 	}
-		// 	this.resolveAutoCountryPromise();
-		// }
+		if (this.options.initialCountry === "auto" && internationalNumberInput.autoCountry) {
+			//* We must set this even if there is an initial val in the input: in case the initial val is
+			//* invalid and they delete it - they should see their auto country.
+			this.defaultCountry = internationalNumberInput.autoCountry;
+			const hasSelectedCountryOrGlobe = this.selectedCountryData.iso2 || this.selectedCountryInner.classList.contains("ini__globe");
+			//* If no country/globe currently selected, then update the country.
+			if (!hasSelectedCountryOrGlobe) {
+				this.setCountry(this.defaultCountry);
+			}
+			this.resolveAutoCountryPromise();
+		}
 	}
   
 	//* This is called when the utils request completes.
