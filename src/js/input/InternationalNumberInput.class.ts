@@ -1,8 +1,48 @@
+import { Guid } from 'guid-typescript'
+import defaultEnglishStrings from "./i18n/en";
 import { NumberType } from "../types";
 import { SomeOptions, AllOptions } from "./InternationalNumberInputOptions";
 import defaults from "./InternationalNumberInputOptions.default";
-import { Guid } from 'guid-typescript'
-import KeyboardKey from "./utils/KeyboardKey.Enum";
+import { KeyboardKey } from "./utils/KeyboardKey.enum";
+import { normaliseString } from './utils/StringUtils';
+import { createDOMElement } from './utils/DOMutils';
+import { buildAttributeClass, buildElementClass, StyleAttribute, StyleElement } from './utils/StyleUtils';
+
+// TODO Remove next import and type
+import allCountries, { Country } from './international-number-input/data'
+type SelectedCountryData = Country | { name?: string, iso2?: string, dialCode?: string };
+
+// TODO Check if translateCursorPosition is really necessary. If yes, move to utilities
+const translateCursorPosition = (
+	relevantChars: number,
+	formattedValue: string,
+	prevCaretPos: number,
+	isDeleteForwards: boolean,
+): number => {
+	//* If the first char is a formatting char, and they backspace delete it:
+	//* Cursor should stay at the start (pos 0), rather than stick to the first digit (pos 1).
+	if (prevCaretPos === 0 && !isDeleteForwards) {
+		return 0;
+	}
+	let count = 0;
+	for (let i = 0; i < formattedValue.length; i++) {
+		if (/[+0-9]/.test(formattedValue[i])) {
+			count++;
+		}
+
+		//* Normal case: stop when you hit the right number of relevant chars
+		//* (cursor will be just after the final relevant char).
+		if (count === relevantChars && !isDeleteForwards) {
+			return i + 1;
+		}
+		//* Spacial case: delete forwards (fn + delete on a mac):
+		//* Wait until hit one extra relevant char, and put the cursor just before it (after any formatting chars).
+		if (isDeleteForwards && count === relevantChars + 1) {
+			return i;
+		}
+	}
+	return formattedValue.length;
+};
 
 //* This is our plugin class that we will create an instance of
 // eslint-disable-next-line no-unused-vars
@@ -168,49 +208,51 @@ export class Ini {
 			country.toLowerCase(),
 			);
 			this.countries = allCountries.filter(
-			(country) => lowerCaseOnlyCountries.indexOf(country.iso2) > -1,
+				(country) => lowerCaseOnlyCountries.indexOf(country.iso2) > -1,
 			);
 		} else if (excludeCountries.length) {
 			const lowerCaseExcludeCountries = excludeCountries.map(
-			(country) => country.toLowerCase(),
+				(country) => country.toLowerCase(),
 			);
 			this.countries = allCountries.filter(
-			(country) => lowerCaseExcludeCountries.indexOf(country.iso2) === -1,
+				(country) => lowerCaseExcludeCountries.indexOf(country.iso2) === -1,
 			);
 		} else {
 			this.countries = allCountries;
 		}
 	}
-  
-	//* Translate Countries by object literal provided on config.
+
+	/**
+	 * Translate countries according to the configurations provided.
+	 */
 	private _translateCountryNames(): void {
-		for (let i = 0; i < this.countries.length; i++) {
-			const iso2 = this.countries[i].iso2.toLowerCase();
-			if (this.options.i18n.hasOwnProperty(iso2)) {
-				this.countries[i].name = this.options.i18n[iso2];
+		this.countries.forEach((country) => {
+			const iso2 = country.iso2.toLowerCase();
+			if(this.options.i18n.hasOwnProperty(iso2)) {
+				country.name = this.options.i18n[iso2];
 			}
-		}
+		});
 	}
   
 	//* Generate all of the markup for the plugin: the selected country overlay, and the dropdown.
 	private _generateMarkup(): void {
-		this.numberInput.classList.add("ini__number-input");
+		this.numberInput.classList.add(buildElementClass(this.options.styles, StyleElement.NumberInput));
 	
 		//* If autocomplete does not exist on the element and its form, then
 		//* prevent autocomplete as there's no safe, cross-browser event we can react to, so it can
 		//* easily put the plugin in an inconsistent state e.g. the wrong flag selected for the
 		//* autocompleted number, which on submit could mean wrong number is saved.
 		if (
-				!this.numberInput.hasAttribute("autocomplete") &&
-				!(this.numberInput.form && this.numberInput.form.hasAttribute("autocomplete"))
+			!this.numberInput.hasAttribute("autocomplete") &&
+			!(this.numberInput.form && this.numberInput.form.hasAttribute("autocomplete"))
 		) {
-				this.numberInput.setAttribute("autocomplete", "off");
+			this.numberInput.setAttribute("autocomplete", "off");
 		}
 	
 		const {
 			allowDropdown,
 			showFlags,
-			containerClass,
+			styles,
 			hiddenInput,
 			dropdownContainer,
 			fixDropdownWidth,
@@ -220,44 +262,46 @@ export class Ini {
 		} = this.options;
 	
 		//* Containers (mostly for positioning).
-		let parentClass = "ini";
+		let parentClass = styles.elementParentClass;
 		if (allowDropdown) {
-			parentClass += " ini--allow-dropdown";
+			parentClass += ` ${buildAttributeClass(styles, StyleAttribute.AllowDropdown)}`;
 		}
 		if (showFlags) {
-			parentClass += " ini--show-flags";
+			parentClass += ` ${buildAttributeClass(styles, StyleAttribute.ShowFlags)}`;
 		}
-		if (containerClass) {
-			parentClass += ` ${containerClass}`;
+		if (styles.elementContainerClass) {
+			parentClass += ` ${styles.elementContainerClass}`;
 		}
 		if (!useFullscreenPopup) {
-			parentClass += " ini--inline-dropdown";
+			parentClass += ` ${buildAttributeClass(styles, StyleAttribute.InlineDropdown)}`;
 		}
 	
-		const wrapper = createEl("div", { class: parentClass });
+		const wrapper = createDOMElement("div", { class: parentClass });
 		this.numberInput.parentNode?.insertBefore(wrapper, this.numberInput);
 	
 		//* Even if allowDropdown is disabled, we still want to show the flag for the currently typed number.
 		if (allowDropdown || showFlags) {
-			this.countryContainer = createEl(
-			"div",
-			{ class: "ini__country-container" },
-			wrapper,
+			this.countryContainer = createDOMElement(
+				"div",
+				{
+					class: buildElementClass(this.options.styles, StyleElement.CountryContainer),
+				},
+				wrapper,
 			);
 	
 			//* Selected country (displayed on left of input while allowDropdown is enabled, otherwise to right)
 			//* https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only
 			if (allowDropdown) {
-			this.selectedCountry = createEl(
+			this.selectedCountry = createDOMElement(
 				"button",
 				{
-				type: "button",
-				class: "ini__selected-country",
-				"aria-expanded": "false",
-				"aria-label": this.options.i18n.selectedCountryAriaLabel,
-				"aria-haspopup": "true",
-				"aria-controls": `ini-${this.id}__dropdown-content`,
-				"role": "combobox",
+					type: "button",
+					class: buildElementClass(this.options.styles, StyleElement.SelectedCountry),
+					"aria-expanded": "false",
+					"aria-label": this.options.i18n.selectedCountryAriaLabel,
+					"aria-haspopup": "true",
+					"aria-controls": `ini-${this.id}__dropdown-content`,
+					"role": "combobox",
 				},
 				this.countryContainer,
 			);
@@ -266,90 +310,105 @@ export class Ini {
 				this.selectedCountry.setAttribute("disabled", "true");
 			}
 			} else {
-			this.selectedCountry = createEl(
+			this.selectedCountry = createDOMElement(
 				"div",
-				{ class: "ini__selected-country" },
+				{
+					class: buildElementClass(styles, StyleElement.SelectedCountry),
+				},
 				this.countryContainer,
 			);
 			}
 	
 			// The element that gets a grey background on hover (if allowDropdown enabled)
-			const selectedCountryPrimary = createEl("div", { class: "ini__selected-country-primary" }, this.selectedCountry);
+			const selectedCountryPrimary = createDOMElement(
+				"div", 
+				{
+					class: buildElementClass(this.options.styles, StyleElement.SelectedCountryPrimary),
+				},
+				this.selectedCountry
+			);
 	
 			//* This is where we will add the selected flag (or globe) class later
-			this.selectedCountryInner = createEl("div", null, selectedCountryPrimary);
-			this.selectedCountryA11yText = createEl(
-			"span",
-			{ class: "ini__a11y-text" },
-			this.selectedCountryInner,
-			);
-	
-			if (allowDropdown) {
-			this.dropdownArrow = createEl(
-				"div",
-				{ class: "ini__arrow", "aria-hidden": "true" },
-				selectedCountryPrimary,
-			);
-			}
-	
-			if (allowDropdown) {
-			const extraClasses = fixDropdownWidth ? "" : "ini--flexible-dropdown-width";
-			this.dropdownContent = createEl("div", {
-				id: `ini-${this.id}__dropdown-content`,
-				class: `ini__dropdown-content iti__hide ${extraClasses}`,
-			});
-		
-			if (countrySearch) {
-				this.searchInput = createEl(
-				"input",
-				{
-					type: "text",
-					class: "ini__search-input",
-					placeholder: i18n.searchPlaceholder,
-					role: "combobox",
-					"aria-expanded": "true",
-					"aria-label": i18n.searchPlaceholder,
-					"aria-controls": `ini-${this.id}__country-listbox`,
-					"aria-autocomplete": "list",
-					"autocomplete": "off",
-				},
-				this.dropdownContent,
-				) as HTMLInputElement;
-				this.searchResultsA11yText = createEl(
+			this.selectedCountryInner = createDOMElement("div", null, selectedCountryPrimary);
+			this.selectedCountryA11yText = createDOMElement(
 				"span",
-				{ class: "ini__a11y-text" },
-				this.dropdownContent,
-				);
-			}
-		
-			this.countryList = createEl(
-				"ul",
 				{
-				class: "ini__country-list",
-				id: `ini-${this.id}__country-listbox`,
-				role: "listbox",
-				"aria-label": i18n.countryListAriaLabel,
+					class: buildElementClass(this.options.styles, StyleElement.AccessibilityText)
 				},
-				this.dropdownContent,
+				this.selectedCountryInner,
 			);
-			this._appendListItems();
-			if (countrySearch) {
-				this._updateSearchResultsText();
+	
+			if (allowDropdown) {
+				
 			}
+	
+			if (allowDropdown) {
+				this.dropdownArrow = createDOMElement(
+					"div",
+					{
+						class: buildElementClass(this.options.styles, StyleElement.DropdownArrow),
+						"aria-hidden": "true"
+					},
+					selectedCountryPrimary,
+				);
+
+				const extraClasses = fixDropdownWidth ? "" : buildAttributeClass(styles, StyleAttribute.FlexibleDropdownWidth);
+				this.dropdownContent = createDOMElement("div", {
+					id: `ini-${this.id}__dropdown-content`,
+					class: `ini__dropdown-content iti__hide ${extraClasses}`,
+				});
 		
-			//* Create dropdownContainer markup.
-			if (dropdownContainer) {
-				let dropdownClasses = "ini ini--container";
-				if (useFullscreenPopup) {
-				dropdownClasses += " ini--fullscreen-popup";
-				} else {
-				dropdownClasses += " ini--inline-dropdown";
+				if (countrySearch) {
+					this.searchInput = createDOMElement(
+						"input",
+						{
+							type: "text",
+							class: buildElementClass(styles, StyleElement.SearchInput),
+							placeholder: i18n.searchPlaceholder,
+							role: "combobox",
+							"aria-expanded": "true",
+							"aria-label": i18n.searchPlaceholder,
+							"aria-controls": `ini-${this.id}__country-listbox`,
+							"aria-autocomplete": "list",
+							"autocomplete": "off",
+						},
+						this.dropdownContent,
+					) as HTMLInputElement;
+					this.searchResultsA11yText = createDOMElement(
+						"span",
+						{ class: buildElementClass(this.options.styles, StyleElement.AccessibilityText) },
+						this.dropdownContent,
+					);
 				}
-				this.dropdown = createEl("div", { class: dropdownClasses });
-				this.dropdown.appendChild(this.dropdownContent);
-			} else {
-				this.countryContainer.appendChild(this.dropdownContent);
-			}
+			
+				this.countryList = createDOMElement(
+					"ul",
+					{
+						class: "ini__country-list",
+						id: `ini-${this.id}__country-listbox`,
+						role: "listbox",
+						"aria-label": i18n.countryListAriaLabel,
+					},
+					this.dropdownContent,
+				);
+				this._appendListItems();
+				if (countrySearch) {
+					this._updateSearchResultsText();
+				}
+			
+				//* Create dropdownContainer markup.
+				if (dropdownContainer) {
+					let dropdownClasses = "ini ini--container";
+					if (useFullscreenPopup) {
+						dropdownClasses += " ini--fullscreen-popup";
+					} else {
+						dropdownClasses += " ini--inline-dropdown";
+					}
+					this.dropdown = createDOMElement("div", { class: dropdownClasses });
+					this.dropdown.appendChild(this.dropdownContent);
+				} else {
+					this.countryContainer.appendChild(this.dropdownContent);
+				}
 			}
 		}
 	
@@ -360,22 +419,27 @@ export class Ini {
 			const names = hiddenInput(numberInputName);
 	
 			if (names.phone) {
-			//* Create hidden input for the full international number.
-			this.hiddenInput = createEl("input", {
-				type: "hidden",
-				name: names.phone,
-			}) as HTMLInputElement;
-			wrapper.appendChild(this.hiddenInput);
+				//* Create hidden input for the full international number.
+				this.hiddenInput = createDOMElement(
+					"input",
+					{
+						type: "hidden",
+						name: names.phone,
+					}
+				) as HTMLInputElement;
+				wrapper.appendChild(this.hiddenInput);
 			}
 	
 			if (names.country) {
-			//* Create hidden input for the selected country iso2 code.
-			this.hiddenInputCountry = createEl(
-				"input", {
-				type: "hidden",
-				name: names.country,
-			}) as HTMLInputElement;
-			wrapper.appendChild(this.hiddenInputCountry);
+				//* Create hidden input for the selected country iso2 code.
+				this.hiddenInputCountry = createDOMElement(
+					"input",
+					{
+						type: "hidden",
+						name: names.country,
+					}
+				) as HTMLInputElement;
+				wrapper.appendChild(this.hiddenInputCountry);
 			}
 		}
 	}
@@ -387,7 +451,7 @@ export class Ini {
 			//* Start by highlighting the first item (useful when countrySearch disabled).
 			const extraClass = i === 0 ? "ini__highlight" : "";
 	
-			const listItem = createEl(
+			const listItem = createDOMElement(
 				"li",
 				{
 					id: `ini-${this.id}__item-${c.iso2}`,
@@ -402,15 +466,39 @@ export class Ini {
 			//* Store this for later use e.g. country search filtering.
 			c.nodeById[this.id] = listItem;
 	
-			let content = "";
+			let flagElement;
 			//* Add the flag.
 			if (this.options.showFlags) {
-				content += `<div class='ini__flag-box'><div class='ini__flag iti__${c.iso2}'></div></div>`;
+				const flagBoxElement = createDOMElement(
+					"div",
+					{
+						class: "ini__flag-box",
+					}
+				);
+				flagElement = createDOMElement(
+					"div",
+					{
+						class: `ini__flag ini__${c.iso2}`,
+					},
+					flagBoxElement
+				);
 			}
-			//* And the country name
-			content += `<span class='ini__country-name'>${c.name}</span>`;
-	
-			listItem.insertAdjacentHTML("beforeend", content);
+			const content = createDOMElement(
+				"span",
+				{
+					class: "ini__country-name"
+				},
+				flagElement
+			);
+			content.insertAdjacentText(
+				"beforeend",
+				`${c.name}`
+			);
+
+			listItem.insertAdjacentElement(
+				"beforeend",
+				content
+			);
 		}
 	}
   
@@ -522,71 +610,73 @@ export class Ini {
   
 	//* Init many requests: utils script / geo ip lookup.
 	private _initRequests(): void {
-		const { utilsScript, initialCountry, geoIpLookup } = this.options;
-		//* If the user has specified the path to the utils script, fetch it on window.load, else resolve.
-		if (utilsScript && !internationalNumberInput.utils) {
-			//* If the plugin is being initialised after the window.load event has already been fired.
-			if (internationalNumberInput.documentReady()) {
-			internationalNumberInput.loadUtils(utilsScript);
-			} else {
-			//* Wait until the load event so we don't block any other requests e.g. the flags image.
-			window.addEventListener("load", () => {
-				internationalNumberInput.loadUtils(utilsScript);
-			});
-			}
-		} else {
-			this.resolveUtilsScriptPromise();
-		}
+		// TODO
+		// const { utilsScript, initialCountry, geoIpLookup } = this.options;
+		// //* If the user has specified the path to the utils script, fetch it on window.load, else resolve.
+		// if (utilsScript && !internationalNumberInput.utils) {
+		// 	//* If the plugin is being initialised after the window.load event has already been fired.
+		// 	if (internationalNumberInput.documentReady()) {
+		// 		internationalNumberInput.loadUtils(utilsScript);
+		// 	} else {
+		// 	//* Wait until the load event so we don't block any other requests e.g. the flags image.
+		// 	window.addEventListener("load", () => {
+		// 		internationalNumberInput.loadUtils(utilsScript);
+		// 	});
+		// 	}
+		// } else {
+		// 	this.resolveUtilsScriptPromise();
+		// }
 	
-		//* Don't bother with IP lookup if we already have a selected country.
-		const isAutoCountry = initialCountry === "auto" && geoIpLookup;
-		if (isAutoCountry && !this.selectedCountryData.iso2) {
-			this._loadAutoCountry();
-		} else {
-			this.resolveAutoCountryPromise();
-		}
+		// //* Don't bother with IP lookup if we already have a selected country.
+		// const isAutoCountry = initialCountry === "auto" && geoIpLookup;
+		// if (isAutoCountry && !this.selectedCountryData.iso2) {
+		// 	this._loadAutoCountry();
+		// } else {
+		// 	this.resolveAutoCountryPromise();
+		// }
 	}
   
 	//* Perform the geo ip lookup.
 	private _loadAutoCountry(): void {
-		//* 3 options:
-		//* 1) Already loaded (we're done)
-		//* 2) Not already started loading (start)
-		//* 3) Already started loading (do nothing - just wait for loading callback to fire)
-		if (internationalNumberInput.autoCountry) {
-			this.handleAutoCountry();
-		} else if (!internationalNumberInput.startedLoadingAutoCountry) {
-			//* Don't do this twice!
-			internationalNumberInput.startedLoadingAutoCountry = true;
+		// TODO
+		// //* 3 options:
+		// //* 1) Already loaded (we're done)
+		// //* 2) Not already started loading (start)
+		// //* 3) Already started loading (do nothing - just wait for loading callback to fire)
+		// if (internationalNumberInput.autoCountry) {
+		// 	this.handleAutoCountry();
+		// } else if (!internationalNumberInput.startedLoadingAutoCountry) {
+		// 	//* Don't do this twice!
+		// 	internationalNumberInput.startedLoadingAutoCountry = true;
 	
-			if (typeof this.options.geoIpLookup === "function") {
-			this.options.geoIpLookup(
-				(iso2 = "") => {
-				const iso2Lower = iso2.toLowerCase();
-				const isValidIso2 = iso2Lower && this._getCountryData(iso2Lower, true);
-				if (isValidIso2) {
-					internationalNumberInput.autoCountry = iso2Lower;
-					//* Tell all instances the auto country is ready.
-					//TODO: this should just be the current instances
-					//* UPDATE: use setTimeout in case their geoIpLookup function calls this callback straight
-					//* away (e.g. if they have already done the geo ip lookup somewhere else). Using
-					//* setTimeout means that the current thread of execution will finish before executing
-					//* this, which allows the plugin to finish initialising.
-					setTimeout(() => forEachInstance("handleAutoCountry"));
-				} else {
-					// this._setInitialState(true);
-					this._setInitialState();
-					forEachInstance("rejectAutoCountryPromise");
-				}
-				},
-				() => {
-				// this._setInitialState(true);
-				this._setInitialState();
-				forEachInstance("rejectAutoCountryPromise");
-				},
-			);
-			}
-		}
+		// 	if (typeof this.options.geoIpLookup === "function") {
+		// 	this.options.geoIpLookup(
+		// 		(iso2 = "") => {
+		// 		const iso2Lower = iso2.toLowerCase();
+		// 		const isValidIso2 = iso2Lower && this._getCountryData(iso2Lower, true);
+		// 		if (isValidIso2) {
+		// 			internationalNumberInput.autoCountry = iso2Lower;
+		// 			//* Tell all instances the auto country is ready.
+		// 			//TODO: this should just be the current instances
+		// 			//* UPDATE: use setTimeout in case their geoIpLookup function calls this callback straight
+		// 			//* away (e.g. if they have already done the geo ip lookup somewhere else). Using
+		// 			//* setTimeout means that the current thread of execution will finish before executing
+		// 			//* this, which allows the plugin to finish initialising.
+		// 			setTimeout(() => forEachInstance("handleAutoCountry"));
+		// 		} else {
+		// 			// this._setInitialState(true);
+		// 			this._setInitialState();
+		// 			forEachInstance("rejectAutoCountryPromise");
+		// 		}
+		// 		},
+		// 		() => {
+		// 			// this._setInitialState(true);
+		// 			this._setInitialState();
+		// 			forEachInstance("rejectAutoCountryPromise");
+		// 		},
+		// 	);
+		// 	}
+		// }
 	}
   
 	//* Initialize the number input listeners.
@@ -605,32 +695,32 @@ export class Ini {
 		this._handleInputEvent = (e: InputEvent): void => {
 			//* Update selected country.
 			if (this._updateCountryFromNumber(this.numberInput.value)) {
-			this._triggerCountryChange();
+				this._triggerCountryChange();
 			}
 	
 			//* If user types their own formatting char (not a plus or a numeric), or they paste something, then set the override.
 			const isFormattingChar = e?.data && /[^+0-9]/.test(e.data);
 			const isPaste = e?.inputType === "insertFromPaste" && this.numberInput.value;
 			if (isFormattingChar || (isPaste && !strictMode)) {
-			userOverrideFormatting = true;
+				userOverrideFormatting = true;
 			}
 			//* If user removes all formatting chars, then reset the override.
 			else if (!/[^+0-9]/.test(this.numberInput.value)) {
-			userOverrideFormatting = false;
+				userOverrideFormatting = false;
 			}
 	
 			const disableFormatOnSetNumber = e?.detail && e.detail["isSetNumber"] && !formatOnDisplay;
 			//* Handle format-as-you-type, unless userOverrideFormatting, or disableFormatOnSetNumber.
 			if (formatAsYouType && !userOverrideFormatting && !disableFormatOnSetNumber) {
-			//* Maintain caret position after reformatting.
-			const currentCaretPos = this.numberInput.selectionStart || 0;
-			const valueBeforeCaret = this.numberInput.value.substring(0, currentCaretPos);
-			const relevantCharsBeforeCaret = valueBeforeCaret.replace(/[^+0-9]/g, "").length;
-			const isDeleteForwards = e?.inputType === "deleteContentForward";
-			const formattedValue = this._formatNumberAsYouType();
-			const newCaretPos = translateCursorPosition(relevantCharsBeforeCaret, formattedValue, currentCaretPos, isDeleteForwards);
-			this.numberInput.value = formattedValue;
-			this.numberInput.setSelectionRange(newCaretPos, newCaretPos);
+				//* Maintain caret position after reformatting.
+				const currentCaretPos = this.numberInput.selectionStart || 0;
+				const valueBeforeCaret = this.numberInput.value.substring(0, currentCaretPos);
+				const relevantCharsBeforeCaret = valueBeforeCaret.replace(/[^+0-9]/g, "").length;
+				const isDeleteForwards = e?.inputType === "deleteContentForward";
+				const formattedValue = this._formatNumberAsYouType();
+				const newCaretPos = translateCursorPosition(relevantCharsBeforeCaret, formattedValue, currentCaretPos, isDeleteForwards);
+				this.numberInput.value = formattedValue;
+				this.numberInput.setSelectionRange(newCaretPos, newCaretPos);
 			}
 		};
 		//* This handles individual key presses as well as cut/paste events
@@ -646,18 +736,20 @@ export class Ini {
 			if (e.key && e.key.length === 1 && !e.altKey && !e.ctrlKey && !e.metaKey) {
 				//* If strictMode, prevent invalid characters.
 				if (strictMode) {
-				const isInitialPlus = this.numberInput.selectionStart === 0 && e.key === "+";
-				const isNumeric = /^[0-9]$/.test(e.key);
-				const isAllowedChar = isInitialPlus || isNumeric;
-				const fullNumber = this._getFullNumber();
-				const coreNumber = internationalNumberInput.utils.getCoreNumber(fullNumber, this.selectedCountryData.iso2);
-				const hasReachedMaxLength = this.maxCoreNumberLength && coreNumber.length >= this.maxCoreNumberLength;
-				const selectedText = this.numberInput.value.substring(this.numberInput.selectionStart, this.numberInput.selectionEnd);
-				const hasSelectedDigit = /\d/.test(selectedText);
-				// ignore the char if (1) it's not an allowed char, or (2) the input has reached max length and no digit is selected (which will be replaced by the new char)
-				if (!isAllowedChar || (hasReachedMaxLength && !hasSelectedDigit)) {
-					e.preventDefault();
-				}
+					const isInitialPlus = this.numberInput.selectionStart === 0 && e.key === "+";
+					const isNumeric = /^[0-9]$/.test(e.key);
+					const isAllowedChar = isInitialPlus || isNumeric;
+					const fullNumber = this._getFullNumber();
+					// TODO Set coreNumber
+					// const coreNumber = internationalNumberInput.utils.getCoreNumber(fullNumber, this.selectedCountryData.iso2);
+					const coreNumber = "123"
+					const hasReachedMaxLength = this.maxCoreNumberLength && coreNumber.length >= this.maxCoreNumberLength;
+					const selectedText = this.numberInput.value.substring(this.numberInput.selectionStart, this.numberInput.selectionEnd);
+					const hasSelectedDigit = /\d/.test(selectedText);
+					// ignore the char if (1) it's not an allowed char, or (2) the input has reached max length and no digit is selected (which will be replaced by the new char)
+					if (!isAllowedChar || (hasReachedMaxLength && !hasSelectedDigit)) {
+						e.preventDefault();
+					}
 				}
 			}
 			};
@@ -942,40 +1034,43 @@ export class Ini {
 	//* Update the input's value to the given val (format first if possible)
 	//* NOTE: this is called from _setInitialState, handleUtils and setNumber.
 	private _updateValFromNumber(fullNumber: string): void {
-		let number = fullNumber;
-		if (
-			this.options.formatOnDisplay &&
-			internationalNumberInput.utils &&
-			this.selectedCountryData
-		) {
-			const useNational =
-			this.options.nationalMode;
-			const { NATIONAL, INTERNATIONAL } = internationalNumberInput.utils.numberFormat;
-			const format = useNational ? NATIONAL : INTERNATIONAL;
-			number = internationalNumberInput.utils.formatNumber(
-				number,
-				this.selectedCountryData.iso2,
-				format,
-			);
-		}
+		// TODO
+		// let number = fullNumber;
+		// if (
+		// 	this.options.formatOnDisplay &&
+		// 	internationalNumberInput.utils &&
+		// 	this.selectedCountryData
+		// ) {
+		// 	const useNational =
+		// 	this.options.nationalMode;
+		// 	const { NATIONAL, INTERNATIONAL } = internationalNumberInput.utils.numberFormat;
+		// 	const format = useNational ? NATIONAL : INTERNATIONAL;
+		// 	number = internationalNumberInput.utils.formatNumber(
+		// 		number,
+		// 		this.selectedCountryData.iso2,
+		// 		format,
+		// 	);
+		// }
 	
-		number = this._beforeSetNumber(number);
-		this.numberInput.value = number;
+		// number = this._beforeSetNumber(number);
+		// this.numberInput.value = number;
 	}
   
 	//* Check if need to select a new country based on the given number
 	//* Note: called from _setInitialState, keyup handler, setNumber.
 	private _updateCountryFromNumber(fullNumber: string): boolean {
-		const plusIndex = fullNumber.indexOf("+");
-		//* If it contains a plus, discard any chars before it e.g. accidental space char.
-		//* This keeps the selected country auto-updating correctly, which we want as
-		//* libphonenumber's validation/getNumber methods will ignore these chars anyway.
-		let number = plusIndex ? fullNumber.substring(plusIndex) : fullNumber;
-	
-		if (iso2 !== null) {
-			return this._setCountry(iso2);
-		}
+		// TODO
 		return false;
+		// const plusIndex = fullNumber.indexOf("+");
+		// //* If it contains a plus, discard any chars before it e.g. accidental space char.
+		// //* This keeps the selected country auto-updating correctly, which we want as
+		// //* libphonenumber's validation/getNumber methods will ignore these chars anyway.
+		// let number = plusIndex ? fullNumber.substring(plusIndex) : fullNumber;
+	
+		// if (iso2 !== null) {
+		// 	return this._setCountry(iso2);
+		// }
+		// return false;
 	}
   
 	//* Remove highlighting from other list items and highlight the given item.
@@ -1061,28 +1156,29 @@ export class Ini {
   
 	//* Update the maximum valid number length for the currently selected country.
 	private _updateMaxLength(): void {
-		const { strictMode, placeholderNumberType, validationNumberType } = this.options;
-		if (strictMode && internationalNumberInput.utils) {
-			if (this.selectedCountryData.iso2) {
-				const numberType = internationalNumberInput.utils.numberType[placeholderNumberType];
-				let exampleNumber = internationalNumberInput.utils.getExampleNumber(
-					this.selectedCountryData.iso2,
-					false,
-					numberType,
-					true,
-				);
-				//* See if adding more digits is still valid to get the true maximum valid length.
-				let validNumber = exampleNumber;
-				while (internationalNumberInput.utils.isPossibleNumber(exampleNumber, this.selectedCountryData.iso2, validationNumberType)) {
-					validNumber = exampleNumber;
-					exampleNumber += "0";
-				}
-				const coreNumber = internationalNumberInput.utils.getCoreNumber(validNumber, this.selectedCountryData.iso2);
-				this.maxCoreNumberLength = coreNumber.length;
-			} else {
-				this.maxCoreNumberLength = null;
-			}
-		}
+		// TODO
+		// const { strictMode, placeholderNumberType, validationNumberType } = this.options;
+		// if (strictMode && internationalNumberInput.utils) {
+		// 	if (this.selectedCountryData.iso2) {
+		// 		const numberType = internationalNumberInput.utils.numberType[placeholderNumberType];
+		// 		let exampleNumber = internationalNumberInput.utils.getExampleNumber(
+		// 			this.selectedCountryData.iso2,
+		// 			false,
+		// 			numberType,
+		// 			true,
+		// 		);
+		// 		//* See if adding more digits is still valid to get the true maximum valid length.
+		// 		let validNumber = exampleNumber;
+		// 		while (internationalNumberInput.utils.isPossibleNumber(exampleNumber, this.selectedCountryData.iso2, validationNumberType)) {
+		// 			validNumber = exampleNumber;
+		// 			exampleNumber += "0";
+		// 		}
+		// 		const coreNumber = internationalNumberInput.utils.getCoreNumber(validNumber, this.selectedCountryData.iso2);
+		// 		this.maxCoreNumberLength = coreNumber.length;
+		// 	} else {
+		// 		this.maxCoreNumberLength = null;
+		// 	}
+		// }
 	}
   
 	private _setSelectedCountryTitleAttribute(iso2: string | null = null): void {
@@ -1127,33 +1223,34 @@ export class Ini {
   
 	//* Update the input placeholder to an example number from the currently selected country.
 	private _updatePlaceholder(): void {
-		const {
-			autoPlaceholder,
-			placeholderNumberType,
-			nationalMode,
-			customPlaceholder,
-		} = this.options;
-		const shouldSetPlaceholder =
-			autoPlaceholder === "aggressive" ||
-			(!this.hadInitialPlaceholder && autoPlaceholder === "polite");
+		// TODO
+		// const {
+		// 	autoPlaceholder,
+		// 	placeholderNumberType,
+		// 	nationalMode,
+		// 	customPlaceholder,
+		// } = this.options;
+		// const shouldSetPlaceholder =
+		// 	autoPlaceholder === "aggressive" ||
+		// 	(!this.hadInitialPlaceholder && autoPlaceholder === "polite");
 	
-		if (internationalNumberInput.utils && shouldSetPlaceholder) {
-			const numberType = internationalNumberInput.utils.numberType[placeholderNumberType];
-			//* Note: Must set placeholder to empty string if no country selected (globe icon showing).
-			let placeholder = this.selectedCountryData.iso2
-			? internationalNumberInput.utils.getExampleNumber(
-				this.selectedCountryData.iso2,
-				nationalMode,
-				numberType,
-				)
-			: "";
+		// if (internationalNumberInput.utils && shouldSetPlaceholder) {
+		// 	const numberType = internationalNumberInput.utils.numberType[placeholderNumberType];
+		// 	//* Note: Must set placeholder to empty string if no country selected (globe icon showing).
+		// 	let placeholder = this.selectedCountryData.iso2
+		// 	? internationalNumberInput.utils.getExampleNumber(
+		// 		this.selectedCountryData.iso2,
+		// 		nationalMode,
+		// 		numberType,
+		// 		)
+		// 	: "";
 	
-			placeholder = this._beforeSetNumber(placeholder);
-			if (typeof customPlaceholder === "function") {
-			placeholder = customPlaceholder(placeholder, this.selectedCountryData);
-			}
-			this.numberInput.setAttribute("placeholder", placeholder);
-		}
+		// 	placeholder = this._beforeSetNumber(placeholder);
+		// 	if (typeof customPlaceholder === "function") {
+		// 	placeholder = customPlaceholder(placeholder, this.selectedCountryData);
+		// 	}
+		// 	this.numberInput.setAttribute("placeholder", placeholder);
+		// }
 	}
   
 	//* Called when the user selects a list item from the dropdown.
@@ -1256,11 +1353,13 @@ export class Ini {
   
 	//* Format the number as the user types.
 	private _formatNumberAsYouType(): string {
-	  const val = this._getFullNumber();
-	  const result = internationalNumberInput.utils
-		? internationalNumberInput.utils.formatNumberAsYouType(val, this.selectedCountryData.iso2)
-		: val;
-	  return result;
+		// TODO
+		return "";
+	//   const val = this._getFullNumber();
+	//   const result = internationalNumberInput.utils
+	// 	? internationalNumberInput.utils.formatNumberAsYouType(val, this.selectedCountryData.iso2)
+	// 	: val;
+	//   return result;
 	}
   
 	//**************************
@@ -1269,33 +1368,35 @@ export class Ini {
   
 	//* This is called when the geoip call returns.
 	handleAutoCountry(): void {
-	  if (this.options.initialCountry === "auto" && internationalNumberInput.autoCountry) {
-		//* We must set this even if there is an initial val in the input: in case the initial val is
-		//* invalid and they delete it - they should see their auto country.
-		this.defaultCountry = internationalNumberInput.autoCountry;
-		const hasSelectedCountryOrGlobe = this.selectedCountryData.iso2 || this.selectedCountryInner.classList.contains("ini__globe");
-		//* If no country/globe currently selected, then update the country.
-		if (!hasSelectedCountryOrGlobe) {
-		  this.setCountry(this.defaultCountry);
-		}
-		this.resolveAutoCountryPromise();
-	  }
+		// TODO
+		// if (this.options.initialCountry === "auto" && internationalNumberInput.autoCountry) {
+		// 	//* We must set this even if there is an initial val in the input: in case the initial val is
+		// 	//* invalid and they delete it - they should see their auto country.
+		// 	this.defaultCountry = internationalNumberInput.autoCountry;
+		// 	const hasSelectedCountryOrGlobe = this.selectedCountryData.iso2 || this.selectedCountryInner.classList.contains("ini__globe");
+		// 	//* If no country/globe currently selected, then update the country.
+		// 	if (!hasSelectedCountryOrGlobe) {
+		// 		this.setCountry(this.defaultCountry);
+		// 	}
+		// 	this.resolveAutoCountryPromise();
+		// }
 	}
   
 	//* This is called when the utils request completes.
 	handleUtils(): void {
-	  //* If the request was successful
-	  if (internationalNumberInput.utils) {
-		//* If there's an initial value in the input, then format it.
-		if (this.numberInput.value) {
-		  this._updateValFromNumber(this.numberInput.value);
-		}
-		if (this.selectedCountryData.iso2) {
-		  this._updatePlaceholder();
-		  this._updateMaxLength();
-		}
-	  }
-	  this.resolveUtilsScriptPromise();
+		// TODO
+	//   //* If the request was successful
+	//   if (internationalNumberInput.utils) {
+	// 	//* If there's an initial value in the input, then format it.
+	// 	if (this.numberInput.value) {
+	// 	  this._updateValFromNumber(this.numberInput.value);
+	// 	}
+	// 	if (this.selectedCountryData.iso2) {
+	// 	  this._updatePlaceholder();
+	// 	  this._updateMaxLength();
+	// 	}
+	//   }
+	//   this.resolveUtilsScriptPromise();
 	}
   
 	//********************
@@ -1304,70 +1405,75 @@ export class Ini {
   
 	//* Remove plugin.
 	destroy(): void {
-		const { allowDropdown } = this.options;
-		if (allowDropdown) {
-			//* Make sure the dropdown is closed (and unbind listeners).
-			this._closeDropdown();
-			this.selectedCountry.removeEventListener(
-				"click",
-				this._handleClickSelectedCountry,
-			);
-			this.countryContainer.removeEventListener(
-				"keydown",
-				this._handleCountryContainerKeydown,
-			);
-			//* Label click hack.
-			const label = this.numberInput.closest("label");
-			if (label) {
-				label.removeEventListener("click", this._handleLabelClick);
-			}
-		}
+		// TODO
+		// const { allowDropdown } = this.options;
+		// if (allowDropdown) {
+		// 	//* Make sure the dropdown is closed (and unbind listeners).
+		// 	this._closeDropdown();
+		// 	this.selectedCountry.removeEventListener(
+		// 		"click",
+		// 		this._handleClickSelectedCountry,
+		// 	);
+		// 	this.countryContainer.removeEventListener(
+		// 		"keydown",
+		// 		this._handleCountryContainerKeydown,
+		// 	);
+		// 	//* Label click hack.
+		// 	const label = this.numberInput.closest("label");
+		// 	if (label) {
+		// 		label.removeEventListener("click", this._handleLabelClick);
+		// 	}
+		// }
 	
-		//* Unbind hiddenInput listeners.
-		const { form } = this.numberInput;
-		if (this._handleHiddenInputSubmit && form) {
-			form.removeEventListener("submit", this._handleHiddenInputSubmit);
-		}
+		// //* Unbind hiddenInput listeners.
+		// const { form } = this.numberInput;
+		// if (this._handleHiddenInputSubmit && form) {
+		// 	form.removeEventListener("submit", this._handleHiddenInputSubmit);
+		// }
 	
-		//* Unbind key events, and cut/paste events.
-		this.numberInput.removeEventListener("input", this._handleInputEvent as EventListener);
-		if (this._handleKeydownEvent) {
-			this.numberInput.removeEventListener("keydown", this._handleKeydownEvent);
-		}
+		// //* Unbind key events, and cut/paste events.
+		// this.numberInput.removeEventListener("input", this._handleInputEvent as EventListener);
+		// if (this._handleKeydownEvent) {
+		// 	this.numberInput.removeEventListener("keydown", this._handleKeydownEvent);
+		// }
 	
-		//* Remove attribute of id instance: data-international-number-input-id.
-		this.numberInput.removeAttribute("data-international-number-input-id");
+		// //* Remove attribute of id instance: data-international-number-input-id.
+		// this.numberInput.removeAttribute("data-international-number-input-id");
 	
-		//* Remove markup (but leave the original input).
-		const wrapper = this.numberInput.parentNode;
-		wrapper?.parentNode?.insertBefore(this.numberInput, wrapper);
-		wrapper?.parentNode?.removeChild(wrapper);
+		// //* Remove markup (but leave the original input).
+		// const wrapper = this.numberInput.parentNode;
+		// wrapper?.parentNode?.insertBefore(this.numberInput, wrapper);
+		// wrapper?.parentNode?.removeChild(wrapper);
 	
-		delete internationalNumberInput.instances[this.id];
+		// delete internationalNumberInput.instances[this.id];
 	}
   
 	//* Format the number to the given format.
 	getNumber(format?: number): string {
-		if (internationalNumberInput.utils) {
-			const { iso2 } = this.selectedCountryData;
-			return internationalNumberInput.utils.formatNumber(
-				this._getFullNumber(),
-				iso2,
-				format,
-			);
-		}
+		// TODO
 		return "";
+		// if (internationalNumberInput.utils) {
+		// 	const { iso2 } = this.selectedCountryData;
+		// 	return internationalNumberInput.utils.formatNumber(
+		// 		this._getFullNumber(),
+		// 		iso2,
+		// 		format,
+		// 	);
+		// }
+		// return "";
 	}
   
 	//* Get the type of the entered number e.g. landline/mobile.
 	getNumberType(): number {
-		if (internationalNumberInput.utils) {
-			return internationalNumberInput.utils.getNumberType(
-				this._getFullNumber(),
-				this.selectedCountryData.iso2,
-			);
-		}
-		return -99;
+		// TODO
+		return 0;
+		// if (internationalNumberInput.utils) {
+		// 	return internationalNumberInput.utils.getNumberType(
+		// 		this._getFullNumber(),
+		// 		this.selectedCountryData.iso2,
+		// 	);
+		// }
+		// return -99;
 	}
   
 	//* Get the country data for the currently selected country.
@@ -1377,35 +1483,41 @@ export class Ini {
   
 	//* Get the validation error.
 	getValidationError(): number {
-		if (internationalNumberInput.utils) {
-			const { iso2 } = this.selectedCountryData;
-			return internationalNumberInput.utils.getValidationError(this._getFullNumber(), iso2);
-		}
-		return -99;
+		// TODO
+		return 0;
+		// if (internationalNumberInput.utils) {
+		// 	const { iso2 } = this.selectedCountryData;
+		// 	return internationalNumberInput.utils.getValidationError(this._getFullNumber(), iso2);
+		// }
+		// return -99;
 	}
   
 	//* Validate the input val
 	isValidNumber(): boolean | null {
-		const val = this._getFullNumber();
-		//* Return false for any alpha chars.
-		if (/\p{L}/u.test(val)) {
-			return false;
-		}
-		return internationalNumberInput.utils
-			? internationalNumberInput.utils.isPossibleNumber(val, this.selectedCountryData.iso2, this.options.validationNumberType)
-			: null;
+		// TODO
+		return false;
+		// const val = this._getFullNumber();
+		// //* Return false for any alpha chars.
+		// if (/\p{L}/u.test(val)) {
+		// 	return false;
+		// }
+		// return internationalNumberInput.utils
+		// 	? internationalNumberInput.utils.isPossibleNumber(val, this.selectedCountryData.iso2, this.options.validationNumberType)
+		// 	: null;
 	}
   
 	//* Validate the input val (precise)
 	isValidNumberPrecise(): boolean | null {
-		const val = this._getFullNumber();
-		//* Return false for any alpha chars.
-		if (/\p{L}/u.test(val)) {
-			return false;
-		}
-		return internationalNumberInput.utils
-			? internationalNumberInput.utils.isValidNumber(val, this.selectedCountryData.iso2)
-			: null;
+		// TODO
+		return false;
+		// const val = this._getFullNumber();
+		// //* Return false for any alpha chars.
+		// if (/\p{L}/u.test(val)) {
+		// 	return false;
+		// }
+		// return internationalNumberInput.utils
+		// 	? internationalNumberInput.utils.isValidNumber(val, this.selectedCountryData.iso2)
+		// 	: null;
 	}
   
 	//* Update the selected country, and update the input val accordingly.

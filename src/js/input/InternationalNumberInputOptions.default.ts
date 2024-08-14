@@ -1,13 +1,28 @@
 import { NumberType } from "../types";
-import { AllOptions } from "./InternationalNumberInputOptions";
+import { AllOptions, AllStyleOptions } from "./InternationalNumberInputOptions";
+
+const styleDefaults: AllStyleOptions = {
+	elementAccessibilityText: "a11y-text",
+	elementContainerClass: "",
+	elementCountryContainerClass: "country-container",
+	elementDropdownArrow: "arrow",
+	elementNumberInputClass: "number-input",
+	elementParentClass: "ini",
+	elementSearchInputClass: "search-input",
+	elementSelectedCountryClass: "selected-country",
+	elementSelectedCountryPrimary: "selected-country-primary",
+
+	attributeAllowDropdownClass: "allow-dropdown",
+	attributeFlexibleDropdownWidthClass: "flexible-dropdown-width",
+	attributeInlineDropdownClass: "inline-dropdown",
+	attributeShowFlagsClass: "show-flags",
+}
 
 const defaults: AllOptions = {
 	//* Whether or not to allow the dropdown.
 	allowDropdown: true,
 	//* Add a placeholder in the input with an example number for the selected country.
 	autoPlaceholder: "polite",
-	//* Modify the parentClass.
-	containerClass: "",
 	//* The order of the countries in the dropdown. Defaults to alphabetical.
 	countryOrder: null,
 	//* Add a country search input at the top of the dropdown.
@@ -42,6 +57,8 @@ const defaults: AllOptions = {
 	showFlags: true,
 	//* Only allow certain chars e.g. a plus followed by numeric digits, and cap at max valid length.
 	strictMode: false,
+	//* Modify the styles.
+	styles: styleDefaults,
 	//* Use full screen popup instead of dropdown for country list.
 	useFullscreenPopup:
 		typeof navigator !== "undefined" && typeof window !== "undefined"

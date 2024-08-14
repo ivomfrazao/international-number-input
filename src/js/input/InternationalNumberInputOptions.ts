@@ -5,7 +5,7 @@ export type SomeOptions = Partial<AllOptions>;
 export interface AllOptions {
 	allowDropdown: boolean;
 	autoPlaceholder: string;
-	containerClass: string;
+	styles: AllStyleOptions;
 	countryOrder: string[];
 	countrySearch: boolean;
 	customPlaceholder: ((selectedCountryPlaceholder: string, selectedCountryData: object) => string) | null;
@@ -278,4 +278,23 @@ export interface AllOptions {
 	useFullscreenPopup: boolean;
 	utilsScript: string;
 	validationNumberType: NumberType | null;
+}
+
+export type SomeStyleOptions = Partial<AllStyleOptions>;
+
+export interface AllStyleOptions {
+	elementAccessibilityText: string;
+	elementContainerClass: string;
+	elementCountryContainerClass: string;
+	elementDropdownArrow: string;
+	elementNumberInputClass: string;
+	elementParentClass: string;
+	elementSearchInputClass: string;
+	elementSelectedCountryClass: string;
+	elementSelectedCountryPrimary: string;
+
+	attributeAllowDropdownClass: string;
+	attributeFlexibleDropdownWidthClass: string;
+	attributeInlineDropdownClass: string;
+	attributeShowFlagsClass: string;
 }

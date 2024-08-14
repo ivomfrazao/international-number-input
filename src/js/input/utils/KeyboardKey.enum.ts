@@ -1,4 +1,7 @@
-enum KeyboardKey {
+/**
+ * Enumeration of keys used in events
+ */
+export enum KeyboardKey {
 	Enter = "Enter",
 	ArrowDown = "ArrowDown",
 	ArrowUp = "ArrowUp",
@@ -6,5 +9,3 @@ enum KeyboardKey {
 	Tab = "Tab",
 	Escape = "Escape"
 }
-
-export default KeyboardKey;

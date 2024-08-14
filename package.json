@@ -32,8 +32,7 @@
     "image-size": "^1.1.1",
     "prettier": "^3.2.5",
     "region-flags": "https://github.com/fonttools/region-flags/archive/refs/tags/1.2.1.tar.gz",
-    "sass": "^1.74.1",
-    "typescript": "^5.5.3"
+    "sass": "^1.74.1"
   },
   "files": [
     "build/*",
@@ -63,35 +62,6 @@
     "build:utils": "grunt build:utils",
     "build:css": "grunt css",
     "build:img": "grunt img"
-  },
-  "style": "build/css/internationalNumberInput.css",
-  "main": "./build/js/internationalNumberInput.js",
-  "types": "./build/js/internationalNumberInput.d.ts",
-  "exports": {
-    ".": {
-      "types": "./build/js/internationalNumberInput.d.ts",
-      "default": "./build/js/internationalNumberInput.js"
-    },
-    "./internationalNumberInputWithUtils": {
-      "types": "./build/js/internationalNumberInput.d.ts",
-      "default": "./build/js/internationalNumberInput.js"
-    },
-    "./data": "./build/js/data.js",
-    "./utils": "./build/js/utils.js",
-    "./i18n": "./build/js/i18n/index.js",
-    "./i18n/*": "./build/js/i18n/*/index.js",
-    "./styles": "./build/css/internationalNumberInput.css",
-    "./*": "./*"
-  },
-  "typesVersions": {
-    "*": {
-      ".": [
-        "build/js/internationalNumberInput.d.ts"
-      ],
-      "react": [
-        "react/build/InternationalNumberInput.d.ts"
-      ]
-    }
   },
   "dependencies": {
     "guid-typescript": "^1.0.9"

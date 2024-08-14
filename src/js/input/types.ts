@@ -1,4 +1,5 @@
 import { CountryValidator, NumberType } from "../types";
+import { AllOptions, SomeOptions } from "./InternationalNumberInputOptions";
 
 interface InternationalNumberInputInterface {
 	(input: HTMLInputElement, options?: SomeOptions): Ini;
