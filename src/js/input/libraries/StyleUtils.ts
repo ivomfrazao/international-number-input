@@ -13,14 +13,16 @@ export function buildAttributeClass(styles: AllStyleOptions, attribute: StyleAtt
 }
 
 export enum StyleElement {
-	AccessibilityText = 'elementAccessibilityText',
+	AccessibilityText = 'elementAccessibilityTextClass',
 	Container = 'elementContainerClass',
 	CountryContainer = 'elementCountryContainerClass',
-	DropdownArrow = 'elementDropdownArrow',
+	DropdownArrow = 'elementDropdownArrowClass',
+	Hide = 'elementHideClass',
+	Highlight = 'elementHighlightClass',
 	NumberInput = 'elementNumberInputClass',
 	SearchInput = 'elementSearchInputClass',
 	SelectedCountry = 'elementSelectedCountryClass',
-	SelectedCountryPrimary = 'elementSelectedCountryPrimary',
+	SelectedCountryPrimary = 'elementSelectedCountryPrimaryClass',
 }
 
 export enum StyleAttribute {

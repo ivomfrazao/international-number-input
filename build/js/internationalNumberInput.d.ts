@@ -1001,7 +1001,7 @@ declare module "input/i18n/en/index" {
     };
     export default _default_2;
 }
-declare module "input/utils/KeyboardKey.enum" {
+declare module "input/libraries/KeyboardKey.enum" {
     /**
      * Enumeration of keys used in events
      */
@@ -1014,7 +1014,7 @@ declare module "input/utils/KeyboardKey.enum" {
         Escape = "Escape"
     }
 }
-declare module "input/utils/StringUtils" {
+declare module "input/libraries/StringUtils" {
     /**
      * Normalises string to ensure expected values when performing other operations.
      * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize for more details.
@@ -1029,7 +1029,7 @@ declare module "input/utils/StringUtils" {
      */
     export function getNumeric(s: string): string;
 }
-declare module "input/utils/DOMUtils" {
+declare module "input/libraries/DOMUtils" {
     /**
      * Creates a DOM element, sets its attributes and appends in a container element in a single atomic action.
      * @param tagName The name of an element.
@@ -1039,7 +1039,7 @@ declare module "input/utils/DOMUtils" {
      */
     export function createDOMElement(tagName: string, attributes: object | null, parentNode?: HTMLElement): HTMLElement;
 }
-declare module "input/utils/StyleUtils" {
+declare module "input/libraries/StyleUtils" {
     import { AllStyleOptions } from "input/InternationalNumberInputOptions";
     export function buildElementClass(styles: AllStyleOptions, element: StyleElement): string;
     export function buildAttributeClass(styles: AllStyleOptions, attribute: StyleAttribute): string;
@@ -1060,7 +1060,7 @@ declare module "input/utils/StyleUtils" {
         ShowFlags = "attributeShowFlagsClass"
     }
 }
-declare module "input/utils/InstancesUtils" {
+declare module "input/libraries/InstancesUtils" {
     export function forEachInstance(method: string): void;
     export function loadUtils(path: string): Promise<unknown> | null;
 }
@@ -1196,7 +1196,7 @@ declare module "input/InternationalNumberInput" {
         version: string | undefined;
         utils?: IniUtils;
     }
-    type IniUtils = {
+    export type IniUtils = {
         formatNumber(number: string, countryISO2: string | undefined, format?: number): string;
         formatNumberAsYouType(number: string, countryISO2: string | undefined): string;
         getCoreNumber(number: string, countryISO2: string | undefined): string;

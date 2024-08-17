@@ -3,7 +3,7 @@ import { AllOptions, SomeOptions } from "./InternationalNumberInputOptions";
 import { defaults } from "./InternationalNumberInputOptions.default";
 import allCountries, { Country } from "./international-number-input/data";
 import { Ini } from "./InternationalNumberInput.class";
-import { loadUtils } from "./utils/InstancesUtils";
+import { loadUtils } from "./libraries/InstancesUtils";
 
 interface InternationalNumberInputInterface {
 	(input: HTMLInputElement, options?: SomeOptions): Ini;
@@ -20,7 +20,7 @@ interface InternationalNumberInputInterface {
 	utils?: IniUtils;
 }
 
-type IniUtils = {
+export type IniUtils = {
 	formatNumber(number: string, countryISO2: string | undefined, format?: number): string;
 	formatNumberAsYouType(number: string, countryISO2: string | undefined): string;
 	getCoreNumber(number: string, countryISO2: string | undefined): string;

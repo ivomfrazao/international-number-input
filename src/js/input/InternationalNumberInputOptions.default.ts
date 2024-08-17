@@ -1,16 +1,19 @@
 import { NumberType } from "../types";
 import { AllOptions, AllStyleOptions } from "./InternationalNumberInputOptions";
+import { AutoPlaceholderType } from "./libraries/AutoPlaceholderType.enum";
 
 const styleDefaults: AllStyleOptions = {
-	elementAccessibilityText: "a11y-text",
+	elementAccessibilityTextClass: "a11y-text",
 	elementContainerClass: "",
 	elementCountryContainerClass: "country-container",
-	elementDropdownArrow: "arrow",
+	elementDropdownArrowClass: "arrow",
+	elementHideClass: "hide",
+	elementHighlightClass: "highlight",
 	elementNumberInputClass: "number-input",
 	elementParentClass: "ini",
 	elementSearchInputClass: "search-input",
 	elementSelectedCountryClass: "selected-country",
-	elementSelectedCountryPrimary: "selected-country-primary",
+	elementSelectedCountryPrimaryClass: "selected-country-primary",
 
 	attributeAllowDropdownClass: "allow-dropdown",
 	attributeFlexibleDropdownWidthClass: "flexible-dropdown-width",
@@ -22,7 +25,7 @@ export const defaults: AllOptions = {
 	//* Whether or not to allow the dropdown.
 	allowDropdown: true,
 	//* Add a placeholder in the input with an example number for the selected country.
-	autoPlaceholder: "polite",
+	autoPlaceholder: AutoPlaceholderType.Polite,
 	//* The order of the countries in the dropdown. Defaults to alphabetical.
 	countryOrder: null,
 	//* Add a country search input at the top of the dropdown.
@@ -47,8 +50,6 @@ export const defaults: AllOptions = {
 	i18n: {},
 	//* Initial country.
 	initialCountry: "",
-	//* National vs international formatting for numbers e.g. placeholders and displaying existing numbers.
-	nationalMode: true,
 	//* Display only these countries.
 	onlyCountries: [],
 	//* Number type to use for placeholders.

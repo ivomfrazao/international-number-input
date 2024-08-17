@@ -3,16 +3,18 @@ import defaultEnglishStrings from "./i18n/en";
 import { NumberType, ValidateReturn } from "../types";
 import { SomeOptions, AllOptions } from "./InternationalNumberInputOptions";
 import defaults from "./InternationalNumberInputOptions.default";
-import { KeyboardKey } from "./utils/KeyboardKey.enum";
-import { normaliseString } from "./utils/StringUtils";
-import { createDOMElement } from "./utils/DOMUtils";
-import { buildAttributeClass, buildElementClass, StyleAttribute, StyleElement } from "./utils/StyleUtils";
-import { forEachInstance } from "./utils/InstancesUtils";
-import * as exceptions from '../exceptions';
+import { KeyboardKey } from "./libraries/KeyboardKey.enum";
+import { normaliseString } from "./libraries/StringUtils";
+import { createDOMElement } from "./libraries/DOMUtils";
+import { buildAttributeClass, buildElementClass, StyleAttribute, StyleElement } from "./libraries/StyleUtils";
+import { forEachInstance } from "./libraries/InstancesUtils";
+import * as exceptions from "../exceptions";
+import { DataAttributes } from "./libraries/DataAttributes.enum";
 
 // TODO Remove next import and type
 import allCountries, { Country } from "./international-number-input/data";
 import internationalNumberInput from "./InternationalNumberInput";
+import { AutoPlaceholderType } from "./libraries/AutoPlaceholderType.enum";
 type SelectedCountryData = Country | { name?: string, iso2?: string, dialCode?: string };
 
 // TODO Check if translateCursorPosition is really necessary. If yes, move to utilities
@@ -473,7 +475,7 @@ export class Ini {
 					class: `ini__country ${extraClass}`,
 					tabindex: "-1",
 					role: "option",
-					"data-country-code": country.iso2,
+					[DataAttributes.CountryCode]: country.iso2,
 					"aria-selected": "false",
 				},
 				this.countryList,
@@ -578,12 +580,13 @@ export class Ini {
   
 	//* initialise the dropdown listeners.
 	private _initDropdownListeners(): void {
+		const elementHideClass = buildElementClass(this.options.styles, StyleElement.Hide)
 		//* Hack for input nested inside label (which is valid markup): clicking the selected country to
 		//* open the dropdown would then automatically trigger a 2nd click on the input which would
 		//* close it again.
 		this._handleLabelClick = (e: Event): void => {
 			//* If the dropdown is closed, then focus the input, else ignore the click.
-			if (this.dropdownContent.classList.contains("ini__hide")) {
+			if (this.dropdownContent.classList.contains(elementHideClass)) {
 				this.numberInput.focus();
 			} else {
 				e.preventDefault();
@@ -600,7 +603,7 @@ export class Ini {
 			//* else let it bubble up to the top ("click-off-to-close" listener)
 			//* we cannot just stopPropagation as it may be needed to close another instance.
 			if (
-				this.dropdownContent.classList.contains("ini__hide") &&
+				this.dropdownContent.classList.contains(elementHideClass) &&
 				!this.numberInput.disabled &&
 				!this.numberInput.readOnly
 			) {
@@ -611,7 +614,7 @@ export class Ini {
 	
 		//* Open dropdown if selected country is focused and they press up/down/space/enter.
 		this._handleCountryContainerKeydown = (e: KeyboardEvent): void => {
-			const isDropdownHidden = this.dropdownContent.classList.contains("ini__hide");
+			const isDropdownHidden = this.dropdownContent.classList.contains(elementHideClass);
 	
 			if (
 				isDropdownHidden &&
@@ -804,7 +807,7 @@ export class Ini {
 		if (fixDropdownWidth) {
 			this.dropdownContent.style.width = `${this.numberInput.offsetWidth}px`;
 		}
-		this.dropdownContent.classList.remove("ini__hide");
+		this.dropdownContent.classList.remove(buildElementClass(this.options.styles, StyleElement.Hide));
 		this.selectedCountry.setAttribute("aria-expanded", "true");
 	
 		this._setDropdownPosition();
@@ -1103,15 +1106,16 @@ export class Ini {
   
 	//* Remove highlighting from other list items and highlight the given item.
 	private _highlightListItem(listItem: HTMLElement | null, shouldFocus: boolean): void {
+		const elementHighlightClass = buildElementClass(this.options.styles, StyleElement.Highlight);
 		const prevItem = this.highlightedItem;
 		if (prevItem) {
-			prevItem.classList.remove("ini__highlight");
+			prevItem.classList.remove(elementHighlightClass);
 			prevItem.setAttribute("aria-selected", "false");
 		}
 		//* Set this, even if it's null, as it will clear the highlight.
 		this.highlightedItem = listItem;
 		if (this.highlightedItem) {
-			this.highlightedItem.classList.add("ini__highlight");
+			this.highlightedItem.classList.add(elementHighlightClass);
 			this.highlightedItem.setAttribute("aria-selected", "true");
 			const activeDescendant = this.highlightedItem.getAttribute("id") || "";
 			this.selectedCountry.setAttribute("aria-activedescendant", activeDescendant);
@@ -1251,26 +1255,25 @@ export class Ini {
 		const {
 			autoPlaceholder,
 			placeholderNumberType,
-			nationalMode,
 			customPlaceholder,
 		} = this.options;
 		const shouldSetPlaceholder =
-			autoPlaceholder === "aggressive" ||
-			(!this.hadInitialPlaceholder && autoPlaceholder === "polite");
+			autoPlaceholder === AutoPlaceholderType.Aggressive ||
+			(!this.hadInitialPlaceholder && autoPlaceholder === AutoPlaceholderType.Polite);
 	
 		if (internationalNumberInput.utils && shouldSetPlaceholder) {
 			const numberType = internationalNumberInput.utils.numberType[placeholderNumberType];
 			//* Note: Must set placeholder to empty string if no country selected (globe icon showing).
 			let placeholder = this.selectedCountryData.iso2
-			? internationalNumberInput.utils.getExampleNumber(
-					this.selectedCountryData.iso2,
-					numberType,
-				)
-			: "";
+				? internationalNumberInput.utils.getExampleNumber(
+						this.selectedCountryData.iso2,
+						numberType,
+					)
+				: "";
 	
 			placeholder = this._beforeSetNumber(placeholder);
 			if (typeof customPlaceholder === "function") {
-			placeholder = customPlaceholder(placeholder, this.selectedCountryData);
+				placeholder = customPlaceholder(placeholder, this.selectedCountryData);
 			}
 			this.numberInput.setAttribute("placeholder", placeholder);
 		}
@@ -1280,7 +1283,7 @@ export class Ini {
 	private _selectListItem(listItem: HTMLElement): void {
 		//* Update selected country and active list item.
 		const countryChanged = this._setCountry(
-			listItem.getAttribute("data-country-code"),
+			listItem.getAttribute(DataAttributes.CountryCode),
 		);
 		this._closeDropdown();
 	
@@ -1454,8 +1457,8 @@ export class Ini {
 			this.numberInput.removeEventListener("keydown", this._handleKeydownEvent);
 		}
 	
-		//* Remove attribute of id instance: data-international-number-input-id.
-		this.numberInput.removeAttribute("data-international-number-input-id");
+		//* Remove attribute of id instance
+		this.numberInput.removeAttribute(DataAttributes.InputId);
 	
 		//* Remove markup (but leave the original input).
 		const wrapper = this.numberInput.parentNode;

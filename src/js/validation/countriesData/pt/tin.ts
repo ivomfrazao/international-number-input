@@ -15,7 +15,7 @@ import { strings, weightedSum } from '../../utils';
 import { Validator, ValidateReturn, NumberType } from '../../../types';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
-  return strings.cleanUnicode(input, ' -.', 'PT');
+	return strings.cleanUnicode(input, ' -.', 'PT');
 }
 
 const validator: Validator = {
@@ -24,12 +24,14 @@ const validator: Validator = {
 	localName: 'Número de Identificação Fiscal',
 	abbreviation: 'NIF',
 	placeholder: '123 456 789',
+	maxLength: 9,
+	minLength: 9,
 
 	compact(input: string): string {
 		const [value, err] = clean(input);
 
 		if (err) {
-		throw err;
+			throw err;
 		}
 
 		return value;
@@ -47,7 +49,7 @@ const validator: Validator = {
 		if (error) {
 			return { isValid: false, error };
 		}
-		if (value.length !== 9) {
+		if (value.length !== this.minLength) {
 			return { isValid: false, error: new exceptions.InvalidLength() };
 		}
 		if (!strings.isdigits(value) || value[0] === '0') {

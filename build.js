@@ -82,15 +82,15 @@ build({
 });
 
 //* build/js/input/internationalNumberInputWithUtils.js
-// build({
-// 	...shared,
-// 	banner: {
-// 		js: getBanner("internationalNumberInput"),
-// 	},
-// 	entryPoints: ["src/js/input/international-number-input/internationalNumberInputWithUtils.ts"],
-// 	minify: false,
-// 	outfile: "build/js/input/internationalNumberInputWithUtils.js",
-// });
+build({
+	...shared,
+	banner: {
+		js: getBanner("internationalNumberInput"),
+	},
+	entryPoints: ["src/js/input/internationalNumberInputWithUtils.ts"],
+	minify: false,
+	outfile: "build/js/input/internationalNumberInputWithUtils.js",
+});
 
 // //* build/js/internationalNumberInputWithUtils.min.js
 // build({

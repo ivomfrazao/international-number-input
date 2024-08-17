@@ -108,11 +108,10 @@ var factoryOutput = (() => {
     }
   });
 
-  // src/js/input/InternationalNumberInput.ts
-  var InternationalNumberInput_exports = {};
-  __export(InternationalNumberInput_exports, {
-    default: () => InternationalNumberInput_default,
-    internationalNumberInput: () => internationalNumberInput
+  // src/js/input/internationalNumberInputWithUtils.ts
+  var internationalNumberInputWithUtils_exports = {};
+  __export(internationalNumberInputWithUtils_exports, {
+    default: () => internationalNumberInputWithUtils_default
   });
 
   // src/js/input/InternationalNumberInputOptions.default.ts
@@ -2739,7 +2738,45 @@ var factoryOutput = (() => {
     }
   );
   var InternationalNumberInput_default = internationalNumberInput;
-  return __toCommonJS(InternationalNumberInput_exports);
+
+  // src/js/input/utils.ts
+  var formatNumberAsYouType = (number, countryCode) => {
+    return countryCode ? number : number;
+  };
+  var formatNumber = (number, countryCode, formatArg) => {
+    let arg = countryCode ? countryCode : formatArg;
+    return arg ? number : number;
+  };
+  var getExampleNumber = (countryCode, numberType) => {
+    return countryCode ? numberType : "";
+  };
+  var getCoreNumber = (number, countryCode) => {
+    return countryCode ? number : number;
+  };
+  var getValidationError = (number, countryCode) => {
+    return countryCode ? number : number;
+  };
+  var isValidNumber = (number, countryCode) => {
+    return countryCode ? number : number;
+  };
+  var isPossibleNumber = (number, countryCode, numberTypeName) => {
+    return countryCode ? number : number;
+  };
+
+  // src/js/input/internationalNumberInputWithUtils.ts
+  var utilsTmp = {
+    formatNumber,
+    formatNumberAsYouType,
+    getCoreNumber,
+    getExampleNumber,
+    getValidationError,
+    isPossibleNumber,
+    isValidNumber,
+    numberType: "NIN" /* NationalIdentificationNumber */
+  };
+  internationalNumberInput.utils = utilsTmp;
+  var internationalNumberInputWithUtils_default = internationalNumberInput;
+  return __toCommonJS(internationalNumberInputWithUtils_exports);
 })();
 
 // UMD

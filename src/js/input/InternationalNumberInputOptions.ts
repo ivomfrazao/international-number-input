@@ -1,10 +1,11 @@
 import { NumberType } from "../types";
+import { AutoPlaceholderType } from "./libraries/AutoPlaceholderType.enum";
 
 export type SomeOptions = Partial<AllOptions>;
 
 export interface AllOptions {
 	allowDropdown: boolean;
-	autoPlaceholder: string;
+	autoPlaceholder: AutoPlaceholderType;
 	styles: AllStyleOptions;
 	/**
 	 * List of countries specifying their order.
@@ -283,7 +284,6 @@ export interface AllOptions {
 	 * It can also be set as `auto`, the component will try to automatically infer the value.
 	 */
 	initialCountry: string;
-	nationalMode: boolean;
 	/**
 	 * List of countries to exclusively be displayed, instead of using all countries.
 	 * If set, it will supersede the {@link excludeCountries} parameter.
@@ -300,15 +300,17 @@ export interface AllOptions {
 export type SomeStyleOptions = Partial<AllStyleOptions>;
 
 export interface AllStyleOptions {
-	elementAccessibilityText: string;
+	elementAccessibilityTextClass: string;
 	elementContainerClass: string;
 	elementCountryContainerClass: string;
-	elementDropdownArrow: string;
+	elementDropdownArrowClass: string;
+	elementHideClass: string;
+	elementHighlightClass: string;
 	elementNumberInputClass: string;
 	elementParentClass: string;
 	elementSearchInputClass: string;
 	elementSelectedCountryClass: string;
-	elementSelectedCountryPrimary: string;
+	elementSelectedCountryPrimaryClass: string;
 
 	attributeAllowDropdownClass: string;
 	attributeFlexibleDropdownWidthClass: string;

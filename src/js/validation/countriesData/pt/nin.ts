@@ -18,7 +18,7 @@ const ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const validRe = /^\d{9}[A-Z0-9]{2}\d$/i;
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
-  return strings.cleanUnicode(input, ' ');
+	return strings.cleanUnicode(input, ' ');
 }
 
 const validator: Validator = {
@@ -27,6 +27,8 @@ const validator: Validator = {
 	localName: 'Número de Cartão de Cidadão',
 	abbreviation: 'CC',
 	placeholder: '12345678 9 ZZ0',
+	maxLength: 12,
+	minLength: 12,
 
 	compact(input: string): string {
 		const [value, err] = clean(input);
@@ -50,7 +52,7 @@ const validator: Validator = {
 		if (error) {
 			return { isValid: false, error };
 		}
-		if (value.length !== 12) {
+		if (value.length !== this.minLength) {
 			return { isValid: false, error: new exceptions.InvalidLength() };
 		}
 		if (!validRe.test(value)) {

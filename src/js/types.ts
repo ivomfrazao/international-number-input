@@ -75,6 +75,16 @@ export interface Validator {
 	placeholder?: string;
 
 	/**
+	 * The maximum length for the number type, without any formatting applied
+	 */
+	maxLength: number;
+
+	/**
+	 * The minimum length for the number type, without any formatting applied
+	 */
+	minLength: number;
+
+	/**
 	 * Convert the number to the minimal representation.
 	 * This strips the number of any valid separators and removes surrounding
 	 * whitespace.
