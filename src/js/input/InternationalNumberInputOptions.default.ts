@@ -61,10 +61,10 @@ export const defaults: AllOptions = {
 	i18n: {},
 	//* Initial country.
 	initialCountry: "",
+	//* The number type to enforce during validation.
+	numberType: NumberType.NationalIdentificationNumber,
 	//* Display only these countries.
 	onlyCountries: [],
-	//* Number type to use for placeholders.
-	placeholderNumberType: NumberType.NationalIdentificationNumber,
 	//* Show flags - for both the selected country, and in the country dropdown
 	showFlags: true,
 	//* Only allow certain chars e.g. a plus followed by numeric digits, and cap at max valid length.
@@ -73,17 +73,15 @@ export const defaults: AllOptions = {
 	styles: styleDefaults,
 	//* Use full screen popup instead of dropdown for country list.
 	useFullscreenPopup:
-		typeof navigator !== "undefined" && typeof window !== "undefined"
-			? //* We cannot just test screen size as some smartphones/website meta tags will report desktop resolutions.
-			//* Note: to target Android Mobiles (and not Tablets), we must find 'Android' and 'Mobile'
-			/Android.+Mobile|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-				navigator.userAgent,
-			) || window.innerWidth <= 500
-			: false,
+	typeof navigator !== "undefined" && typeof window !== "undefined"
+	? //* We cannot just test screen size as some smartphones/website meta tags will report desktop resolutions.
+	//* Note: to target Android Mobiles (and not Tablets), we must find 'Android' and 'Mobile'
+	/Android.+Mobile|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+		navigator.userAgent,
+	) || window.innerWidth <= 500
+	: false,
 	//* Specify the path to the libphonenumber script to enable validation/formatting.
 	utilsScriptPath: "",
-	//* The number type to enforce during validation.
-	validationNumberType: NumberType.NationalIdentificationNumber,
 };
 
 export default defaults;

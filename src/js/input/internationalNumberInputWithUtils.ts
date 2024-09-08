@@ -10,6 +10,7 @@ const utilsTmp: IniUtils = {
 	getValidationError: utils.getValidationError,
 	isPossibleNumber: utils.isPossibleNumber,
 	isValidNumber: utils.isValidNumber,
+	getMaxLength: utils.getMaxLength,
 
 	numberType: NumberType.NationalIdentificationNumber,
 }

@@ -172,10 +172,10 @@ var factoryOutput = (() => {
     i18n: {},
     //* Initial country.
     initialCountry: "",
+    //* The number type to enforce during validation.
+    numberType: "NIN" /* NationalIdentificationNumber */,
     //* Display only these countries.
     onlyCountries: [],
-    //* Number type to use for placeholders.
-    placeholderNumberType: "NIN" /* NationalIdentificationNumber */,
     //* Show flags - for both the selected country, and in the country dropdown
     showFlags: true,
     //* Only allow certain chars e.g. a plus followed by numeric digits, and cap at max valid length.
@@ -191,9 +191,7 @@ var factoryOutput = (() => {
       ) || window.innerWidth <= 500
     ) : false,
     //* Specify the path to the libphonenumber script to enable validation/formatting.
-    utilsScriptPath: "",
-    //* The number type to enforce during validation.
-    validationNumberType: "NIN" /* NationalIdentificationNumber */
+    utilsScriptPath: ""
   };
   var InternationalNumberInputOptions_default_default = defaults;
 
@@ -1960,7 +1958,7 @@ var factoryOutput = (() => {
         );
         content.insertAdjacentText(
           "beforeend",
-          `${country.name}`
+          country.name
         );
         listItem.insertAdjacentElement(
           "beforeend",
@@ -2433,21 +2431,12 @@ var factoryOutput = (() => {
     }
     //* Update the maximum valid number length for the currently selected country.
     _updateMaxLength() {
-      const { strictMode, placeholderNumberType, validationNumberType } = this.options;
+      const { strictMode, numberType } = this.options;
       if (strictMode && InternationalNumberInput_default.utils) {
         if (this.selectedCountryData.iso2) {
-          const numberType = InternationalNumberInput_default.utils.numberType[placeholderNumberType];
-          let exampleNumber = InternationalNumberInput_default.utils.getExampleNumber(
-            this.selectedCountryData.iso2,
-            numberType
+          this.maxCoreNumberLength = InternationalNumberInput_default.utils.getMaxLength(
+            this.selectedCountryData.iso2
           );
-          let validNumber = exampleNumber;
-          while (InternationalNumberInput_default.utils.isPossibleNumber(exampleNumber, this.selectedCountryData.iso2, validationNumberType)) {
-            validNumber = exampleNumber;
-            exampleNumber += "0";
-          }
-          const coreNumber = InternationalNumberInput_default.utils.getCoreNumber(validNumber, this.selectedCountryData.iso2);
-          this.maxCoreNumberLength = coreNumber.length;
         } else {
           this.maxCoreNumberLength = null;
         }
@@ -2488,12 +2477,11 @@ var factoryOutput = (() => {
     _updatePlaceholder() {
       const {
         autoPlaceholder,
-        placeholderNumberType,
+        numberType,
         customPlaceholder
       } = this.options;
       const shouldSetPlaceholder = autoPlaceholder === "agressive" /* Aggressive */ || !this.hadInitialPlaceholder && autoPlaceholder === "polite" /* Polite */;
-      if (InternationalNumberInput_default.utils && shouldSetPlaceholder) {
-        const numberType = InternationalNumberInput_default.utils.numberType[placeholderNumberType];
+      if (shouldSetPlaceholder && InternationalNumberInput_default.utils) {
         let placeholder = this.selectedCountryData.iso2 ? InternationalNumberInput_default.utils.getExampleNumber(
           this.selectedCountryData.iso2,
           numberType
@@ -2685,7 +2673,7 @@ var factoryOutput = (() => {
       if (/\p{L}/u.test(val)) {
         return false;
       }
-      return InternationalNumberInput_default.utils ? InternationalNumberInput_default.utils.isPossibleNumber(val, this.selectedCountryData.iso2, this.options.validationNumberType) : null;
+      return InternationalNumberInput_default.utils ? InternationalNumberInput_default.utils.isPossibleNumber(val, this.selectedCountryData.iso2, this.options.numberType) : null;
     }
     //* Validate the input val (precise)
     isValidNumberPrecise() {
@@ -2713,11 +2701,6 @@ var factoryOutput = (() => {
         this._triggerCountryChange();
       }
       this._trigger("input", { isSetNumber: true });
-    }
-    //* Set the placeholder number typ
-    setPlaceholderNumberType(type) {
-      this.options.placeholderNumberType = type;
-      this._updatePlaceholder();
     }
     setDisabled(disabled) {
       this.numberInput.disabled = disabled;
@@ -2780,6 +2763,9 @@ var factoryOutput = (() => {
   var isPossibleNumber = (number, countryCode, numberTypeName) => {
     return countryCode ? number : number;
   };
+  var getMaxLength = (countryCode) => {
+    return 10;
+  };
 
   // src/js/input/internationalNumberInputWithUtils.ts
   var utilsTmp = {
@@ -2790,6 +2776,7 @@ var factoryOutput = (() => {
     getValidationError,
     isPossibleNumber,
     isValidNumber,
+    getMaxLength,
     numberType: "NIN" /* NationalIdentificationNumber */
   };
   internationalNumberInput.utils = utilsTmp;

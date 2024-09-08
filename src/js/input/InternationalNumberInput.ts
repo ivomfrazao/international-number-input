@@ -25,6 +25,7 @@ export type IniUtils = {
 	formatNumberAsYouType(number: string, countryISO2: string | undefined): string;
 	getCoreNumber(number: string, countryISO2: string | undefined): string;
 	getExampleNumber(countryISO2: string | undefined, numberType: NumberType): string;
+	getMaxLength(countryISO2: string): number;
 	getValidationError(number: string, countryISO2: string | undefined): ValidateReturn;
 	isPossibleNumber(number: string, countryISO2: string | undefined, numberType?: NumberType): boolean;
 	isValidNumber: (number: string, countryISO2: string | undefined) => boolean;

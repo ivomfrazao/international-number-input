@@ -513,7 +513,7 @@ export class Ini {
 			);
 			content.insertAdjacentText(
 				"beforeend",
-				`${country.name}`,
+				country.name,
 			);
 			listItem.insertAdjacentElement(
 				"beforeend",
@@ -1191,22 +1191,12 @@ export class Ini {
   
 	//* Update the maximum valid number length for the currently selected country.
 	private _updateMaxLength(): void {
-		const { strictMode, placeholderNumberType, validationNumberType } = this.options;
+		const { strictMode, numberType } = this.options;
 		if (strictMode && internationalNumberInput.utils) {
 			if (this.selectedCountryData.iso2) {
-				const numberType = internationalNumberInput.utils.numberType[placeholderNumberType];
-				let exampleNumber = internationalNumberInput.utils.getExampleNumber(
-					this.selectedCountryData.iso2,
-					numberType,
+				this.maxCoreNumberLength = internationalNumberInput.utils.getMaxLength(
+					this.selectedCountryData.iso2
 				);
-				//* See if adding more digits is still valid to get the true maximum valid length.
-				let validNumber = exampleNumber;
-				while (internationalNumberInput.utils.isPossibleNumber(exampleNumber, this.selectedCountryData.iso2, validationNumberType)) {
-					validNumber = exampleNumber;
-					exampleNumber += "0";
-				}
-				const coreNumber = internationalNumberInput.utils.getCoreNumber(validNumber, this.selectedCountryData.iso2);
-				this.maxCoreNumberLength = coreNumber.length;
 			} else {
 				this.maxCoreNumberLength = null;
 			}
@@ -1257,15 +1247,14 @@ export class Ini {
 	private _updatePlaceholder(): void {
 		const {
 			autoPlaceholder,
-			placeholderNumberType,
+			numberType,
 			customPlaceholder,
 		} = this.options;
 		const shouldSetPlaceholder =
 			autoPlaceholder === AutoPlaceholderType.Aggressive ||
 			(!this.hadInitialPlaceholder && autoPlaceholder === AutoPlaceholderType.Polite);
 	
-		if (internationalNumberInput.utils && shouldSetPlaceholder) {
-			const numberType = internationalNumberInput.utils.numberType[placeholderNumberType];
+		if (shouldSetPlaceholder && internationalNumberInput.utils) {
 			//* Note: Must set placeholder to empty string if no country selected (globe icon showing).
 			let placeholder = this.selectedCountryData.iso2
 				? internationalNumberInput.utils.getExampleNumber(
@@ -1512,7 +1501,7 @@ export class Ini {
 			return false;
 		}
 		return internationalNumberInput.utils
-			? internationalNumberInput.utils.isPossibleNumber(val, this.selectedCountryData.iso2, this.options.validationNumberType)
+			? internationalNumberInput.utils.isPossibleNumber(val, this.selectedCountryData.iso2, this.options.numberType)
 			: null;
 	}
   
@@ -1555,12 +1544,6 @@ export class Ini {
 		}
 		//* This is required for the React cmp to update its state correctly.
 		this._trigger("input", { isSetNumber: true });
-	}
-  
-	//* Set the placeholder number typ
-	setPlaceholderNumberType(type: NumberType): void {
-		this.options.placeholderNumberType = type;
-		this._updatePlaceholder();
 	}
   
 	setDisabled(disabled: boolean): void {

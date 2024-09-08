@@ -438,17 +438,16 @@ declare module "input/InternationalNumberInputOptions" {
          * It can also be set as `auto`, the component will try to automatically infer the value.
          */
         initialCountry: string;
+        numberType: NumberType | null;
         /**
          * List of countries to exclusively be displayed, instead of using all countries.
          * If set, it will supersede the {@link excludeCountries} parameter.
          */
         onlyCountries: string[];
-        placeholderNumberType: NumberType;
         showFlags: boolean;
         strictMode: boolean;
         useFullscreenPopup: boolean;
         utilsScriptPath: string;
-        validationNumberType: NumberType | null;
     }
     export type SomeStyleOptions = Partial<AllStyleOptions>;
     export interface AllStyleOptions {
@@ -1222,7 +1221,6 @@ declare module "input/InternationalNumberInput.class" {
         isValidNumberPrecise(): boolean | null;
         setCountry(iso2: string): void;
         setNumber(number: string): void;
-        setPlaceholderNumberType(type: NumberType): void;
         setDisabled(disabled: boolean): void;
     }
 }
@@ -1252,6 +1250,7 @@ declare module "input/InternationalNumberInput" {
         formatNumberAsYouType(number: string, countryISO2: string | undefined): string;
         getCoreNumber(number: string, countryISO2: string | undefined): string;
         getExampleNumber(countryISO2: string | undefined, numberType: NumberType): string;
+        getMaxLength(countryISO2: string): number;
         getValidationError(number: string, countryISO2: string | undefined): ValidateReturn;
         isPossibleNumber(number: string, countryISO2: string | undefined, numberType?: NumberType): boolean;
         isValidNumber: (number: string, countryISO2: string | undefined) => boolean;

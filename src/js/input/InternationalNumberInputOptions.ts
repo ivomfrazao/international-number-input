@@ -284,17 +284,16 @@ export interface AllOptions {
 	 * It can also be set as `auto`, the component will try to automatically infer the value.
 	 */
 	initialCountry: string;
+	numberType: NumberType | null;
 	/**
 	 * List of countries to exclusively be displayed, instead of using all countries.
 	 * If set, it will supersede the {@link excludeCountries} parameter.
 	 */
 	onlyCountries: string[];
-	placeholderNumberType: NumberType;
 	showFlags: boolean;
 	strictMode: boolean;
 	useFullscreenPopup: boolean;
 	utilsScriptPath: string;
-	validationNumberType: NumberType | null;
 }
 
 export type SomeStyleOptions = Partial<AllStyleOptions>;

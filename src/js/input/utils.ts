@@ -194,6 +194,10 @@ export const isPossibleNumber = (number, countryCode, numberTypeName) => {
 	// }
 };
 
+export const getMaxLength = (countryCode) => {
+	return 10;
+}
+
 /********************
  * NOTE: for following sections, keys must be in quotes to force closure compiler to preserve them
  ********************/
