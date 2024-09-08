@@ -1009,7 +1009,7 @@ export class Ini {
 	private _searchForCountry(query: string): void {
 		for (let i = 0; i < this.countries.length; i++) {
 			const c = this.countries[i];
-			const startsWith = c.name.substr(0, query.length).toLowerCase() === query;
+			const startsWith = c.name.substring(0, query.length).toLowerCase() === query;
 			if (startsWith) {
 				const listItem = c.nodeById[this.id];
 				//* Update highlighting and scroll.
