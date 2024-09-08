@@ -61,8 +61,6 @@ export class Ini {
 	private highlightedItem: HTMLElement | null;
 	private options: AllOptions;
 	private hadInitialPlaceholder: boolean;
-	private isRTL: boolean;
-	private isAndroid: boolean;
 	private selectedCountryData: SelectedCountryData;
 	private countries: Country[];
 	private countryContainer: HTMLElement;
@@ -79,8 +77,6 @@ export class Ini {
 	private hiddenInputCountry: HTMLInputElement;
 	private maxCoreNumberLength: number | null;
 	private defaultCountry: string | null;
-	private originalPaddingRight: string;
-	private originalPaddingLeft: string;
   
 	private _handleHiddenInputSubmit: () => void;
 	private _handleLabelClick: (e: Event) => void;
@@ -110,8 +106,11 @@ export class Ini {
 		this.options = Object.assign({}, defaults, customOptions);
 		this.hadInitialPlaceholder = Boolean(input.getAttribute("placeholder"));
 	}
-  
-	//* Can't be private as it's called from internationalNumberInput convenience wrapper.
+
+	/**
+	 * Initialization method.
+	 * Can't be private as it's called from internationalNumberInput convenience wrapper.
+	 */
 	_init(): void {
 		//* If showing fullscreen popup, do not fix the width.
 		if (this.options.useFullscreenPopup) {
@@ -122,11 +121,6 @@ export class Ini {
 		if (this.options.useFullscreenPopup && !this.options.dropdownContainer) {
 			this.options.dropdownContainer = document.body;
 		}
-	
-		this.isAndroid = typeof navigator !== "undefined" ? /Android/i.test(navigator.userAgent) : false;
-	
-		//* Check if input has one parent with RTL.
-		this.isRTL = !!this.numberInput.closest("[dir=rtl]");
 	
 		//* Allow overriding the default interface strings.
 		this.options.i18n = { ...defaultEnglishStrings, ...this.options.i18n };
@@ -162,12 +156,14 @@ export class Ini {
 		//* Utils script, and auto country.
 		this._initRequests();
 	}
-	
-	//********************
-	//*  PRIVATE METHODS
-	//********************
 
-	//* Prepare all of the country data, including onlyCountries, excludeCountries, countryOrder options.
+	/**
+	 * PRIVATE METHODS
+	 */
+
+	/**
+	 * Prepare all of the country data, including onlyCountries, excludeCountries, countryOrder options.
+	 */
 	private _processCountryData(): void {
 		//* Process onlyCountries or excludeCountries array if present.
 		this._processAllCountries();
@@ -178,8 +174,10 @@ export class Ini {
 		//* Sort countries by countryOrder option (if present), then name.
 		this._sortCountries();
 	}
-		
-	//* Sort countries by countryOrder option (if present), then name.
+
+	/**
+	 * Sort countries by countryOrder option (if present), then name.
+	 */
 	private _sortCountries() {
 		if (this.options.countryOrder) {
 			this.options.countryOrder = this.options.countryOrder.map((country) => country.toLowerCase());
@@ -205,7 +203,9 @@ export class Ini {
 		});
 	}
   
-	//* Process onlyCountries or excludeCountries array if present.
+	/**
+	 * Process onlyCountries or excludeCountries array if present.
+	 */
 	private _processAllCountries(): void {
 		const { onlyCountries, excludeCountries } = this.options;
 		if (onlyCountries.length) {
@@ -238,8 +238,10 @@ export class Ini {
 			}
 		});
 	}
-  
-	//* Generate all of the markup for the plugin: the selected country overlay, and the dropdown.
+
+	/**
+	 * Generate all of the markup for the plugin: the selected country overlay, and the dropdown.
+	 */
 	private _generateMarkup(): void {
 		this.numberInput.classList.add(buildElementClass(this.options.styles, StyleElement.NumberInput));
 	
@@ -462,8 +464,10 @@ export class Ini {
 			}
 		}
 	}
-  
-	//* For each country: add a country list item <li> to the countryList <ul> container.
+
+	/**
+	 * For each country: add a country list item <li> to the countryList <ul> container.
+	 */
 	private _appendListItems(): void {
 		this.countries.forEach((country, index) => {
 			//* Start by highlighting the first item (useful when countrySearch disabled).
@@ -521,9 +525,12 @@ export class Ini {
 			);
 		});
 	}
-  
-	//* Set the initial state of the input value and the selected country by:
-	//* 1. Using explicit initialCountry
+
+	/**
+	 * Set the initial state of the input value and the selected country by:
+	 * 1. Using explicit initialCountry
+	 * @param overrideAutoCountry 
+	 */
 	private _setInitialState(overrideAutoCountry: boolean = false): void {
 		const attributeValue = this.numberInput.getAttribute("value");
 		const inputValue = this.numberInput.value;
@@ -552,7 +559,9 @@ export class Ini {
 		}
 	}
   
-	//* Initialise the main event listeners: input keyup, and click selected country.
+	/**
+	 * Initialise the main event listeners: input keyup, and click selected country.
+	 */
 	private _initListeners(): void {
 		this._initNumberInputListeners();
 		if (this.options.allowDropdown) {
@@ -563,7 +572,9 @@ export class Ini {
 		}
 	}
   
-	//* Update hidden input on form submit.
+	/**
+	 * Update hidden input on form submit.
+	 */
 	private _initHiddenInputListener(): void {
 		this._handleHiddenInputSubmit = (): void => {
 			if (this.hiddenInput) {
@@ -578,8 +589,10 @@ export class Ini {
 			this._handleHiddenInputSubmit,
 		);
 	}
-  
-	//* initialise the dropdown listeners.
+
+	/**
+	 * Initialise the dropdown listeners.
+	 */
 	private _initDropdownListeners(): void {
 		const elementHideClass = buildElementClass(this.options.styles, StyleElement.Hide)
 		//* Hack for input nested inside label (which is valid markup): clicking the selected country to
@@ -638,8 +651,10 @@ export class Ini {
 			this._handleCountryContainerKeydown,
 		);
 	}
-  
-	//* Init many requests: utils script / geo ip lookup.
+
+	/**
+	 * Init many requests: utils script / geo ip lookup.
+	 */
 	private _initRequests(): void {
 		const { utilsScriptPath, initialCountry, geoIpLookup } = this.options;
 		//* If the user has specified the path to the utils script, fetch it on window.load, else resolve.
@@ -665,8 +680,10 @@ export class Ini {
 			this.resolveAutoCountryPromise();
 		}
 	}
-  
-	//* Perform the geo ip lookup.
+
+	/**
+	 * Perform the geo ip lookup.
+	 */
 	private _loadAutoCountry(): void {
 		//* 3 options:
 		//* 1) Already loaded (we're done)
@@ -707,8 +724,10 @@ export class Ini {
 			}
 		}
 	}
-  
-	//* Initialize the number input listeners.
+
+	/**
+	 * Initialize the number input listeners.
+	 */
 	private _initNumberInputListeners(): void {
 		const { strictMode, formatAsYouType, formatOnDisplay } = this.options;
 		let userOverrideFormatting = false;
@@ -785,14 +804,22 @@ export class Ini {
 			this.numberInput.addEventListener("keydown", this._handleKeydownEvent);
 		}
 	}
-  
-	//* Adhere to the input's maxlength attr.
+
+	/**
+	 * Adhere to the input's maxlength attr.
+	 * @param number The number the user inputted.
+	 * @returns The number limited to the max length allowed
+	 */
 	private _cap(number: string): string {
 		const max = parseInt(this.numberInput.getAttribute("maxlength") || "", 10);
 		return (max && number.length > max) ? number.substring(0, max) : number;
 	}
   
-	//* Trigger a custom event on the input.
+	/**
+	 * Trigger a custom event on the input.
+	 * @param name The name of the event to be triggered.
+	 * @param detailProps The details of the event to send to the catcher.
+	 */
 	private _trigger(name: string, detailProps: object = {}): void {
 		const e = new CustomEvent(name, {
 			bubbles: true,
@@ -801,8 +828,10 @@ export class Ini {
 		});
 		this.numberInput.dispatchEvent(e);
 	}
-  
-	//* Open the dropdown.
+
+	/**
+	 * Open the dropdown.
+	 */
 	private _openDropdown(): void {
 		const { fixDropdownWidth, countrySearch } = this.options;
 		if (fixDropdownWidth) {
@@ -832,8 +861,10 @@ export class Ini {
 	
 		this._trigger("open:countrydropdown");
 	}
-  
-	//* Set the dropdown position
+
+	/**
+	 * Set the dropdown position
+	 */
 	private _setDropdownPosition(): void {
 		if (this.options.dropdownContainer) {
 			this.options.dropdownContainer.appendChild(this.dropdown);
@@ -856,8 +887,10 @@ export class Ini {
 			}
 		}
 	}
-  
-	//* We only bind dropdown listeners when the dropdown is open.
+
+	/**
+	 * Binds listeners to the dropdown when it is opened.
+	 */
 	private _bindDropdownListeners(): void {
 		//* When mouse over a list item, just highlight that one
 		//* we add the class "highlight", so if they hit "enter" we know which one to select.
@@ -968,8 +1001,11 @@ export class Ini {
 			this.searchInput.addEventListener("click", (e) => e.stopPropagation());
 		}
 	}
-  
-	//* Hidden search (countrySearch disabled): Find the first list item whose name starts with the query string.
+
+	/**
+	 * Hidden search (countrySearch disabled): Finds the first list item whose name start with the query string.
+	 * @param query The string to be queried.
+	 */
 	private _searchForCountry(query: string): void {
 		for (let i = 0; i < this.countries.length; i++) {
 			const c = this.countries[i];
@@ -983,8 +1019,12 @@ export class Ini {
 			}
 		}
 	}
-  
-	//* Country search enabled: Filter the countries according to the search query.
+
+	/**
+	 * Country search enabled: Filter the countries according to the search query.
+	 * @param query The string to be queried.
+	 * @param isReset 
+	 */
 	private _filterCountries(query: string, isReset: boolean = false): void {
 		let noCountriesAddedYet = true;
 		this.countryList.innerHTML = "";
@@ -1016,8 +1056,10 @@ export class Ini {
 		this.countryList.scrollTop = 0;
 		this._updateSearchResultsText();
 	}
-  
-	//* Update search results text (for a11y).
+
+	/**
+	 * Updates the search results' text (for a11y).
+	 */
 	private _updateSearchResultsText(): void {
 		const { i18n } = this.options;
 		const count = this.countryList.childElementCount;
@@ -1033,7 +1075,10 @@ export class Ini {
 		this.searchResultsA11yText.textContent = searchText;
 	}
   
-	//* Highlight the next/prev item in the list (and ensure it is visible).
+	/**
+	 * Event that highlights the next/previous item in the list (and ensures it is visible).
+	 * @param key The key that was used.
+	 */
 	private _handleUpDownKey(key: string): void {
 		let next =
 			key === KeyboardKey.ArrowUp
@@ -1054,16 +1099,21 @@ export class Ini {
 			this._highlightListItem(next, false);
 		}
 	}
-  
-	//* Select the currently highlighted item.
+
+	/**
+	 * Selects the currently highlighted item.
+	 */
 	private _handleEnterKey(): void {
 		if (this.highlightedItem) {
 			this._selectListItem(this.highlightedItem);
 		}
 	}
   
-	//* Update the input's value to the given val (format first if possible)
-	//* NOTE: this is called from _setInitialState, handleUtils and setNumber.
+	/**
+	 * Update the input's value to the given val (format first if possible)
+	 * NOTE: this is called from _setInitialState, handleUtils and setNumber.
+	 * @param fullNumber The number the user has inputted.
+	 */
 	private _updateValFromNumber(fullNumber: string): void {
 		let number = fullNumber;
 		// if (
@@ -1085,8 +1135,12 @@ export class Ini {
 		this.numberInput.value = number;
 	}
   
-	//* Check if need to select a new country based on the given number
-	//* Note: called from _setInitialState, keyup handler, setNumber.
+	/**
+	 * Checks if a new country needs to be selected based on the given number.
+	 * NOTE: called from _setInitialState, keyup handler, setNumber.
+	 * @param fullNumber The number the user has inputted.
+	 * @returns Flag that identifies if an update to the country is necessary.
+	 */
 	private _updateCountryFromNumber(fullNumber: string): boolean {
 		const plusIndex = fullNumber.indexOf("+");
 		//* If it contains a plus, discard any chars before it e.g. accidental space char.
@@ -1106,8 +1160,12 @@ export class Ini {
 
 		return false;
 	}
-  
-	//* Remove highlighting from other list items and highlight the given item.
+
+	/**
+	 * Remove highlighting from other list items and highlight the given item.
+	 * @param listItem The HTML list item to be modified.
+	 * @param shouldFocus Identifies if the item is to be focused.
+	 */
 	private _highlightListItem(listItem: HTMLElement | null, shouldFocus: boolean): void {
 		const elementHighlightClass = buildElementClass(this.options.styles, StyleElement.Highlight);
 		const prevItem = this.highlightedItem;
@@ -1131,9 +1189,13 @@ export class Ini {
 			this.highlightedItem.focus();
 		}
 	}
-  
-	//* Find the country data for the given iso2 code
-	//* the ignoreOnlyCountriesOption is only used during init() while parsing the onlyCountries array
+	
+	/**
+	 * Find the country data for the given iso2 code
+	 * @param iso2 The country whose information is to be fetched.
+	 * @param allowFail Identifies if a gracious fail should be used, retuning null, or an exception should be thrown otherwise.
+	 * @returns 
+	 */
 	private _getCountryData(iso2: string, allowFail: boolean): Country | null {
 		for (let i = 0; i < this.countries.length; i++) {
 			if (this.countries[i].iso2 === iso2) {
@@ -1145,9 +1207,13 @@ export class Ini {
 		}
 		throw new Error(`No country data for '${iso2}'`);
 	}
-  
-	//* Update the selected country, dial code (if separateDialCode), placeholder, title, and active list item.
-	//* Note: called from _setInitialState, _updateCountryFromNumber, _selectListItem, setCountry.
+	
+	/**
+	 * Updates the selected country, placeholder, title, active list item, and other metedata.
+	 * NOTE: called from _setInitialState, _updateCountryFromNumber, _selectListItem, setCountry.
+	 * @param iso2 The country to be set as selected.
+	 * @returns Identifies if a change to the selected country was made. If false, it means the country was already selected.
+	 */
 	private _setCountry(iso2?: string | null): boolean {
 		const { showFlags, i18n } = this.options;
 	
@@ -1188,8 +1254,10 @@ export class Ini {
 		//* Return if the country has changed or not.
 		return prevCountry.iso2 !== iso2;
 	}
-  
-	//* Update the maximum valid number length for the currently selected country.
+	
+	/**
+	 * Updates the maximum valid number length for the currently selected country.
+	 */
 	private _updateMaxLength(): void {
 		const { strictMode, numberType } = this.options;
 		if (strictMode && internationalNumberInput.utils) {
@@ -1202,48 +1270,10 @@ export class Ini {
 			}
 		}
 	}
-  
-	private _setSelectedCountryTitleAttribute(iso2: string | null = null): void {
-		if (!this.selectedCountry) {
-			return;
-		}
 	
-		let title;
-		if (iso2) {
-			title = this.selectedCountryData.name;
-		} else {
-			title = "Unknown";
-		}
-	
-		this.selectedCountry.setAttribute("title", title);
-	}
-  
-	//* When the input is in a hidden container during initialisation, we must inject some markup
-	//* into the end of the DOM to calculate the correct offsetWidth.
-	//* NOTE: this is only used when separateDialCode is enabled, so countryContainer and selectedCountry
-	//* will definitely exist.
-	private _getHiddenSelectedCountryWidth(): number {
-		//* To get the right styling to apply, all we need is a shallow clone of the container,
-		//* and then to inject a deep clone of the selectedCountry element.
-		if (this.numberInput.parentNode) {
-			const containerClone = this.numberInput.parentNode.cloneNode(false) as HTMLElement;
-			containerClone.style.visibility = "hidden";
-			document.body.appendChild(containerClone);
-	
-			const countryContainerClone = this.countryContainer.cloneNode() as HTMLElement;
-			containerClone.appendChild(countryContainerClone);
-	
-			const selectedCountryClone = this.selectedCountry.cloneNode(true) as HTMLElement;
-			countryContainerClone.appendChild(selectedCountryClone);
-	
-			const width = selectedCountryClone.offsetWidth;
-			document.body.removeChild(containerClone);
-			return width;
-		}
-		return 0;
-	}
-  
-	//* Update the input placeholder to an example number from the currently selected country.
+	/**
+	 * Updates the input placeholder to an example number from the currently selected country.
+	 */
 	private _updatePlaceholder(): void {
 		const {
 			autoPlaceholder,
@@ -1270,8 +1300,11 @@ export class Ini {
 			this.numberInput.setAttribute("placeholder", placeholder);
 		}
 	}
-  
-	//* Called when the user selects a list item from the dropdown.
+	
+	/**
+	 * Called when the user selects a list item from the dropdown.
+	 * @param listItem The item HTMLElement that was selected.
+	 */
 	private _selectListItem(listItem: HTMLElement): void {
 		//* Update selected country and active list item.
 		const countryChanged = this._setCountry(
@@ -1286,8 +1319,10 @@ export class Ini {
 			this._triggerCountryChange();
 		}
 	}
-  
-	//* Close the dropdown and unbind any listeners.
+
+	/**
+	 * Closes the dropdown and unbinds any listeners.
+	 */
 	private _closeDropdown(): void {
 		this.dropdownContent.classList.add(buildElementClass(this.options.styles, StyleElement.Hide));
 		this.selectedCountry.setAttribute("aria-expanded", "false");
@@ -1329,8 +1364,11 @@ export class Ini {
 	
 		this._trigger("close:countrydropdown");
 	}
-  
-	//* Check if an element is visible within it's container, else scroll until it is.
+	
+	/**
+	 * Check if an element is visible within it's container, else scroll until it is.
+	 * @param element The element to scroll into for it to be visible.
+	 */
 	private _scrollTo(element: HTMLElement): void {
 		const container = this.countryList;
 		const scrollTop = document.documentElement.scrollTop;
@@ -1351,24 +1389,37 @@ export class Ini {
 			container.scrollTop = newScrollTop - heightDifference;
 		}
 	}
-  
-	//* Get the input val
+	
+	/**
+	 * Gets the input's value trimmed.
+	 * @returns The full number trimmed.
+	 */
 	private _getFullNumber(): string {
 		const val = this.numberInput.value.trim();
 		return val;
 	}
   
+	/**
+	 * Processes the number before it's set in the input to be valid.
+	 * @param fullNumber The number inputted by the user.
+	 * @returns The number limitted to the maximum length the number is allowed to have.
+	 */
 	private _beforeSetNumber(fullNumber: string): string {
 		const number = fullNumber;
 		return this._cap(number);
 	}
-  
-	//* Trigger the 'countrychange' event.
+	
+	/**
+	 * Triggers a "countrychange" event.
+	 */
 	private _triggerCountryChange(): void {
 		this._trigger("countrychange");
 	}
-  
-	//* Format the number as the user types.
+	
+	/**
+	 * Formats the number according to it's rules.
+	 * @returns The formatted number.
+	 */
 	private _formatNumberAsYouType(): string {
 		const val = this._getFullNumber();
 		const result = internationalNumberInput.utils
@@ -1380,8 +1431,10 @@ export class Ini {
 	//**************************
 	//*  SECRET PUBLIC METHODS
 	//**************************
-  
-	//* This is called when the geoip call returns.
+	
+	/**
+	 * Handles the geoip call return.
+	 */
 	handleAutoCountry(): void {
 		if (this.options.initialCountry === "auto" && internationalNumberInput.autoCountry) {
 			//* We must set this even if there is an initial val in the input: in case the initial val is
@@ -1395,8 +1448,10 @@ export class Ini {
 			this.resolveAutoCountryPromise();
 		}
 	}
-  
-	//* This is called when the utils request completes.
+	
+	/**
+	 * Handles the utils request completion.
+	 */
 	handleUtils(): void {
 		//* If the request was successful
 		if (internationalNumberInput.utils) {
@@ -1415,8 +1470,10 @@ export class Ini {
 	//********************
 	//*  PUBLIC METHODS
 	//********************
-  
-	//* Remove plugin.
+	
+	/**
+	 * Destroys the instance of the INI.
+	 */
 	destroy(): void {
 		const { allowDropdown } = this.options;
 		if (allowDropdown) {
@@ -1459,8 +1516,12 @@ export class Ini {
 	
 		delete internationalNumberInput.instances[this.id];
 	}
-  
-	//* Format the number to the given format.
+	
+	/**
+	 * Format the number to the given format.
+	 * @param format The format to be used.
+	 * @returns The number formatted.
+	 */
 	getNumber(format?: number): string {
 		if (internationalNumberInput.utils) {
 			const { iso2 } = this.selectedCountryData;
@@ -1472,19 +1533,29 @@ export class Ini {
 		}
 		return "";
 	}
-  
-	//* Get the type of the entered number
+	
+	/**
+	 * Gets the type of the entered number
+	 * @returns The type of number that was entered.
+	 */
 	getNumberType(): NumberType {
 		// TODO
 		return NumberType.NationalIdentificationNumber;
 	}
-  
-	//* Get the country data for the currently selected country.
+	
+	/**
+	 * Gets the country data for the currently selected country.
+	 * @returns The data of the selected country.
+	 */
 	getSelectedCountryData(): SelectedCountryData {
 		return this.selectedCountryData;
 	}
   
-	//* Get the validation error.
+	//* 
+	/**
+	 * Gets the result of the validation process.
+	 * @returns The validation result.
+	 */
 	getValidationError(): ValidateReturn {
 		if (internationalNumberInput.utils) {
 			const { iso2 } = this.selectedCountryData;
@@ -1492,8 +1563,11 @@ export class Ini {
 		}
 		return { isValid: false, error: new exceptions.ValidationError("An unknown error occurred") };;
 	}
-  
-	//* Validate the input val
+	
+	/**
+	 * Validates the currently entered number.
+	 * @returns Identifies if the entered number is valid.
+	 */
 	isValidNumber(): boolean | null {
 		const val = this._getFullNumber();
 		//* Return false for any alpha chars.
@@ -1504,8 +1578,11 @@ export class Ini {
 			? internationalNumberInput.utils.isPossibleNumber(val, this.selectedCountryData.iso2, this.options.numberType)
 			: null;
 	}
-  
-	//* Validate the input val (precise)
+	
+	/**
+	 * Validates the currently entered number.
+	 * @returns Identifies if the entered number is valid.
+	 */
 	isValidNumberPrecise(): boolean | null {
 		const val = this._getFullNumber();
 		//* Return false for any alpha chars.
@@ -1516,8 +1593,11 @@ export class Ini {
 			? internationalNumberInput.utils.isValidNumber(val, this.selectedCountryData.iso2)
 			: null;
 	}
-  
-	//* Update the selected country, and update the input val accordingly.
+	
+	/**
+	 * Update the selected country, and update the input val accordingly.
+	 * @param iso2 The selected country's ISO2 code.
+	 */
 	setCountry(iso2: string): void {
 		const iso2Lower = iso2?.toLowerCase();
 		const currentCountry = this.selectedCountryData.iso2;
@@ -1532,8 +1612,11 @@ export class Ini {
 			this._triggerCountryChange();
 		}
 	}
-  
-	//* Set the input value and update the country.
+	
+	/**
+	 * Sets the input's value and updates the country.
+	 * @param number The number that was entered.
+	 */
 	setNumber(number: string): void {
 		//* We must update the country first, which updates this.selectedCountryData, which is used for
 		//* formatting the number before displaying it.
@@ -1546,6 +1629,10 @@ export class Ini {
 		this._trigger("input", { isSetNumber: true });
 	}
   
+	/**
+	 * Sets the disabled status of the selected country.
+	 * @param disabled If it's to disable or not.
+	 */
 	setDisabled(disabled: boolean): void {
 		this.numberInput.disabled = disabled;
 		if (disabled) {
