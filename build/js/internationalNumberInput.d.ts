@@ -108,6 +108,14 @@ declare module "types" {
          */
         placeholder?: string;
         /**
+         * The maximum length for the number type, without any formatting applied
+         */
+        maxLength: number;
+        /**
+         * The minimum length for the number type, without any formatting applied
+         */
+        minLength: number;
+        /**
          * Convert the number to the minimal representation.
          * This strips the number of any valid separators and removes surrounding
          * whitespace.
@@ -133,12 +141,22 @@ declare module "types" {
         validators: Validator[];
     }
 }
+declare module "input/libraries/AutoPlaceholderType.enum" {
+    /**
+     * Enumeration of the autoplaceholder types
+     */
+    export enum AutoPlaceholderType {
+        Aggressive = "agressive",
+        Polite = "polite"
+    }
+}
 declare module "input/InternationalNumberInputOptions" {
     import { NumberType } from "types";
+    import { AutoPlaceholderType } from "input/libraries/AutoPlaceholderType.enum";
     export type SomeOptions = Partial<AllOptions>;
     export interface AllOptions {
         allowDropdown: boolean;
-        autoPlaceholder: string;
+        autoPlaceholder: AutoPlaceholderType;
         styles: AllStyleOptions;
         /**
          * List of countries specifying their order.
@@ -420,7 +438,6 @@ declare module "input/InternationalNumberInputOptions" {
          * It can also be set as `auto`, the component will try to automatically infer the value.
          */
         initialCountry: string;
-        nationalMode: boolean;
         /**
          * List of countries to exclusively be displayed, instead of using all countries.
          * If set, it will supersede the {@link excludeCountries} parameter.
@@ -435,19 +452,32 @@ declare module "input/InternationalNumberInputOptions" {
     }
     export type SomeStyleOptions = Partial<AllStyleOptions>;
     export interface AllStyleOptions {
-        elementAccessibilityText: string;
+        elementAccessibilityTextClass: string;
+        elementArrowClass: string;
         elementContainerClass: string;
+        elementCountryClass: string;
         elementCountryContainerClass: string;
-        elementDropdownArrow: string;
+        elementCountryListboxClass: string;
+        elementCountryNameClass: string;
+        elementDropdownContentClass: string;
+        elementFlagClass: string;
+        elementFlagBoxClass: string;
+        elementGlobeClass: string;
+        elementHideClass: string;
+        elementHighlightClass: string;
+        elementItemClass: string;
         elementNumberInputClass: string;
         elementParentClass: string;
         elementSearchInputClass: string;
         elementSelectedCountryClass: string;
-        elementSelectedCountryPrimary: string;
+        elementSelectedCountryPrimaryClass: string;
         attributeAllowDropdownClass: string;
+        attributeDownClass: string;
         attributeFlexibleDropdownWidthClass: string;
+        attributeFullscreenPopupClass: string;
         attributeInlineDropdownClass: string;
         attributeShowFlagsClass: string;
+        attributeUpClass: string;
     }
 }
 declare module "input/InternationalNumberInputOptions.default" {
@@ -1041,28 +1071,49 @@ declare module "input/libraries/DOMUtils" {
 }
 declare module "input/libraries/StyleUtils" {
     import { AllStyleOptions } from "input/InternationalNumberInputOptions";
-    export function buildElementClass(styles: AllStyleOptions, element: StyleElement): string;
-    export function buildAttributeClass(styles: AllStyleOptions, attribute: StyleAttribute): string;
+    export function buildElementClass(styles: AllStyleOptions, element?: StyleElement | string, attribute?: StyleAttribute): string;
     export enum StyleElement {
-        AccessibilityText = "elementAccessibilityText",
+        AccessibilityText = "elementAccessibilityTextClass",
+        Arrow = "elementArrowClass",
         Container = "elementContainerClass",
+        Country = "elementCountryClass",
         CountryContainer = "elementCountryContainerClass",
-        DropdownArrow = "elementDropdownArrow",
+        CountryListbox = "elementCountryListboxClass",
+        CountryName = "elementCountryNameClass",
+        DropdownContent = "elementDropdownContentClass",
+        Flag = "elementFlagClass",
+        FlagBox = "elementFlagBoxClass",
+        Globe = "elementGlobeClass",
+        Hide = "elementHideClass",
+        Highlight = "elementHighlightClass",
+        Item = "elementItemClass",
         NumberInput = "elementNumberInputClass",
         SearchInput = "elementSearchInputClass",
         SelectedCountry = "elementSelectedCountryClass",
-        SelectedCountryPrimary = "elementSelectedCountryPrimary"
+        SelectedCountryPrimary = "elementSelectedCountryPrimaryClass"
     }
     export enum StyleAttribute {
         AllowDropdown = "attributeAllowDropdownClass",
+        Down = "attributeDownClass",
         FlexibleDropdownWidth = "attributeFlexibleDropdownWidthClass",
+        FullscreenPopup = "attributeFullscreenPopupClass",
         InlineDropdown = "attributeInlineDropdownClass",
-        ShowFlags = "attributeShowFlagsClass"
+        ShowFlags = "attributeShowFlagsClass",
+        Up = "attributeUpClass"
     }
 }
 declare module "input/libraries/InstancesUtils" {
     export function forEachInstance(method: string): void;
     export function loadUtils(path: string): Promise<unknown> | null;
+}
+declare module "input/libraries/DataAttributes.enum" {
+    /**
+     * Enumeration of the data attributes (e.g., data-ini-id).
+     */
+    export enum DataAttributes {
+        CountryCode = "data-country-code",
+        InputId = "data-ini-id"
+    }
 }
 declare module "input/InternationalNumberInput.class" {
     import { NumberType, ValidateReturn } from "types";

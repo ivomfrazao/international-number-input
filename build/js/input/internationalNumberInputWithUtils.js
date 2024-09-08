@@ -116,25 +116,38 @@ var factoryOutput = (() => {
 
   // src/js/input/InternationalNumberInputOptions.default.ts
   var styleDefaults = {
-    elementAccessibilityText: "a11y-text",
+    elementAccessibilityTextClass: "a11y-text",
+    elementArrowClass: "arrow",
     elementContainerClass: "",
+    elementCountryClass: "country",
     elementCountryContainerClass: "country-container",
-    elementDropdownArrow: "arrow",
+    elementCountryListboxClass: "country-listbox",
+    elementCountryNameClass: "country-name",
+    elementDropdownContentClass: "dropdown-content",
+    elementFlagClass: "flag",
+    elementFlagBoxClass: "flag-box",
+    elementGlobeClass: "globe",
+    elementHideClass: "hide",
+    elementHighlightClass: "highlight",
+    elementItemClass: "item",
     elementNumberInputClass: "number-input",
     elementParentClass: "ini",
     elementSearchInputClass: "search-input",
     elementSelectedCountryClass: "selected-country",
-    elementSelectedCountryPrimary: "selected-country-primary",
+    elementSelectedCountryPrimaryClass: "selected-country-primary",
     attributeAllowDropdownClass: "allow-dropdown",
+    attributeDownClass: "down",
     attributeFlexibleDropdownWidthClass: "flexible-dropdown-width",
+    attributeFullscreenPopupClass: "fullscreen-popup",
     attributeInlineDropdownClass: "inline-dropdown",
-    attributeShowFlagsClass: "show-flags"
+    attributeShowFlagsClass: "show-flags",
+    attributeUpClass: "up"
   };
   var defaults = {
     //* Whether or not to allow the dropdown.
     allowDropdown: true,
     //* Add a placeholder in the input with an example number for the selected country.
-    autoPlaceholder: "polite",
+    autoPlaceholder: "polite" /* Polite */,
     //* The order of the countries in the dropdown. Defaults to alphabetical.
     countryOrder: null,
     //* Add a country search input at the top of the dropdown.
@@ -159,8 +172,6 @@ var factoryOutput = (() => {
     i18n: {},
     //* Initial country.
     initialCountry: "",
-    //* National vs international formatting for numbers e.g. placeholders and displaying existing numbers.
-    nationalMode: true,
     //* Display only these countries.
     onlyCountries: [],
     //* Number type to use for placeholders.
@@ -1556,14 +1567,17 @@ var factoryOutput = (() => {
   }
 
   // src/js/input/libraries/StyleUtils.ts
-  function buildElementClass(styles, element) {
+  function buildElementClass(styles, element, attribute) {
     let builtClass = styles.elementParentClass;
-    builtClass += element ? `__${styles[element]}` : "";
-    return builtClass;
-  }
-  function buildAttributeClass(styles, attribute) {
-    let builtClass = styles.elementParentClass;
-    builtClass += attribute ? `--${styles[attribute]}` : "";
+    if (element) {
+      const elementSeparator = "__";
+      const styleElement = styles[element];
+      builtClass += elementSeparator + (styleElement ? styleElement : element);
+    }
+    if (attribute) {
+      const attributeSeparator = "--";
+      builtClass += attribute ? `${attributeSeparator}${styles[attribute]}` : "";
+    }
     return builtClass;
   }
 
@@ -1717,8 +1731,9 @@ var factoryOutput = (() => {
     //* Generate all of the markup for the plugin: the selected country overlay, and the dropdown.
     _generateMarkup() {
       this.numberInput.classList.add(buildElementClass(this.options.styles, "elementNumberInputClass" /* NumberInput */));
-      if (!this.numberInput.hasAttribute("autocomplete") && !(this.numberInput.form && this.numberInput.form.hasAttribute("autocomplete"))) {
-        this.numberInput.setAttribute("autocomplete", "off");
+      const autocompleteAttribute = "autocomplete";
+      if (!this.numberInput.hasAttribute(autocompleteAttribute) && !(this.numberInput.form && this.numberInput.form.hasAttribute(autocompleteAttribute))) {
+        this.numberInput.setAttribute(autocompleteAttribute, "off");
       }
       const {
         allowDropdown,
@@ -1733,16 +1748,16 @@ var factoryOutput = (() => {
       } = this.options;
       let parentClass = styles.elementParentClass;
       if (allowDropdown) {
-        parentClass += ` ${buildAttributeClass(styles, "attributeAllowDropdownClass" /* AllowDropdown */)}`;
+        parentClass += ` ${buildElementClass(styles, void 0, "attributeAllowDropdownClass" /* AllowDropdown */)}`;
       }
       if (showFlags) {
-        parentClass += ` ${buildAttributeClass(styles, "attributeShowFlagsClass" /* ShowFlags */)}`;
+        parentClass += ` ${buildElementClass(styles, void 0, "attributeShowFlagsClass" /* ShowFlags */)}`;
       }
       if (styles.elementContainerClass) {
         parentClass += ` ${styles.elementContainerClass}`;
       }
       if (!useFullscreenPopup) {
-        parentClass += ` ${buildAttributeClass(styles, "attributeInlineDropdownClass" /* InlineDropdown */)}`;
+        parentClass += ` ${buildElementClass(styles, void 0, "attributeInlineDropdownClass" /* InlineDropdown */)}`;
       }
       const wrapper = createDOMElement(
         "div",
@@ -1768,7 +1783,7 @@ var factoryOutput = (() => {
               "aria-expanded": "false",
               "aria-label": this.options.i18n.selectedCountryAriaLabel,
               "aria-haspopup": "true",
-              "aria-controls": `ini-${this.id}__dropdown-content`,
+              "aria-controls": `${buildElementClass(this.options.styles, "elementDropdownContentClass" /* DropdownContent */)}-${this.id}`,
               "role": "combobox"
             },
             this.countryContainer
@@ -1788,7 +1803,7 @@ var factoryOutput = (() => {
         const selectedCountryPrimary = createDOMElement(
           "div",
           {
-            class: buildElementClass(this.options.styles, "elementSelectedCountryPrimary" /* SelectedCountryPrimary */)
+            class: buildElementClass(this.options.styles, "elementSelectedCountryPrimaryClass" /* SelectedCountryPrimary */)
           },
           this.selectedCountry
         );
@@ -1800,7 +1815,7 @@ var factoryOutput = (() => {
         this.selectedCountryA11yText = createDOMElement(
           "span",
           {
-            class: buildElementClass(this.options.styles, "elementAccessibilityText" /* AccessibilityText */)
+            class: buildElementClass(this.options.styles, "elementAccessibilityTextClass" /* AccessibilityText */)
           },
           this.selectedCountryInner
         );
@@ -1808,15 +1823,15 @@ var factoryOutput = (() => {
           this.dropdownArrow = createDOMElement(
             "div",
             {
-              class: buildElementClass(this.options.styles, "elementDropdownArrow" /* DropdownArrow */),
+              class: buildElementClass(this.options.styles, "elementArrowClass" /* Arrow */),
               "aria-hidden": "true"
             },
             selectedCountryPrimary
           );
-          const extraClasses = fixDropdownWidth ? "" : buildAttributeClass(styles, "attributeFlexibleDropdownWidthClass" /* FlexibleDropdownWidth */);
+          const extraClasses = fixDropdownWidth ? "" : buildElementClass(styles, void 0, "attributeFlexibleDropdownWidthClass" /* FlexibleDropdownWidth */);
           this.dropdownContent = createDOMElement("div", {
-            id: `ini-${this.id}__dropdown-content`,
-            class: `ini__dropdown-content ini__hide ${extraClasses}`
+            id: `${buildElementClass(this.options.styles, "elementDropdownContentClass" /* DropdownContent */)}-${this.id}`,
+            class: `${buildElementClass(this.options.styles, "elementDropdownContentClass" /* DropdownContent */)} ${buildElementClass(this.options.styles, "elementHideClass" /* Hide */)} ${extraClasses}`
           });
           if (countrySearch) {
             this.searchInput = createDOMElement(
@@ -1828,7 +1843,7 @@ var factoryOutput = (() => {
                 role: "combobox",
                 "aria-expanded": "true",
                 "aria-label": i18n.searchPlaceholder,
-                "aria-controls": `ini-${this.id}__country-listbox`,
+                "aria-controls": `${buildElementClass(this.options.styles, "elementCountryListboxClass" /* CountryListbox */)}-${this.id}`,
                 "aria-autocomplete": "list",
                 "autocomplete": "off"
               },
@@ -1837,7 +1852,7 @@ var factoryOutput = (() => {
             this.searchResultsA11yText = createDOMElement(
               "span",
               {
-                class: buildElementClass(this.options.styles, "elementAccessibilityText" /* AccessibilityText */)
+                class: buildElementClass(this.options.styles, "elementAccessibilityTextClass" /* AccessibilityText */)
               },
               this.dropdownContent
             );
@@ -1845,8 +1860,8 @@ var factoryOutput = (() => {
           this.countryList = createDOMElement(
             "ul",
             {
-              class: "ini__country-list",
-              id: `ini-${this.id}__country-listbox`,
+              class: buildElementClass(this.options.styles, "elementCountryListboxClass" /* CountryListbox */),
+              id: `${buildElementClass(this.options.styles, "elementCountryListboxClass" /* CountryListbox */)}-${this.id}`,
               role: "listbox",
               "aria-label": i18n.countryListAriaLabel
             },
@@ -1857,11 +1872,11 @@ var factoryOutput = (() => {
             this._updateSearchResultsText();
           }
           if (dropdownContainer) {
-            let dropdownClasses = "ini ini--container";
+            let dropdownClasses = `${buildElementClass(this.options.styles)}`;
             if (useFullscreenPopup) {
-              dropdownClasses += " ini--fullscreen-popup";
+              dropdownClasses += ` ${buildElementClass(this.options.styles, void 0, "attributeFullscreenPopupClass" /* FullscreenPopup */)}`;
             } else {
-              dropdownClasses += " ini--inline-dropdown";
+              dropdownClasses += ` ${buildElementClass(this.options.styles, void 0, "attributeInlineDropdownClass" /* InlineDropdown */)}`;
             }
             this.dropdown = createDOMElement(
               "div",
@@ -1904,15 +1919,15 @@ var factoryOutput = (() => {
     //* For each country: add a country list item <li> to the countryList <ul> container.
     _appendListItems() {
       this.countries.forEach((country, index) => {
-        const extraClass = index === 0 ? "ini__highlight" : "";
+        const extraClass = index === 0 ? buildElementClass(this.options.styles, "elementHighlightClass" /* Highlight */) : "";
         const listItem = createDOMElement(
           "li",
           {
-            id: `ini-${this.id}__item-${country.iso2}`,
-            class: `ini__country ${extraClass}`,
+            id: `${buildElementClass(this.options.styles, "elementItemClass" /* Item */)}-${this.id}-${country.iso2}`,
+            class: `${buildElementClass(this.options.styles, "elementCountryClass" /* Country */)} ${extraClass}`,
             tabindex: "-1",
             role: "option",
-            "data-country-code": country.iso2,
+            ["data-country-code" /* CountryCode */]: country.iso2,
             "aria-selected": "false"
           },
           this.countryList
@@ -1922,13 +1937,13 @@ var factoryOutput = (() => {
           const flagBoxElement = createDOMElement(
             "div",
             {
-              class: "ini__flag-box"
+              class: buildElementClass(this.options.styles, "elementFlagBoxClass" /* FlagBox */)
             }
           );
           createDOMElement(
             "div",
             {
-              class: `ini__flag ini__${country.iso2}`
+              class: `${buildElementClass(this.options.styles, "elementFlagClass" /* Flag */)} ${buildElementClass(this.options.styles, country.iso2)}`
             },
             flagBoxElement
           );
@@ -1940,7 +1955,7 @@ var factoryOutput = (() => {
         const content = createDOMElement(
           "span",
           {
-            class: "ini__country-name"
+            class: buildElementClass(this.options.styles, "elementCountryNameClass" /* CountryName */)
           }
         );
         content.insertAdjacentText(
@@ -2002,8 +2017,9 @@ var factoryOutput = (() => {
     }
     //* initialise the dropdown listeners.
     _initDropdownListeners() {
+      const elementHideClass = buildElementClass(this.options.styles, "elementHideClass" /* Hide */);
       this._handleLabelClick = (e) => {
-        if (this.dropdownContent.classList.contains("ini__hide")) {
+        if (this.dropdownContent.classList.contains(elementHideClass)) {
           this.numberInput.focus();
         } else {
           e.preventDefault();
@@ -2014,13 +2030,13 @@ var factoryOutput = (() => {
         label.addEventListener("click", this._handleLabelClick);
       }
       this._handleClickSelectedCountry = () => {
-        if (this.dropdownContent.classList.contains("ini__hide") && !this.numberInput.disabled && !this.numberInput.readOnly) {
+        if (this.dropdownContent.classList.contains(elementHideClass) && !this.numberInput.disabled && !this.numberInput.readOnly) {
           this._openDropdown();
         }
       };
       this.selectedCountry.addEventListener("click", this._handleClickSelectedCountry);
       this._handleCountryContainerKeydown = (e) => {
-        const isDropdownHidden = this.dropdownContent.classList.contains("ini__hide");
+        const isDropdownHidden = this.dropdownContent.classList.contains(elementHideClass);
         if (isDropdownHidden && ["ArrowUp" /* ArrowUp */, "ArrowDown" /* ArrowDown */, " " /* Space */, "Enter" /* Enter */].map((key) => key.toString()).includes(e.key)) {
           e.preventDefault();
           e.stopPropagation();
@@ -2151,7 +2167,7 @@ var factoryOutput = (() => {
       if (fixDropdownWidth) {
         this.dropdownContent.style.width = `${this.numberInput.offsetWidth}px`;
       }
-      this.dropdownContent.classList.remove("ini__hide");
+      this.dropdownContent.classList.remove(buildElementClass(this.options.styles, "elementHideClass" /* Hide */));
       this.selectedCountry.setAttribute("aria-expanded", "true");
       this._setDropdownPosition();
       if (countrySearch) {
@@ -2163,7 +2179,8 @@ var factoryOutput = (() => {
         this.searchInput.focus();
       }
       this._bindDropdownListeners();
-      this.dropdownArrow.classList.add("ini__arrow--up");
+      this.dropdownArrow.classList.add(buildElementClass(this.options.styles, "elementArrowClass" /* Arrow */, "attributeUpClass" /* Up */));
+      this.dropdownArrow.classList.add(buildElementClass(this.options.styles, "elementArrowClass" /* Arrow */, "attributeDownClass" /* Down */));
       this._trigger("open:countrydropdown");
     }
     //* Set the dropdown position
@@ -2184,8 +2201,9 @@ var factoryOutput = (() => {
     }
     //* We only bind dropdown listeners when the dropdown is open.
     _bindDropdownListeners() {
+      const countryClass = buildElementClass(this.options.styles, "elementCountryClass" /* Country */);
       this._handleMouseoverCountryList = (e) => {
-        const listItem = e.target?.closest(".ini__country");
+        const listItem = e.target?.closest(`.${countryClass}`);
         if (listItem) {
           this._highlightListItem(listItem, false);
         }
@@ -2195,7 +2213,7 @@ var factoryOutput = (() => {
         this._handleMouseoverCountryList
       );
       this._handleClickCountryList = (e) => {
-        const listItem = e.target?.closest(".ini__country");
+        const listItem = e.target?.closest(`.${countryClass}`);
         if (listItem) {
           this._selectListItem(listItem);
         }
@@ -2354,14 +2372,15 @@ var factoryOutput = (() => {
     }
     //* Remove highlighting from other list items and highlight the given item.
     _highlightListItem(listItem, shouldFocus) {
+      const elementHighlightClass = buildElementClass(this.options.styles, "elementHighlightClass" /* Highlight */);
       const prevItem = this.highlightedItem;
       if (prevItem) {
-        prevItem.classList.remove("ini__highlight");
+        prevItem.classList.remove(elementHighlightClass);
         prevItem.setAttribute("aria-selected", "false");
       }
       this.highlightedItem = listItem;
       if (this.highlightedItem) {
-        this.highlightedItem.classList.add("ini__highlight");
+        this.highlightedItem.classList.add(elementHighlightClass);
         this.highlightedItem.setAttribute("aria-selected", "true");
         const activeDescendant = this.highlightedItem.getAttribute("id") || "";
         this.selectedCountry.setAttribute("aria-activedescendant", activeDescendant);
@@ -2399,10 +2418,10 @@ var factoryOutput = (() => {
         let flagClass = "";
         let a11yText = "";
         if (iso2 && showFlags) {
-          flagClass = `ini__flag ini__${iso2}`;
-          a11yText = `${this.selectedCountryData.name}`;
+          flagClass = `${buildElementClass(this.options.styles, "elementFlagClass" /* Flag */)} ${buildElementClass(this.options.styles, iso2)}`;
+          a11yText = this.selectedCountryData.name;
         } else {
-          flagClass = "ini__flag ini__globe";
+          flagClass = `${buildElementClass(this.options.styles, "elementFlagClass" /* Flag */)} ${buildElementClass(this.options.styles, "elementGlobeClass" /* Globe */)}`;
           a11yText = i18n.noCountrySelected;
         }
         this.selectedCountryInner.className = flagClass;
@@ -2470,10 +2489,9 @@ var factoryOutput = (() => {
       const {
         autoPlaceholder,
         placeholderNumberType,
-        nationalMode,
         customPlaceholder
       } = this.options;
-      const shouldSetPlaceholder = autoPlaceholder === "aggressive" || !this.hadInitialPlaceholder && autoPlaceholder === "polite";
+      const shouldSetPlaceholder = autoPlaceholder === "agressive" /* Aggressive */ || !this.hadInitialPlaceholder && autoPlaceholder === "polite" /* Polite */;
       if (InternationalNumberInput_default.utils && shouldSetPlaceholder) {
         const numberType = InternationalNumberInput_default.utils.numberType[placeholderNumberType];
         let placeholder = this.selectedCountryData.iso2 ? InternationalNumberInput_default.utils.getExampleNumber(
@@ -2490,7 +2508,7 @@ var factoryOutput = (() => {
     //* Called when the user selects a list item from the dropdown.
     _selectListItem(listItem) {
       const countryChanged = this._setCountry(
-        listItem.getAttribute("data-country-code")
+        listItem.getAttribute("data-country-code" /* CountryCode */)
       );
       this._closeDropdown();
       this.numberInput.focus();
@@ -2500,7 +2518,7 @@ var factoryOutput = (() => {
     }
     //* Close the dropdown and unbind any listeners.
     _closeDropdown() {
-      this.dropdownContent.classList.add("ini__hide");
+      this.dropdownContent.classList.add(buildElementClass(this.options.styles, "elementHideClass" /* Hide */));
       this.selectedCountry.setAttribute("aria-expanded", "false");
       this.selectedCountry.removeAttribute("aria-activedescendant");
       if (this.highlightedItem) {
@@ -2509,7 +2527,7 @@ var factoryOutput = (() => {
       if (this.options.countrySearch) {
         this.searchInput.removeAttribute("aria-activedescendant");
       }
-      this.dropdownArrow.classList.remove("ini__arrow--up");
+      this.dropdownArrow.classList.remove(buildElementClass(this.options.styles, "elementArrowClass" /* Arrow */, "attributeUpClass" /* Up */));
       document.removeEventListener("keydown", this._handleKeydownOnDropdown);
       if (this.options.countrySearch) {
         this.searchInput.removeEventListener("input", this._handleSearchChange);
@@ -2577,7 +2595,7 @@ var factoryOutput = (() => {
     handleAutoCountry() {
       if (this.options.initialCountry === "auto" && InternationalNumberInput_default.autoCountry) {
         this.defaultCountry = InternationalNumberInput_default.autoCountry;
-        const hasSelectedCountryOrGlobe = this.selectedCountryData.iso2 || this.selectedCountryInner.classList.contains("ini__globe");
+        const hasSelectedCountryOrGlobe = this.selectedCountryData.iso2 || this.selectedCountryInner.classList.contains(buildElementClass(this.options.styles, "elementGlobeClass" /* Globe */));
         if (!hasSelectedCountryOrGlobe) {
           this.setCountry(this.defaultCountry);
         }
@@ -2626,7 +2644,7 @@ var factoryOutput = (() => {
       if (this._handleKeydownEvent) {
         this.numberInput.removeEventListener("keydown", this._handleKeydownEvent);
       }
-      this.numberInput.removeAttribute("data-international-number-input-id");
+      this.numberInput.removeAttribute("data-ini-id" /* InputId */);
       const wrapper = this.numberInput.parentNode;
       wrapper?.parentNode?.insertBefore(this.numberInput, wrapper);
       wrapper?.parentNode?.removeChild(wrapper);

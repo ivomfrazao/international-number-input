@@ -5,7 +5,8 @@ export function buildElementClass(styles: AllStyleOptions, element?: StyleElemen
 	// Element
 	if (element) {
 		const elementSeparator = "__";
-		builtClass += (typeof(element) === "string") ? `${elementSeparator}${element}` : `${elementSeparator}${styles[element]}`;
+		const styleElement = styles[element];
+		builtClass += elementSeparator + (styleElement ? styleElement : element);
 	}
 	// Attribute
 	if (attribute) {
@@ -17,7 +18,7 @@ export function buildElementClass(styles: AllStyleOptions, element?: StyleElemen
 
 export enum StyleElement {
 	AccessibilityText = 'elementAccessibilityTextClass',
-	Arrow = 'elementDropdownArrowClass',
+	Arrow = 'elementArrowClass',
 	Container = 'elementContainerClass',
 	Country = 'elementCountryClass',
 	CountryContainer = 'elementCountryContainerClass',

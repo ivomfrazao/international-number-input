@@ -412,7 +412,7 @@ export class Ini {
 			
 				//* Create dropdownContainer markup.
 				if (dropdownContainer) {
-					let dropdownClasses = buildElementClass(this.options.styles);
+					let dropdownClasses = `${buildElementClass(this.options.styles)}`;
 					if (useFullscreenPopup) {
 						dropdownClasses += ` ${buildElementClass(this.options.styles, undefined, StyleAttribute.FullscreenPopup)}`;
 					} else {
