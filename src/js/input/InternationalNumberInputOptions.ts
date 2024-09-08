@@ -301,11 +301,19 @@ export type SomeStyleOptions = Partial<AllStyleOptions>;
 
 export interface AllStyleOptions {
 	elementAccessibilityTextClass: string;
+	elementArrowClass: string;
 	elementContainerClass: string;
+	elementCountryClass: string;
 	elementCountryContainerClass: string;
-	elementDropdownArrowClass: string;
+	elementCountryListboxClass: string;
+	elementCountryNameClass: string;
+	elementDropdownContentClass: string;
+	elementFlagClass: string;
+	elementFlagBoxClass: string;
+	elementGlobeClass: string;
 	elementHideClass: string;
 	elementHighlightClass: string;
+	elementItemClass: string;
 	elementNumberInputClass: string;
 	elementParentClass: string;
 	elementSearchInputClass: string;
@@ -313,7 +321,10 @@ export interface AllStyleOptions {
 	elementSelectedCountryPrimaryClass: string;
 
 	attributeAllowDropdownClass: string;
+	attributeDownClass: string;
 	attributeFlexibleDropdownWidthClass: string;
+	attributeFullscreenPopupClass: string;
 	attributeInlineDropdownClass: string;
 	attributeShowFlagsClass: string;
+	attributeUpClass: string;
 }

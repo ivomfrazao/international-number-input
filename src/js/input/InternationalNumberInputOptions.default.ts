@@ -4,11 +4,19 @@ import { AutoPlaceholderType } from "./libraries/AutoPlaceholderType.enum";
 
 const styleDefaults: AllStyleOptions = {
 	elementAccessibilityTextClass: "a11y-text",
+	elementArrowClass: "arrow",
 	elementContainerClass: "",
+	elementCountryClass: "country",
 	elementCountryContainerClass: "country-container",
-	elementDropdownArrowClass: "arrow",
+	elementCountryListboxClass: "country-listbox",
+	elementCountryNameClass: "country-name",
+	elementDropdownContentClass: "dropdown-content",
+	elementFlagClass: "flag",
+	elementFlagBoxClass: "flag-box",
+	elementGlobeClass: "globe",
 	elementHideClass: "hide",
 	elementHighlightClass: "highlight",
+	elementItemClass: "item",
 	elementNumberInputClass: "number-input",
 	elementParentClass: "ini",
 	elementSearchInputClass: "search-input",
@@ -16,9 +24,12 @@ const styleDefaults: AllStyleOptions = {
 	elementSelectedCountryPrimaryClass: "selected-country-primary",
 
 	attributeAllowDropdownClass: "allow-dropdown",
+	attributeDownClass: "down",
 	attributeFlexibleDropdownWidthClass: "flexible-dropdown-width",
+	attributeFullscreenPopupClass: "fullscreen-popup",
 	attributeInlineDropdownClass: "inline-dropdown",
 	attributeShowFlagsClass: "show-flags",
+	attributeUpClass: "up",
 }
 
 export const defaults: AllOptions = {

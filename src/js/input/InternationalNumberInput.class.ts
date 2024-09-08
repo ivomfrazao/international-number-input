@@ -6,7 +6,7 @@ import defaults from "./InternationalNumberInputOptions.default";
 import { KeyboardKey } from "./libraries/KeyboardKey.enum";
 import { normaliseString } from "./libraries/StringUtils";
 import { createDOMElement } from "./libraries/DOMUtils";
-import { buildAttributeClass, buildElementClass, StyleAttribute, StyleElement } from "./libraries/StyleUtils";
+import { buildElementClass, StyleAttribute, StyleElement } from "./libraries/StyleUtils";
 import { forEachInstance } from "./libraries/InstancesUtils";
 import * as exceptions from "../exceptions";
 import { DataAttributes } from "./libraries/DataAttributes.enum";
@@ -247,11 +247,12 @@ export class Ini {
 		//* prevent autocomplete as there's no safe, cross-browser event we can react to, so it can
 		//* easily put the plugin in an inconsistent state e.g. the wrong flag selected for the
 		//* autocompleted number, which on submit could mean wrong number is saved.
+		const autocompleteAttribute = "autocomplete";
 		if (
-			!this.numberInput.hasAttribute("autocomplete") &&
-			!(this.numberInput.form && this.numberInput.form.hasAttribute("autocomplete"))
+			!this.numberInput.hasAttribute(autocompleteAttribute) &&
+			!(this.numberInput.form && this.numberInput.form.hasAttribute(autocompleteAttribute))
 		) {
-			this.numberInput.setAttribute("autocomplete", "off");
+			this.numberInput.setAttribute(autocompleteAttribute, "off");
 		}
 	
 		const {
@@ -269,16 +270,16 @@ export class Ini {
 		//* Containers (mostly for positioning).
 		let parentClass = styles.elementParentClass;
 		if (allowDropdown) {
-			parentClass += ` ${buildAttributeClass(styles, StyleAttribute.AllowDropdown)}`;
+			parentClass += ` ${buildElementClass(styles, undefined, StyleAttribute.AllowDropdown)}`;
 		}
 		if (showFlags) {
-			parentClass += ` ${buildAttributeClass(styles, StyleAttribute.ShowFlags)}`;
+			parentClass += ` ${buildElementClass(styles, undefined, StyleAttribute.ShowFlags)}`;
 		}
 		if (styles.elementContainerClass) {
 			parentClass += ` ${styles.elementContainerClass}`;
 		}
 		if (!useFullscreenPopup) {
-			parentClass += ` ${buildAttributeClass(styles, StyleAttribute.InlineDropdown)}`;
+			parentClass += ` ${buildElementClass(styles, undefined, StyleAttribute.InlineDropdown)}`;
 		}
 	
 		const wrapper = createDOMElement(
@@ -310,7 +311,7 @@ export class Ini {
 						"aria-expanded": "false",
 						"aria-label": this.options.i18n.selectedCountryAriaLabel,
 						"aria-haspopup": "true",
-						"aria-controls": `ini-${this.id}__dropdown-content`,
+						"aria-controls": `${buildElementClass(this.options.styles, StyleElement.DropdownContent)}-${this.id}`,
 						"role": "combobox",
 					},
 					this.countryContainer,
@@ -356,16 +357,16 @@ export class Ini {
 				this.dropdownArrow = createDOMElement(
 					"div",
 					{
-						class: buildElementClass(this.options.styles, StyleElement.DropdownArrow),
+						class: buildElementClass(this.options.styles, StyleElement.Arrow),
 						"aria-hidden": "true",
 					},
 					selectedCountryPrimary,
 				);
 
-				const extraClasses = fixDropdownWidth ? "" : buildAttributeClass(styles, StyleAttribute.FlexibleDropdownWidth);
+				const extraClasses = fixDropdownWidth ? "" : buildElementClass(styles, undefined, StyleAttribute.FlexibleDropdownWidth);
 				this.dropdownContent = createDOMElement("div", {
-					id: `ini-${this.id}__dropdown-content`,
-					class: `ini__dropdown-content ini__hide ${extraClasses}`,
+					id: `${buildElementClass(this.options.styles, StyleElement.DropdownContent)}-${this.id}`,
+					class: `${buildElementClass(this.options.styles, StyleElement.DropdownContent)} ${buildElementClass(this.options.styles, StyleElement.Hide)} ${extraClasses}`,
 				});
 		
 				if (countrySearch) {
@@ -378,7 +379,7 @@ export class Ini {
 							role: "combobox",
 							"aria-expanded": "true",
 							"aria-label": i18n.searchPlaceholder,
-							"aria-controls": `ini-${this.id}__country-listbox`,
+							"aria-controls": `${buildElementClass(this.options.styles, StyleElement.CountryListbox)}-${this.id}`,
 							"aria-autocomplete": "list",
 							"autocomplete": "off",
 						},
@@ -396,8 +397,8 @@ export class Ini {
 				this.countryList = createDOMElement(
 					"ul",
 					{
-						class: "ini__country-list",
-						id: `ini-${this.id}__country-listbox`,
+						class: buildElementClass(this.options.styles, StyleElement.CountryListbox),
+						id: `${buildElementClass(this.options.styles, StyleElement.CountryListbox)}-${this.id}`,
 						role: "listbox",
 						"aria-label": i18n.countryListAriaLabel,
 					},
@@ -411,11 +412,11 @@ export class Ini {
 			
 				//* Create dropdownContainer markup.
 				if (dropdownContainer) {
-					let dropdownClasses = "ini ini--container";
+					let dropdownClasses = buildElementClass(this.options.styles);
 					if (useFullscreenPopup) {
-						dropdownClasses += " ini--fullscreen-popup";
+						dropdownClasses += ` ${buildElementClass(this.options.styles, undefined, StyleAttribute.FullscreenPopup)}`;
 					} else {
-						dropdownClasses += " ini--inline-dropdown";
+						dropdownClasses += ` ${buildElementClass(this.options.styles, undefined, StyleAttribute.InlineDropdown)}`;
 					}
 					this.dropdown = createDOMElement(
 						"div",
@@ -466,13 +467,13 @@ export class Ini {
 	private _appendListItems(): void {
 		this.countries.forEach((country, index) => {
 			//* Start by highlighting the first item (useful when countrySearch disabled).
-			const extraClass = index === 0 ? "ini__highlight" : "";
+			const extraClass = index === 0 ? buildElementClass(this.options.styles, StyleElement.Highlight) : "";
 	
 			const listItem = createDOMElement(
 				"li",
 				{
-					id: `ini-${this.id}__item-${country.iso2}`,
-					class: `ini__country ${extraClass}`,
+					id: `${buildElementClass(this.options.styles, StyleElement.Item)}-${this.id}-${country.iso2}`,
+					class: `${buildElementClass(this.options.styles, StyleElement.Country)} ${extraClass}`,
 					tabindex: "-1",
 					role: "option",
 					[DataAttributes.CountryCode]: country.iso2,
@@ -488,13 +489,13 @@ export class Ini {
 				const flagBoxElement = createDOMElement(
 					"div",
 					{
-						class: "ini__flag-box",
+						class: buildElementClass(this.options.styles, StyleElement.FlagBox),
 					},
 				);
 				createDOMElement(
 					"div",
 					{
-						class: `ini__flag ini__${country.iso2}`,
+						class: `${buildElementClass(this.options.styles, StyleElement.Flag)} ${buildElementClass(this.options.styles, country.iso2)}`,
 					},
 					flagBoxElement,
 				);
@@ -507,7 +508,7 @@ export class Ini {
 			const content = createDOMElement(
 				"span",
 				{
-					class: "ini__country-name",
+					class: buildElementClass(this.options.styles, StyleElement.CountryName),
 				},
 			);
 			content.insertAdjacentText(
@@ -826,7 +827,8 @@ export class Ini {
 		this._bindDropdownListeners();
 	
 		//* Update the arrow.
-		this.dropdownArrow.classList.add("ini__arrow--up");
+		this.dropdownArrow.classList.add(buildElementClass(this.options.styles, StyleElement.Arrow, StyleAttribute.Up));
+		this.dropdownArrow.classList.add(buildElementClass(this.options.styles, StyleElement.Arrow, StyleAttribute.Down));
 	
 		this._trigger("open:countrydropdown");
 	}
@@ -859,9 +861,10 @@ export class Ini {
 	private _bindDropdownListeners(): void {
 		//* When mouse over a list item, just highlight that one
 		//* we add the class "highlight", so if they hit "enter" we know which one to select.
+		const countryClass = buildElementClass(this.options.styles, StyleElement.Country);
 		this._handleMouseoverCountryList = (e): void => {
 			//* Handle event delegation, as we're listening for this event on the countryList.
-			const listItem: HTMLElement | null = (e.target as HTMLElement)?.closest(".ini__country");
+			const listItem: HTMLElement | null = (e.target as HTMLElement)?.closest(`.${countryClass}`);
 			if (listItem) {
 			this._highlightListItem(listItem, false);
 			}
@@ -873,7 +876,7 @@ export class Ini {
 	
 		//* Listen for country selection.
 		this._handleClickCountryList = (e): void => {
-		const listItem: HTMLElement | null = (e.target as HTMLElement)?.closest(".ini__country");
+		const listItem: HTMLElement | null = (e.target as HTMLElement)?.closest(`.${countryClass}`);
 			if (listItem) {
 			this._selectListItem(listItem);
 			}
@@ -1166,10 +1169,10 @@ export class Ini {
 			let flagClass = "";
 			let a11yText = "";
 			if (iso2 && showFlags) {
-				flagClass = `ini__flag ini__${iso2}`;
-				a11yText = `${this.selectedCountryData.name}`;
+				flagClass = `${buildElementClass(this.options.styles, StyleElement.Flag)} ${buildElementClass(this.options.styles, iso2)}`;
+				a11yText = this.selectedCountryData.name;
 			} else {
-				flagClass = "ini__flag ini__globe";
+				flagClass = `${buildElementClass(this.options.styles, StyleElement.Flag)} ${buildElementClass(this.options.styles, StyleElement.Globe)}`;
 				a11yText = i18n.noCountrySelected;
 			}
 			this.selectedCountryInner.className = flagClass;
@@ -1297,7 +1300,7 @@ export class Ini {
   
 	//* Close the dropdown and unbind any listeners.
 	private _closeDropdown(): void {
-		this.dropdownContent.classList.add("ini__hide");
+		this.dropdownContent.classList.add(buildElementClass(this.options.styles, StyleElement.Hide));
 		this.selectedCountry.setAttribute("aria-expanded", "false");
 		this.selectedCountry.removeAttribute("aria-activedescendant");
 		if (this.highlightedItem) {
@@ -1308,7 +1311,7 @@ export class Ini {
 		}
 	
 		//* Update the arrow.
-		this.dropdownArrow.classList.remove("ini__arrow--up");
+		this.dropdownArrow.classList.remove(buildElementClass(this.options.styles, StyleElement.Arrow, StyleAttribute.Up));
 	
 		//* Unbind key events.
 		document.removeEventListener("keydown", this._handleKeydownOnDropdown);
@@ -1395,7 +1398,7 @@ export class Ini {
 			//* We must set this even if there is an initial val in the input: in case the initial val is
 			//* invalid and they delete it - they should see their auto country.
 			this.defaultCountry = internationalNumberInput.autoCountry;
-			const hasSelectedCountryOrGlobe = this.selectedCountryData.iso2 || this.selectedCountryInner.classList.contains("ini__globe");
+			const hasSelectedCountryOrGlobe = this.selectedCountryData.iso2 || this.selectedCountryInner.classList.contains(buildElementClass(this.options.styles, StyleElement.Globe));
 			//* If no country/globe currently selected, then update the country.
 			if (!hasSelectedCountryOrGlobe) {
 				this.setCountry(this.defaultCountry);
