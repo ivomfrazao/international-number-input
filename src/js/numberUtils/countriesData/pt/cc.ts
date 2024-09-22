@@ -10,9 +10,9 @@
  */
 
 import * as exceptions from '../../../exceptions';
-import { strings } from '../../utils';
-import { Validator, ValidateReturn, NumberType } from '../../../types';
-import { luhnChecksumValidate } from '../../utils/checksum';
+import { strings } from '../../libraries';
+import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
+import { luhnChecksumValidate } from '../../libraries/checksum';
 
 const ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const validRe = /^\d{9}[A-Z0-9]{2}\d$/i;
@@ -21,7 +21,7 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 	return strings.cleanUnicode(input, ' ');
 }
 
-const validator: Validator = {
+const validator: StandardNumberUtils = {
 	type: NumberType.NationalIdentificationNumber,
 	name: 'Portuguese National Identification Number',
 	localName: 'Número de Cartão de Cidadão',

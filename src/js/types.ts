@@ -45,10 +45,11 @@ export type ValidateReturn = { error?: ValidationError } & (
 
 export enum NumberType {
 	NationalIdentificationNumber = "NIN",
-	TaxpayerIdentificationNumber = "TIN"
+	TaxpayerIdentificationNumber = "TIN",
+	SocialSecurityIdentificationNumber = "SSN",
 };
 
-export interface Validator {
+export interface StandardNumberUtils {
 	/**
 	 * The type of number being validated
 	 */
@@ -102,14 +103,14 @@ export interface Validator {
 	validate(value: string): ValidateReturn;
 }
 
-export interface CountryValidator {
+export interface CountryStandardNumberUtils {
 	/**
 	 * The ISO2 code of the country
 	 */
 	iso2: string;
 
 	/**
-	 * The list of validations possible for the country
+	 * The list of number utilities possible for the country
 	 */
-	validators: Validator[];
+	numberUtils: StandardNumberUtils[];
 }

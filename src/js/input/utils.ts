@@ -1,3 +1,5 @@
+import * as NumberUtils from '../numberUtils';
+
 // goog.provide("i18n.phonenumbers.demo");
 // // includes
 // goog.require("i18n.phonenumbers.PhoneNumberFormat");

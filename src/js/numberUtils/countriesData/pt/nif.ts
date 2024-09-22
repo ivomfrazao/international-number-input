@@ -11,14 +11,14 @@
  */
 
 import * as exceptions from '../../../exceptions';
-import { strings, weightedSum } from '../../utils';
-import { Validator, ValidateReturn, NumberType } from '../../../types';
+import { strings, weightedSum } from '../../libraries';
+import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 	return strings.cleanUnicode(input, ' -.', 'PT');
 }
 
-const validator: Validator = {
+const validator: StandardNumberUtils = {
 	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Portuguese Taxpayer Identification Number',
 	localName: 'Número de Identificação Fiscal',
@@ -52,7 +52,7 @@ const validator: Validator = {
 		if (value.length !== this.minLength) {
 			return { isValid: false, error: new exceptions.InvalidLength() };
 		}
-		if (!strings.isdigits(value) || value[0] === '0') {
+		if (!strings.isDigits(value) || value[0] === '0') {
 			return { isValid: false, error: new exceptions.InvalidFormat() };
 		}
 
