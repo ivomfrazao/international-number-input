@@ -6,8 +6,8 @@
  * a 2 digit checksum
  *
  * Sources:
- *   https://cis.ier.hit-u.ac.jp/English/society/conference1001/delgado-paper.pdf
- *   https://www.grupoalquerque.es/ferias/2012/archivos/digitos/codigo_seguridad_social.pdf
+ *	 https://cis.ier.hit-u.ac.jp/English/society/conference1001/delgado-paper.pdf
+ *	 https://www.grupoalquerque.es/ferias/2012/archivos/digitos/codigo_seguridad_social.pdf
  *
  * TAX/PERSON
  */

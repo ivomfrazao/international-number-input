@@ -5,8 +5,8 @@
  * Número de Identificação Civil, a two-letter version and a check digit.
  *
  * Source
- *   https://pt.wikipedia.org/wiki/Cartão_de_cidadão
- *   https://www.autenticacao.gov.pt/documents/20126/115760/Validação+de+Número+de+Documento+do+Cartão+de+Cidadão.pdf
+ *	 https://pt.wikipedia.org/wiki/Cartão_de_cidadão
+ *	 https://www.autenticacao.gov.pt/documents/20126/115760/Validação+de+Número+de+Documento+do+Cartão+de+Cidadão.pdf
  */
 
 import * as exceptions from '../../../exceptions';

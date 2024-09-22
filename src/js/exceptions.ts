@@ -12,45 +12,45 @@
  * exception.
  */
 export class ValidationError extends Error {
-	constructor(msg: string) {
-		super(msg);
-		this.name = 'ValidationError';
-	}
+    constructor(msg: string) {
+        super(msg);
+        this.name = 'ValidationError';
+    }
 }
-  
+
 /**
- *  Something is wrong with the format of the number.
+ *	Something is wrong with the format of the number.
  *
- *  This generally means characters or delimiters that are not allowed are
- *  part of the number or required parts are missing.
+ *	This generally means characters or delimiters that are not allowed are
+ *	part of the number or required parts are missing.
  */
 export class InvalidFormat extends ValidationError {
-	constructor(msg = 'The number has an invalid format.') {
-		super(msg);
-		this.name = 'InvalidFormat';
-	}
+    constructor(msg = 'The number has an invalid format.') {
+        super(msg);
+        this.name = 'InvalidFormat';
+    }
 }
-  
+
 /**
  * The number's internal checksum or check digit does not match.
  */
 export class InvalidChecksum extends ValidationError {
-	constructor(msg = "The number checksum or check digit is invalid.") {
-		super(msg);
-		this.name = 'InvalidChecksum';
-	}
+    constructor(msg = 'The number checksum or check digit is invalid.') {
+        super(msg);
+        this.name = 'InvalidChecksum';
+    }
 }
 
 /**
  * The length of the number is wrong
  */
 export class InvalidLength extends ValidationError {
-	constructor(msg = 'The number has an invalid length.') {
-		super(msg);
-		this.name = 'InvalidLength';
-	}
+    constructor(msg = 'The number has an invalid length.') {
+        super(msg);
+        this.name = 'InvalidLength';
+    }
 }
-  
+
 /**
  * One of the parts of the number has an invalid reference.
  *
@@ -59,28 +59,32 @@ export class InvalidLength extends ValidationError {
  * some invalid reference.
  */
 export class InvalidComponent extends ValidationError {
-	constructor(msg = 'One of the parts of the number are invalid or unknown.') {
-		super(msg);
-		this.name = 'InvalidComponent';
-	}
+    constructor(
+        msg = 'One of the parts of the number are invalid or unknown.',
+    ) {
+        super(msg);
+        this.name = 'InvalidComponent';
+    }
 }
 
 /**
  * The provided country is not supported.
  */
 export class InvalidCountry extends ValidationError {
-	constructor(msg = 'The country is not supported.') {
-		super(msg);
-		this.name = 'InvalidCountry';
-	}
+    constructor(msg = 'The country is not supported.') {
+        super(msg);
+        this.name = 'InvalidCountry';
+    }
 }
 
 /**
  * The number type is not supported for the provided country.
  */
 export class InvalidNumberType extends ValidationError {
-	constructor(msg = 'The number type is not supported for the provided country.') {
-		super(msg);
-		this.name = 'InvalidNumberType';
-	}
+    constructor(
+        msg = 'The number type is not supported for the provided country.',
+    ) {
+        super(msg);
+        this.name = 'InvalidNumberType';
+    }
 }

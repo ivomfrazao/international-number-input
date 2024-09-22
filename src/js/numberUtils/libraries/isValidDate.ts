@@ -40,8 +40,8 @@ export function buildDate(yy: string, mm: string, dd: string): Date | null {
 }
 
 /** Check to make sure this is a valid date
- *  isBefore checks to make sure that the date is today or before, this
- *  typically is used for birtdays (you could be born today)
+ *	isBefore checks to make sure that the date is today or before, this
+ *	typically is used for birtdays (you could be born today)
  */
 export function isValidDate(
 	yy: string,

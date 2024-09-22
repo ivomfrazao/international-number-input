@@ -98,8 +98,8 @@ export function luhnChecksumValidate(
 }
 
 /**
- * Compute the Luhn checksum over the provider number.  The checksum is returned as
- * a Number.  Valid numbers should be equal to 0
+ * Compute the Luhn checksum over the provider number.	The checksum is returned as
+ * a Number.	Valid numbers should be equal to 0
  */
 export function luhnChecksumValue(
 	value: string,
@@ -122,7 +122,7 @@ export function luhnChecksumValue(
 
 /**
  * Compute the checksum digit that should be provided given the alphabet
- *   (e.g. calc_check_digit)
+ *	 (e.g. calc_check_digit)
  */
 export function luhnChecksumDigit(
 	value: string,
@@ -200,7 +200,7 @@ export function verhoeffValidate(array: string): boolean {
 }
 
 // From stackover flow
-//   https://stackoverflow.com/questions/929910/modulo-in-javascript-large-number
+//	 https://stackoverflow.com/questions/929910/modulo-in-javascript-large-number
 function modulo(dividentIn: string, divisor: number) {
 	let divident = dividentIn;
 	const partLength = 10;
@@ -243,7 +243,7 @@ export function mod97base10Validate(value: string, expect = 1): boolean {
 }
 
 /**
- *  The ISO 7064 Mod 11, 10 algorithm.
+ *	The ISO 7064 Mod 11, 10 algorithm.
  *
  * The Mod 11, 10 algorithm uses a number of calculations modulo 11 and 10 to
  * determine a checksum.
