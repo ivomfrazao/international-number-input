@@ -84,21 +84,33 @@ const validator: StandardNumberUtils = {
 	placeholder: '28-1234567840',
 	maxLength: 12,
 	minLength: 12,
+	countryPrefix: 'ES',
 
-	compact(input: string): string {
+	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 
 		if (err) {
 			throw err;
 		}
 
-		return value;
+		if (includeCountryPrefix) {
+			return this.countryPrefix + value;
+		}
+		else {
+			return value;
+		}
 	},
 
-	format(input: string): string {
-		const [value] = clean(input);
+	format(input: string, includeCountryPrefix: boolean): string {
+		const [cleanValue] = clean(input);
+		const value = strings.splitAt(cleanValue, 2).join('-');
 
-		return strings.splitAt(value, 2).join('-');
+		if (includeCountryPrefix) {
+			return this.countryPrefix + value;
+		}
+		else {
+			return value;
+		}
 	},
 
 	validate(input: string): ValidateReturn {

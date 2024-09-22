@@ -129,15 +129,19 @@ declare module "types" {
          */
         minLength: number;
         /**
+         * The country's prefix for the number type.
+         */
+        countryPrefix: string;
+        /**
          * Convert the number to the minimal representation.
          * This strips the number of any valid separators and removes surrounding
          * whitespace.
          */
-        compact(value: string): string;
+        compact(value: string, includeCountryPrefix: boolean): string;
         /**
          * Reformat the number to the standard presentation format.
          */
-        format(value: string): string;
+        format(value: string, includeCountryPrefix: boolean): string;
         /**
          * Validate with error throws subclass of ValidationError
          */
@@ -1394,7 +1398,7 @@ declare module "input/InternationalNumberInput.class" {
          * Validates the currently entered number.
          * @returns Identifies if the entered number is valid.
          */
-        isValidNumber(): Boolean;
+        isValidNumber(): boolean;
         /**
          * Update the selected country, and update the input val accordingly.
          * @param iso2 The selected country's ISO2 code.
@@ -1436,10 +1440,11 @@ declare module "input/InternationalNumberInput" {
     export type IniUtils = {
         formatNumber(number: string, countryISO2: string, numberType: NumberType): string;
         formatNumberAsYouType(number: string, countryISO2: string, numberType: NumberType): string;
-        getCoreNumber(number: string, countryISO2: string | undefined): string;
+        getCoreNumber(number: string, countryISO2: string, numberType: NumberType): string;
         getExampleNumber(countryISO2: string, numberType: NumberType): string;
+        getFullNumber(number: string, countryISO2: string, numberType: NumberType, includeFormatting: boolean): string;
         getMaxLength(countryISO2: string): number;
-        getValidationError(number: string, countryISO2: string | undefined): ValidateReturn;
+        getMinLength(countryISO2: string): number;
         isValidNumber: (number: string, countryISO2: string, numberType: NumberType) => ValidateReturn;
         numberType: NumberType;
     };

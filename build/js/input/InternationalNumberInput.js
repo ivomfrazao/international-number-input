@@ -2118,15 +2118,11 @@ var factoryOutput = (() => {
         const isPaste = e?.inputType === "insertFromPaste" && this.numberInput.value;
         if (isFormattingChar || isPaste && !strictMode) {
           userOverrideFormatting = true;
-        } else if (!/[^+0-9]/.test(this.numberInput.value)) {
-          userOverrideFormatting = false;
         }
         const disableFormatOnSetNumber = e?.detail?.isSetNumber && !formatOnDisplay;
         if (formatAsYouType && !userOverrideFormatting && !disableFormatOnSetNumber) {
           const currentCaretPos = this.numberInput.selectionStart || 0;
           const valueBeforeCaret = this.numberInput.value.substring(0, currentCaretPos);
-          const relevantCharsBeforeCaret = valueBeforeCaret.replace(/[^+0-9]/g, "").length;
-          const isDeleteForwards = e?.inputType === "deleteContentForward";
           const formattedValue = this._formatNumberAsYouType();
           this.numberInput.value = formattedValue;
         }
@@ -2139,7 +2135,8 @@ var factoryOutput = (() => {
               const isInitialPlus = this.numberInput.selectionStart === 0 && e.key === "+";
               const isNumeric = /^[0-9]$/.test(e.key);
               const isAllowedChar = isInitialPlus || isNumeric;
-              const coreNumber = "123";
+              const fullNumber = this._getFullNumber();
+              const coreNumber = InternationalNumberInput_default.utils.getCoreNumber(fullNumber, this.selectedCountryData.iso2, this.options.numberType);
               const hasReachedMaxLength = this.maxCoreNumberLength && coreNumber.length >= this.maxCoreNumberLength;
               const selectedText = this.numberInput.value.substring(this.numberInput.selectionStart || 0, this.numberInput.selectionEnd || 0);
               const hasSelectedDigit = /\d/.test(selectedText);
@@ -2715,7 +2712,6 @@ var factoryOutput = (() => {
     getSelectedCountryData() {
       return this.selectedCountryData;
     }
-    //* 
     /**
      * Gets the result of the validation process.
      * @returns The validation result.
@@ -2723,7 +2719,7 @@ var factoryOutput = (() => {
     getValidationError() {
       if (InternationalNumberInput_default.utils) {
         const { iso2 } = this.selectedCountryData;
-        return InternationalNumberInput_default.utils.getValidationError(this._getFullNumber(), iso2);
+        return InternationalNumberInput_default.utils.isValidNumber(this._getFullNumber(), iso2, this.options.numberType);
       }
       return { isValid: false, error: new ValidationError("An unknown error occurred") };
       ;

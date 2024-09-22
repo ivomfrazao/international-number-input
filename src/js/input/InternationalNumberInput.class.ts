@@ -713,15 +713,11 @@ export class Ini {
 				this._triggerCountryChange();
 			}
 	
-			//* If user types their own formatting char (not a plus or a numeric), or they paste something, then set the override.
+			//* If user types their own formatting char (not a plus or an alphanumeric), or they paste something, then set the override.
 			const isFormattingChar = e?.data && /[^a-zA-Z0-9]/.test(e.data);
 			const isPaste = e?.inputType === "insertFromPaste" && this.numberInput.value;
 			if (isFormattingChar || (isPaste && !strictMode)) {
 				userOverrideFormatting = true;
-			}
-			//* If user removes all formatting chars, then reset the override.
-			else if (!/[^+0-9]/.test(this.numberInput.value)) {
-				userOverrideFormatting = false;
 			}
 	
 			const disableFormatOnSetNumber = e?.detail?.isSetNumber && !formatOnDisplay;
@@ -730,8 +726,6 @@ export class Ini {
 				//* Maintain caret position after reformatting.
 				const currentCaretPos = this.numberInput.selectionStart || 0;
 				const valueBeforeCaret = this.numberInput.value.substring(0, currentCaretPos);
-				const relevantCharsBeforeCaret = valueBeforeCaret.replace(/[^+0-9]/g, "").length;
-				const isDeleteForwards = e?.inputType === "deleteContentForward";
 				const formattedValue = this._formatNumberAsYouType();
 				this.numberInput.value = formattedValue;
 			}
@@ -745,26 +739,24 @@ export class Ini {
 			//* On keydown event: (1) if strictMode then prevent invalid characters, (2) if separateDialCode then handle plus key
 			//* Note that this fires BEFORE the input is updated.
 			this._handleKeydownEvent = (e: KeyboardEvent): void => {
-			//* Only interested in actual character presses, rather than ctrl, alt, command, arrow keys, delete/backspace, cut/copy/paste etc.
-			if (e.key && e.key.length === 1 && !e.altKey && !e.ctrlKey && !e.metaKey) {
-				//* If strictMode, prevent invalid characters.
-				if (strictMode) {
-					const isInitialPlus = this.numberInput.selectionStart === 0 && e.key === "+";
-					const isNumeric = /^[0-9]$/.test(e.key);
-					const isAllowedChar = isInitialPlus || isNumeric;
-					// const fullNumber = this._getFullNumber();
-					// TODO Set coreNumber
-					// const coreNumber = internationalNumberInput.utils.getCoreNumber(fullNumber, this.selectedCountryData.iso2);
-					const coreNumber = "123";
-					const hasReachedMaxLength = this.maxCoreNumberLength && coreNumber.length >= this.maxCoreNumberLength;
-					const selectedText = this.numberInput.value.substring(this.numberInput.selectionStart || 0, this.numberInput.selectionEnd || 0);
-					const hasSelectedDigit = /\d/.test(selectedText);
-					// ignore the char if (1) it's not an allowed char, or (2) the input has reached max length and no digit is selected (which will be replaced by the new char)
-					if (!isAllowedChar || (hasReachedMaxLength && !hasSelectedDigit)) {
-						e.preventDefault();
+				//* Only interested in actual character presses, rather than ctrl, alt, command, arrow keys, delete/backspace, cut/copy/paste etc.
+				if (e.key && e.key.length === 1 && !e.altKey && !e.ctrlKey && !e.metaKey) {
+					//* If strictMode, prevent invalid characters.
+					if (strictMode) {
+						const isInitialPlus = this.numberInput.selectionStart === 0 && e.key === "+";
+						const isNumeric = /^[0-9]$/.test(e.key);
+						const isAllowedChar = isInitialPlus || isNumeric;
+						const fullNumber = this._getFullNumber();
+						const coreNumber = internationalNumberInput.utils.getCoreNumber(fullNumber, this.selectedCountryData.iso2, this.options.numberType);
+						const hasReachedMaxLength = this.maxCoreNumberLength && coreNumber.length >= this.maxCoreNumberLength;
+						const selectedText = this.numberInput.value.substring(this.numberInput.selectionStart || 0, this.numberInput.selectionEnd || 0);
+						const hasSelectedDigit = /\d/.test(selectedText);
+						// ignore the char if (1) it's not an allowed char, or (2) the input has reached max length and no digit is selected (which will be replaced by the new char)
+						if (!isAllowedChar || (hasReachedMaxLength && !hasSelectedDigit)) {
+							e.preventDefault();
+						}
 					}
 				}
-			}
 			};
 			this.numberInput.addEventListener("keydown", this._handleKeydownEvent);
 		}
@@ -1506,8 +1498,7 @@ export class Ini {
 	getSelectedCountryData(): SelectedCountryData {
 		return this.selectedCountryData;
 	}
-  
-	//* 
+
 	/**
 	 * Gets the result of the validation process.
 	 * @returns The validation result.
@@ -1515,7 +1506,7 @@ export class Ini {
 	getValidationError(): ValidateReturn {
 		if (internationalNumberInput.utils) {
 			const { iso2 } = this.selectedCountryData;
-			return internationalNumberInput.utils.getValidationError(this._getFullNumber(), iso2);
+			return internationalNumberInput.utils.isValidNumber(this._getFullNumber(), iso2, this.options.numberType);
 		}
 		return { isValid: false, error: new exceptions.ValidationError("An unknown error occurred") };;
 	}
@@ -1524,7 +1515,7 @@ export class Ini {
 	 * Validates the currently entered number.
 	 * @returns Identifies if the entered number is valid.
 	 */
-	isValidNumber(): Boolean {
+	isValidNumber(): boolean {
 		const val = this._getFullNumber();
 
 		return internationalNumberInput.utils

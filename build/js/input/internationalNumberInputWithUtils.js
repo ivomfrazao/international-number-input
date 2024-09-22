@@ -2153,15 +2153,11 @@ var factoryOutput = (() => {
         const isPaste = e?.inputType === "insertFromPaste" && this.numberInput.value;
         if (isFormattingChar || isPaste && !strictMode) {
           userOverrideFormatting = true;
-        } else if (!/[^+0-9]/.test(this.numberInput.value)) {
-          userOverrideFormatting = false;
         }
         const disableFormatOnSetNumber = e?.detail?.isSetNumber && !formatOnDisplay;
         if (formatAsYouType && !userOverrideFormatting && !disableFormatOnSetNumber) {
           const currentCaretPos = this.numberInput.selectionStart || 0;
           const valueBeforeCaret = this.numberInput.value.substring(0, currentCaretPos);
-          const relevantCharsBeforeCaret = valueBeforeCaret.replace(/[^+0-9]/g, "").length;
-          const isDeleteForwards = e?.inputType === "deleteContentForward";
           const formattedValue = this._formatNumberAsYouType();
           this.numberInput.value = formattedValue;
         }
@@ -2174,7 +2170,8 @@ var factoryOutput = (() => {
               const isInitialPlus = this.numberInput.selectionStart === 0 && e.key === "+";
               const isNumeric = /^[0-9]$/.test(e.key);
               const isAllowedChar = isInitialPlus || isNumeric;
-              const coreNumber = "123";
+              const fullNumber = this._getFullNumber();
+              const coreNumber = InternationalNumberInput_default.utils.getCoreNumber(fullNumber, this.selectedCountryData.iso2, this.options.numberType);
               const hasReachedMaxLength = this.maxCoreNumberLength && coreNumber.length >= this.maxCoreNumberLength;
               const selectedText = this.numberInput.value.substring(this.numberInput.selectionStart || 0, this.numberInput.selectionEnd || 0);
               const hasSelectedDigit = /\d/.test(selectedText);
@@ -2750,7 +2747,6 @@ var factoryOutput = (() => {
     getSelectedCountryData() {
       return this.selectedCountryData;
     }
-    //* 
     /**
      * Gets the result of the validation process.
      * @returns The validation result.
@@ -2758,7 +2754,7 @@ var factoryOutput = (() => {
     getValidationError() {
       if (InternationalNumberInput_default.utils) {
         const { iso2 } = this.selectedCountryData;
-        return InternationalNumberInput_default.utils.getValidationError(this._getFullNumber(), iso2);
+        return InternationalNumberInput_default.utils.isValidNumber(this._getFullNumber(), iso2, this.options.numberType);
       }
       return { isValid: false, error: new ValidationError("An unknown error occurred") };
       ;
@@ -3452,16 +3448,26 @@ var factoryOutput = (() => {
     placeholder: "54362315-K",
     maxLength: 9,
     minLength: 9,
-    compact(input) {
+    countryPrefix: "ES",
+    compact(input, includeCountryPrefix) {
       const [value, err] = clean(input);
       if (err) {
         throw err;
       }
-      return value;
+      if (includeCountryPrefix) {
+        return this.countryPrefix + value;
+      } else {
+        return value;
+      }
     },
-    format(input) {
-      const [value] = clean(input);
-      return strings_exports.splitAt(value, 8).join("-");
+    format(input, includeCountryPrefix) {
+      const [cleanValue] = clean(input);
+      const value = strings_exports.splitAt(cleanValue, 8).join("-");
+      if (includeCountryPrefix) {
+        return this.countryPrefix + value;
+      } else {
+        return value;
+      }
     },
     validate(input) {
       const [value, error] = clean(input);
@@ -3501,16 +3507,26 @@ var factoryOutput = (() => {
     placeholder: "X-2482300-W",
     maxLength: 9,
     minLength: 9,
-    compact(input) {
+    countryPrefix: "ES",
+    compact(input, includeCountryPrefix) {
       const [value, err] = clean2(input);
       if (err) {
         throw err;
       }
-      return value;
+      if (includeCountryPrefix) {
+        return this.countryPrefix + value;
+      } else {
+        return value;
+      }
     },
-    format(input) {
-      const [value] = clean2(input);
-      return strings_exports.splitAt(value, 1, 8).join("-");
+    format(input, includeCountryPrefix) {
+      const [cleanValue] = clean2(input);
+      const value = strings_exports.splitAt(cleanValue, 1, 8).join("-");
+      if (includeCountryPrefix) {
+        return this.countryPrefix + value;
+      } else {
+        return value;
+      }
     },
     validate(input) {
       const [value, error] = clean2(input);
@@ -3550,16 +3566,26 @@ var factoryOutput = (() => {
     abbreviation: "CIF",
     maxLength: 9,
     minLength: 9,
-    compact(input) {
+    countryPrefix: "ES",
+    compact(input, includeCountryPrefix) {
       const [value, err] = clean3(input);
       if (err) {
         throw err;
       }
-      return value;
+      if (includeCountryPrefix) {
+        return this.countryPrefix + value;
+      } else {
+        return value;
+      }
     },
-    format(input) {
-      const [value] = clean3(input);
-      return strings_exports.splitAt(value, 1, 8).join("-");
+    format(input, includeCountryPrefix) {
+      const [cleanValue] = clean3(input);
+      const value = strings_exports.splitAt(cleanValue, 1, 8).join("-");
+      if (includeCountryPrefix) {
+        return this.countryPrefix + value;
+      } else {
+        return value;
+      }
     },
     validate(input) {
       const [value, error] = clean3(input);
@@ -3607,16 +3633,26 @@ var factoryOutput = (() => {
     placeholder: "B-58378431",
     maxLength: 9,
     minLength: 9,
-    compact(input) {
+    countryPrefix: "ES",
+    compact(input, includeCountryPrefix) {
       const [value, err] = clean4(input);
       if (err) {
         throw err;
       }
-      return value;
+      if (includeCountryPrefix) {
+        return this.countryPrefix + value;
+      } else {
+        return value;
+      }
     },
-    format(input) {
-      const [value] = clean4(input);
-      return strings_exports.splitAt(value, 1).join("-");
+    format(input, includeCountryPrefix) {
+      const [cleanValue] = clean4(input);
+      const value = strings_exports.splitAt(cleanValue, 1).join("-");
+      if (includeCountryPrefix) {
+        return this.countryPrefix + value;
+      } else {
+        return value;
+      }
     },
     validate(input) {
       const [value, error] = clean4(input);
@@ -3672,16 +3708,26 @@ var factoryOutput = (() => {
     placeholder: "12345678 9 ZZ0",
     maxLength: 12,
     minLength: 12,
-    compact(input) {
+    countryPrefix: "PT",
+    compact(input, includeCountryPrefix) {
       const [value, err] = clean5(input);
       if (err) {
         throw err;
       }
-      return value;
+      if (includeCountryPrefix) {
+        return this.countryPrefix + value;
+      } else {
+        return value;
+      }
     },
-    format(input) {
-      const [value] = clean5(input);
-      return strings_exports.splitAt(value, 8, 9).join(" ");
+    format(input, includeCountryPrefix) {
+      const [cleanValue] = clean5(input);
+      const value = strings_exports.splitAt(cleanValue, 8, 9).join(" ");
+      if (includeCountryPrefix) {
+        return this.countryPrefix + value;
+      } else {
+        return value;
+      }
     },
     validate(input) {
       const [value, error] = clean5(input);
@@ -3719,16 +3765,26 @@ var factoryOutput = (() => {
     placeholder: "123 456 789",
     maxLength: 9,
     minLength: 9,
-    compact(input) {
+    countryPrefix: "PT",
+    compact(input, includeCountryPrefix) {
       const [value, err] = clean6(input);
       if (err) {
         throw err;
       }
-      return value;
+      if (includeCountryPrefix) {
+        return this.countryPrefix + value;
+      } else {
+        return value;
+      }
     },
-    format(input) {
-      const [value] = clean6(input);
-      return strings_exports.splitAt(value, 3, 6).join(" ");
+    format(input, includeCountryPrefix) {
+      const [cleanValue] = clean6(input);
+      const value = strings_exports.splitAt(cleanValue, 3, 6).join(" ");
+      if (includeCountryPrefix) {
+        return this.countryPrefix + value;
+      } else {
+        return value;
+      }
     },
     validate(input) {
       const [value, error] = clean6(input);
@@ -3794,7 +3850,7 @@ var factoryOutput = (() => {
   function formatNumberAsYouType(number, countryISO2, numberType) {
     try {
       const numberUtils = getNumberUtils(countryISO2, numberType);
-      return numberUtils.format(number);
+      return numberUtils.format(number, false);
     } catch (e) {
       return number;
     }
@@ -3802,7 +3858,7 @@ var factoryOutput = (() => {
   function formatNumber(number, countryISO2, numberType) {
     try {
       const numberUtils = getNumberUtils(countryISO2, numberType);
-      return numberUtils.format(number);
+      return numberUtils.format(number, false);
     } catch (e) {
       return number;
     }
@@ -3815,12 +3871,14 @@ var factoryOutput = (() => {
       return "";
     }
   }
-  var getCoreNumber = (number, countryCode) => {
-    return countryCode ? number : number;
-  };
-  var getValidationError = (number, countryCode) => {
-    return countryCode ? number : number;
-  };
+  function getCoreNumber(number, countryISO2, numberType) {
+    try {
+      const numberUtils = getNumberUtils(countryISO2, numberType);
+      return numberUtils.compact(number, false);
+    } catch (e) {
+      return number;
+    }
+  }
   function isValidNumber(number, countryISO2, numberType) {
     try {
       const numberUtils = getNumberUtils(countryISO2, numberType);
@@ -3834,9 +3892,14 @@ var factoryOutput = (() => {
       return validateReturn;
     }
   }
-  var getMaxLength = (countryCode) => {
-    return 10;
-  };
+  function getMaxLength(countryISO2, numberType) {
+    try {
+      const numberUtils = getNumberUtils(countryISO2, numberType);
+      return numberUtils.maxLength;
+    } catch (e) {
+      return 0;
+    }
+  }
 
   // src/js/input/internationalNumberInputWithUtils.ts
   var utilsTmp = {
@@ -3844,7 +3907,7 @@ var factoryOutput = (() => {
     formatNumberAsYouType,
     getCoreNumber,
     getExampleNumber,
-    getValidationError,
+    getValidationError: void 0,
     isPossibleNumber: void 0,
     isValidNumber,
     getMaxLength,

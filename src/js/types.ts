@@ -86,16 +86,21 @@ export interface StandardNumberUtils {
 	minLength: number;
 
 	/**
+	 * The country's prefix for the number type.
+	 */
+	countryPrefix: string;
+
+	/**
 	 * Convert the number to the minimal representation.
 	 * This strips the number of any valid separators and removes surrounding
 	 * whitespace.
 	 */
-	compact(value: string): string;
+	compact(value: string, includeCountryPrefix: boolean): string;
 
 	/**
 	 * Reformat the number to the standard presentation format.
 	 */
-	format(value: string): string;
+	format(value: string, includeCountryPrefix: boolean): string;
 
 	/**
 	 * Validate with error throws subclass of ValidationError

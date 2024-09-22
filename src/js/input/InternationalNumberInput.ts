@@ -23,10 +23,11 @@ interface InternationalNumberInputInterface {
 export type IniUtils = {
 	formatNumber(number: string, countryISO2: string, numberType: NumberType): string;
 	formatNumberAsYouType(number: string, countryISO2: string, numberType: NumberType): string;
-	getCoreNumber(number: string, countryISO2: string | undefined): string;
+	getCoreNumber(number: string, countryISO2: string, numberType: NumberType): string;
 	getExampleNumber(countryISO2: string, numberType: NumberType): string;
+	getFullNumber(number: string, countryISO2: string, numberType: NumberType, includeFormatting: boolean): string;
 	getMaxLength(countryISO2: string): number;
-	getValidationError(number: string, countryISO2: string | undefined): ValidateReturn;
+	getMinLength(countryISO2: string): number;
 	isValidNumber: (number: string, countryISO2: string, numberType: NumberType) => ValidateReturn;
 
 	numberType: NumberType;

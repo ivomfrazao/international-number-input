@@ -26,21 +26,33 @@ const validator: StandardNumberUtils = {
 	placeholder: '123 456 789',
 	maxLength: 9,
 	minLength: 9,
+	countryPrefix: 'PT',
 
-	compact(input: string): string {
+	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 
 		if (err) {
 			throw err;
 		}
 
-		return value;
+		if (includeCountryPrefix) {
+			return this.countryPrefix + value;
+		}
+		else {
+			return value;
+		}
 	},
 
-	format(input: string): string {
-		const [value] = clean(input);
+	format(input: string, includeCountryPrefix: boolean): string {
+		const [cleanValue] = clean(input);
+		const value = strings.splitAt(cleanValue, 3, 6).join(' ');
 
-		return strings.splitAt(value, 3, 6).join(' ');
+		if (includeCountryPrefix) {
+			return this.countryPrefix + value;
+		}
+		else {
+			return value;
+		}
 	},
 
 	validate(input: string): ValidateReturn {
