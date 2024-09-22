@@ -12,42 +12,14 @@ import * as exceptions from "../exceptions";
 import { DataAttributes } from "./libraries/DataAttributes.enum";
 
 // TODO Remove next import and type
-import allCountries, { Country } from "./international-number-input/data";
 import internationalNumberInput from "./InternationalNumberInput";
 import { AutoPlaceholderType } from "./libraries/AutoPlaceholderType.enum";
+import allCountries, { Country } from "./international-number-input/data";
 type SelectedCountryData = Country | { name?: string, iso2?: string, dialCode?: string };
 
-// TODO Check if translateCursorPosition is really necessary. If yes, move to utilities
-const translateCursorPosition = (
-	relevantChars: number,
-	formattedValue: string,
-	prevCaretPos: number,
-	isDeleteForwards: boolean,
-): number => {
-	//* If the first char is a formatting char, and they backspace delete it:
-	//* Cursor should stay at the start (pos 0), rather than stick to the first digit (pos 1).
-	if (prevCaretPos === 0 && !isDeleteForwards) {
-		return 0;
-	}
-	let count = 0;
-	for (let i = 0; i < formattedValue.length; i++) {
-		if (/[+0-9]/.test(formattedValue[i])) {
-			count++;
-		}
-
-		//* Normal case: stop when you hit the right number of relevant chars
-		//* (cursor will be just after the final relevant char).
-		if (count === relevantChars && !isDeleteForwards) {
-			return i + 1;
-		}
-		//* Spacial case: delete forwards (fn + delete on a mac):
-		//* Wait until hit one extra relevant char, and put the cursor just before it (after any formatting chars).
-		if (isDeleteForwards && count === relevantChars + 1) {
-			return i;
-		}
-	}
-	return formattedValue.length;
-};
+interface CustomInputEventDetail {
+    isSetNumber?: boolean;
+}
 
 //* This is our plugin class that we will create an instance of
 // eslint-disable-next-line no-unused-vars
@@ -61,7 +33,8 @@ export class Ini {
 	private highlightedItem: HTMLElement | null;
 	private options: AllOptions;
 	private hadInitialPlaceholder: boolean;
-	private selectedCountryData: SelectedCountryData;
+	private selectedCountryData: Country | null;
+	private selectedNumberType: NumberType;
 	private countries: Country[];
 	private countryContainer: HTMLElement;
 	private selectedCountry: HTMLElement;
@@ -139,7 +112,7 @@ export class Ini {
 	
 		//* In various situations there could be no country selected initially, but we need to be able
 		//* to assume this variable exists.
-		this.selectedCountryData = {};
+		this.selectedCountryData = null;
 	
 		//* Process all the data: onlyCountries, excludeCountries, countryOrder etc.
 		this._processCountryData();
@@ -674,7 +647,7 @@ export class Ini {
 	
 		//* Don't bother with IP lookup if we already have a selected country.
 		const isAutoCountry = initialCountry === "auto" && geoIpLookup;
-		if (isAutoCountry && !this.selectedCountryData.iso2) {
+		if (isAutoCountry && !this.selectedCountryData?.iso2) {
 			this._loadAutoCountry();
 		} else {
 			this.resolveAutoCountryPromise();
@@ -732,22 +705,16 @@ export class Ini {
 		const { strictMode, formatAsYouType, formatOnDisplay } = this.options;
 		let userOverrideFormatting = false;
 	
-		// const openDropdownWithPlus = () => {
-		//   this._openDropdown();
-		//   this.searchInput.value = "+";
-		//   this._filterCountries("", true);
-		// };
-	
 		//* On input event: (1) Update selected country, (2) Format-as-you-type.
 		//* Note that this fires AFTER the input is updated.
-		this._handleInputEvent = (e: InputEvent): void => {
+		this._handleInputEvent = (e: InputEvent & { detail?: CustomInputEventDetail }): void => {
 			//* Update selected country.
 			if (this._updateCountryFromNumber(this.numberInput.value)) {
 				this._triggerCountryChange();
 			}
 	
 			//* If user types their own formatting char (not a plus or a numeric), or they paste something, then set the override.
-			const isFormattingChar = e?.data && /[^+0-9]/.test(e.data);
+			const isFormattingChar = e?.data && /[^a-zA-Z0-9]/.test(e.data);
 			const isPaste = e?.inputType === "insertFromPaste" && this.numberInput.value;
 			if (isFormattingChar || (isPaste && !strictMode)) {
 				userOverrideFormatting = true;
@@ -757,7 +724,7 @@ export class Ini {
 				userOverrideFormatting = false;
 			}
 	
-			const disableFormatOnSetNumber = e?.detail && e.detail["isSetNumber"] && !formatOnDisplay;
+			const disableFormatOnSetNumber = e?.detail?.isSetNumber && !formatOnDisplay;
 			//* Handle format-as-you-type, unless userOverrideFormatting, or disableFormatOnSetNumber.
 			if (formatAsYouType && !userOverrideFormatting && !disableFormatOnSetNumber) {
 				//* Maintain caret position after reformatting.
@@ -766,9 +733,7 @@ export class Ini {
 				const relevantCharsBeforeCaret = valueBeforeCaret.replace(/[^+0-9]/g, "").length;
 				const isDeleteForwards = e?.inputType === "deleteContentForward";
 				const formattedValue = this._formatNumberAsYouType();
-				const newCaretPos = translateCursorPosition(relevantCharsBeforeCaret, formattedValue, currentCaretPos, isDeleteForwards);
 				this.numberInput.value = formattedValue;
-				this.numberInput.setSelectionRange(newCaretPos, newCaretPos);
 			}
 		};
 		//* This handles individual key presses as well as cut/paste events
@@ -792,7 +757,7 @@ export class Ini {
 					// const coreNumber = internationalNumberInput.utils.getCoreNumber(fullNumber, this.selectedCountryData.iso2);
 					const coreNumber = "123";
 					const hasReachedMaxLength = this.maxCoreNumberLength && coreNumber.length >= this.maxCoreNumberLength;
-					const selectedText = this.numberInput.value.substring(this.numberInput.selectionStart, this.numberInput.selectionEnd);
+					const selectedText = this.numberInput.value.substring(this.numberInput.selectionStart || 0, this.numberInput.selectionEnd || 0);
 					const hasSelectedDigit = /\d/.test(selectedText);
 					// ignore the char if (1) it's not an allowed char, or (2) the input has reached max length and no digit is selected (which will be replaced by the new char)
 					if (!isAllowedChar || (hasReachedMaxLength && !hasSelectedDigit)) {
@@ -1008,7 +973,7 @@ export class Ini {
 	 */
 	private _searchForCountry(query: string): void {
 		for (let i = 0; i < this.countries.length; i++) {
-			const c = this.countries[i];
+			const c: Country = this.countries[i];
 			const startsWith = c.name.substring(0, query.length).toLowerCase() === query;
 			if (startsWith) {
 				const listItem = c.nodeById[this.id];
@@ -1070,9 +1035,9 @@ export class Ini {
 			searchText = i18n.oneSearchResult;
 		} else {
 			// eslint-disable-next-line no-template-curly-in-string
-			searchText = i18n.multipleSearchResults.replace("${count}", count.toString());
+			searchText = i18n.multipleSearchResults?.replace("${count}", count.toString());
 		}
-		this.searchResultsA11yText.textContent = searchText;
+		this.searchResultsA11yText.textContent = searchText || "";
 	}
   
 	/**
@@ -1186,7 +1151,7 @@ export class Ini {
 		}
 	
 		if (shouldFocus) {
-			this.highlightedItem.focus();
+			this.highlightedItem?.focus();
 		}
 	}
 	
@@ -1217,16 +1182,16 @@ export class Ini {
 	private _setCountry(iso2?: string | null): boolean {
 		const { showFlags, i18n } = this.options;
 	
-		const prevCountry = this.selectedCountryData.iso2
+		const prevCountry: Country = this.selectedCountryData?.iso2
 			? this.selectedCountryData
-			: {};
+			: null;
 	
 		//* Do this first as it will throw an error and stop if iso2 is invalid.
 		this.selectedCountryData = iso2
-			? this._getCountryData(iso2, false) || {}
-			: {};
+			? this._getCountryData(iso2, false) || null
+			: null;
 		//* Update the defaultCountry - we only need the iso2 from now on, so just store that.
-		if (this.selectedCountryData.iso2) {
+		if (this.selectedCountryData?.iso2) {
 			this.defaultCountry = this.selectedCountryData.iso2;
 		}
 	
@@ -1239,7 +1204,7 @@ export class Ini {
 				a11yText = this.selectedCountryData.name;
 			} else {
 				flagClass = `${buildElementClass(this.options.styles, StyleElement.Flag)} ${buildElementClass(this.options.styles, StyleElement.Globe)}`;
-				a11yText = i18n.noCountrySelected;
+				a11yText = i18n.noCountrySelected || "";
 			}
 			this.selectedCountryInner.className = flagClass;
 			this.selectedCountryA11yText.textContent = a11yText;
@@ -1252,7 +1217,7 @@ export class Ini {
 		this._updateMaxLength();
 	
 		//* Return if the country has changed or not.
-		return prevCountry.iso2 !== iso2;
+		return prevCountry?.iso2 !== iso2;
 	}
 	
 	/**
@@ -1261,9 +1226,9 @@ export class Ini {
 	private _updateMaxLength(): void {
 		const { strictMode, numberType } = this.options;
 		if (strictMode && internationalNumberInput.utils) {
-			if (this.selectedCountryData.iso2) {
+			if (this.selectedCountryData?.iso2) {
 				this.maxCoreNumberLength = internationalNumberInput.utils.getMaxLength(
-					this.selectedCountryData.iso2
+					this.selectedCountryData?.iso2
 				);
 			} else {
 				this.maxCoreNumberLength = null;
@@ -1286,9 +1251,9 @@ export class Ini {
 	
 		if (shouldSetPlaceholder && internationalNumberInput.utils) {
 			//* Note: Must set placeholder to empty string if no country selected (globe icon showing).
-			let placeholder = this.selectedCountryData.iso2
+			let placeholder = this.selectedCountryData?.iso2
 				? internationalNumberInput.utils.getExampleNumber(
-						this.selectedCountryData.iso2,
+						this.selectedCountryData?.iso2,
 						numberType,
 					)
 				: "";
@@ -1423,7 +1388,7 @@ export class Ini {
 	private _formatNumberAsYouType(): string {
 		const val = this._getFullNumber();
 		const result = internationalNumberInput.utils
-			? internationalNumberInput.utils.formatNumberAsYouType(val, this.selectedCountryData.iso2)
+			? internationalNumberInput.utils.formatNumberAsYouType(val, this.selectedCountryData?.iso2, this.options.numberType)
 			: val;
 		return result;
 	}
@@ -1440,7 +1405,7 @@ export class Ini {
 			//* We must set this even if there is an initial val in the input: in case the initial val is
 			//* invalid and they delete it - they should see their auto country.
 			this.defaultCountry = internationalNumberInput.autoCountry;
-			const hasSelectedCountryOrGlobe = this.selectedCountryData.iso2 || this.selectedCountryInner.classList.contains(buildElementClass(this.options.styles, StyleElement.Globe));
+			const hasSelectedCountryOrGlobe = this.selectedCountryData?.iso2 || this.selectedCountryInner.classList.contains(buildElementClass(this.options.styles, StyleElement.Globe));
 			//* If no country/globe currently selected, then update the country.
 			if (!hasSelectedCountryOrGlobe) {
 				this.setCountry(this.defaultCountry);
@@ -1459,7 +1424,7 @@ export class Ini {
 			if (this.numberInput.value) {
 				this._updateValFromNumber(this.numberInput.value);
 			}
-			if (this.selectedCountryData.iso2) {
+			if (this.selectedCountryData?.iso2) {
 				this._updatePlaceholder();
 				this._updateMaxLength();
 			}
@@ -1528,19 +1493,10 @@ export class Ini {
 			return internationalNumberInput.utils.formatNumber(
 				this._getFullNumber(),
 				iso2,
-				format,
+				this.options.numberType,
 			);
 		}
 		return "";
-	}
-	
-	/**
-	 * Gets the type of the entered number
-	 * @returns The type of number that was entered.
-	 */
-	getNumberType(): NumberType {
-		// TODO
-		return NumberType.NationalIdentificationNumber;
 	}
 	
 	/**
@@ -1568,30 +1524,12 @@ export class Ini {
 	 * Validates the currently entered number.
 	 * @returns Identifies if the entered number is valid.
 	 */
-	isValidNumber(): boolean | null {
+	isValidNumber(): Boolean {
 		const val = this._getFullNumber();
-		//* Return false for any alpha chars.
-		if (/\p{L}/u.test(val)) {
-			return false;
-		}
+
 		return internationalNumberInput.utils
-			? internationalNumberInput.utils.isPossibleNumber(val, this.selectedCountryData.iso2, this.options.numberType)
-			: null;
-	}
-	
-	/**
-	 * Validates the currently entered number.
-	 * @returns Identifies if the entered number is valid.
-	 */
-	isValidNumberPrecise(): boolean | null {
-		const val = this._getFullNumber();
-		//* Return false for any alpha chars.
-		if (/\p{L}/u.test(val)) {
-			return false;
-		}
-		return internationalNumberInput.utils
-			? internationalNumberInput.utils.isValidNumber(val, this.selectedCountryData.iso2)
-			: null;
+			? internationalNumberInput.utils.isValidNumber(val, this.selectedCountryData?.iso2, this.options.numberType).isValid
+			: false;
 	}
 	
 	/**
@@ -1600,7 +1538,7 @@ export class Ini {
 	 */
 	setCountry(iso2: string): void {
 		const iso2Lower = iso2?.toLowerCase();
-		const currentCountry = this.selectedCountryData.iso2;
+		const currentCountry = this.selectedCountryData?.iso2;
 		/**
 		 * There is a country change IF:
 		 * - there is a new country and it's different to the current one
@@ -1626,7 +1564,7 @@ export class Ini {
 			this._triggerCountryChange();
 		}
 		//* This is required for the React cmp to update its state correctly.
-		this._trigger("input", { isSetNumber: true });
+		this._trigger("input", { isSetNumber: true } as CustomInputEventDetail);
 	}
   
 	/**

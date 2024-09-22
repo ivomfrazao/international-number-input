@@ -2,9 +2,9 @@ import { CountryStandardNumberUtils } from '../../types';
 import ES from './es';
 import PT from './pt';
 
-const validators: CountryStandardNumberUtils[] = [
-	ES,
+const countryNumberUtils: CountryStandardNumberUtils[] = [
+	ES,	
 	PT,
 ]
 
-export default validators;
+export default countryNumberUtils;

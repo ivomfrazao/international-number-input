@@ -19,7 +19,7 @@
 				<label for="number2">Number</label>
 				<input id="number2" name="number2" type="text" value="PT123456789" />
 			</div>
-			<button class="button" type="submit">Submit</button>
+			<button class="button" onclick="onSubmit()">Submit</button>
 		</form>
 
 		<script src="build/js/input/internationalNumberInputWithUtils.js"></script>
@@ -30,7 +30,7 @@
 				// allowDropdown: false,
 				// autoPlaceholder: "off",
 				// containerClass: "test",
-				countryOrder: ["pt", "us"],
+				countryOrder: ["pt", "es", "us"],
 				// countrySearch: false,
 				// customPlaceholder: function(selectedCountryPlaceholder, selectedCountryData) {
 				//   return "e.g. " + selectedCountryPlaceholder;
@@ -50,7 +50,7 @@
 				// i18n: { 'de': 'Deutschland' },
 				initialCountry: "pt",
 				// nationalMode: false,
-				onlyCountries: ['us', 'gb', 'ch', 'ca', 'do', 'pt'],
+				onlyCountries: ['us', 'gb', 'ch', 'ca', 'do', 'pt', 'es'],
 				// placeholderNumberType: "MOBILE",
 				// showFlags: false,
 				// separateDialCode: true,
@@ -62,10 +62,15 @@
 			const ini2 = window.internationalNumberInput(input2, {
 				countryOrder: ["pt", "us"],
 				onlyCountries: ['us', 'gb', 'ch', 'ca', 'do', 'pt'],
+				numberType: "TIN",
 				// utilsScriptPath: "./build/js/input/utils/InstancesUtils.js", // leading slash (and http-server) required for this to work in chrome
 			});
 			window.ini1 = ini1; // useful for testing
 			window.ini2 = ini2; // useful for testing
+			function onSubmit() {
+				console.log(`ini1: ${ini1.isValidNumber() ? 'true' : 'false'}`)
+				console.log(`ini2: ${ini2.isValidNumber() ? 'true' : 'false'}`)
+			}
 		</script>
 	</body>
 </html>

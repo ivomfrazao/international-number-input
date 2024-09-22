@@ -2,7 +2,7 @@ import { CountryStandardNumberUtils } from '../../../types';
 import nin from './cc'
 import tin from './nif'
 
-const validator: CountryStandardNumberUtils = {
+const countryNumberUtils: CountryStandardNumberUtils = {
 	iso2: "PT",
 	numberUtils: [
 		nin,
@@ -10,4 +10,4 @@ const validator: CountryStandardNumberUtils = {
 	]
 }
 
-export default validator;
+export default countryNumberUtils;

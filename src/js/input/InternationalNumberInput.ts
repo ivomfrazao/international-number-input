@@ -21,14 +21,13 @@ interface InternationalNumberInputInterface {
 }
 
 export type IniUtils = {
-	formatNumber(number: string, countryISO2: string | undefined, format?: number): string;
-	formatNumberAsYouType(number: string, countryISO2: string | undefined): string;
+	formatNumber(number: string, countryISO2: string, numberType: NumberType): string;
+	formatNumberAsYouType(number: string, countryISO2: string, numberType: NumberType): string;
 	getCoreNumber(number: string, countryISO2: string | undefined): string;
-	getExampleNumber(countryISO2: string | undefined, numberType: NumberType): string;
+	getExampleNumber(countryISO2: string, numberType: NumberType): string;
 	getMaxLength(countryISO2: string): number;
 	getValidationError(number: string, countryISO2: string | undefined): ValidateReturn;
-	isPossibleNumber(number: string, countryISO2: string | undefined, numberType?: NumberType): boolean;
-	isValidNumber: (number: string, countryISO2: string | undefined) => boolean;
+	isValidNumber: (number: string, countryISO2: string, numberType: NumberType) => ValidateReturn;
 
 	numberType: NumberType;
 };

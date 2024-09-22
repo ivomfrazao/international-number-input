@@ -12,7 +12,7 @@ export interface AllOptions {
 	 * Countries not provided in the list will be ordered alphabetically.
 	 * If not set, the entire list will be ordered alphabetically.
 	 */
-	countryOrder: string[];
+	countryOrder: string[] | null;
 	countrySearch: boolean;
 	customPlaceholder: ((selectedCountryPlaceholder: string, selectedCountryData: object) => string) | null;
 	dropdownContainer: HTMLElement | null;
@@ -284,7 +284,7 @@ export interface AllOptions {
 	 * It can also be set as `auto`, the component will try to automatically infer the value.
 	 */
 	initialCountry: string;
-	numberType: NumberType | null;
+	numberType: NumberType;
 	/**
 	 * List of countries to exclusively be displayed, instead of using all countries.
 	 * If set, it will supersede the {@link excludeCountries} parameter.

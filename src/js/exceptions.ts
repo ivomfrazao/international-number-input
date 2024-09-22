@@ -64,3 +64,23 @@ export class InvalidComponent extends ValidationError {
 		this.name = 'InvalidComponent';
 	}
 }
+
+/**
+ * The provided country is not supported.
+ */
+export class InvalidCountry extends ValidationError {
+	constructor(msg = 'The country is not supported.') {
+		super(msg);
+		this.name = 'InvalidCountry';
+	}
+}
+
+/**
+ * The number type is not supported for the provided country.
+ */
+export class InvalidNumberType extends ValidationError {
+	constructor(msg = 'The number type is not supported for the provided country.') {
+		super(msg);
+		this.name = 'InvalidNumberType';
+	}
+}

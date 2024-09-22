@@ -1608,26 +1608,44 @@ var factoryOutput = (() => {
       this.name = "ValidationError";
     }
   };
+  var InvalidFormat = class extends ValidationError {
+    constructor(msg = "The number has an invalid format.") {
+      super(msg);
+      this.name = "InvalidFormat";
+    }
+  };
+  var InvalidChecksum = class extends ValidationError {
+    constructor(msg = "The number checksum or check digit is invalid.") {
+      super(msg);
+      this.name = "InvalidChecksum";
+    }
+  };
+  var InvalidLength = class extends ValidationError {
+    constructor(msg = "The number has an invalid length.") {
+      super(msg);
+      this.name = "InvalidLength";
+    }
+  };
+  var InvalidComponent = class extends ValidationError {
+    constructor(msg = "One of the parts of the number are invalid or unknown.") {
+      super(msg);
+      this.name = "InvalidComponent";
+    }
+  };
+  var InvalidCountry = class extends ValidationError {
+    constructor(msg = "The country is not supported.") {
+      super(msg);
+      this.name = "InvalidCountry";
+    }
+  };
+  var InvalidNumberType = class extends ValidationError {
+    constructor(msg = "The number type is not supported for the provided country.") {
+      super(msg);
+      this.name = "InvalidNumberType";
+    }
+  };
 
   // src/js/input/InternationalNumberInput.class.ts
-  var translateCursorPosition = (relevantChars, formattedValue, prevCaretPos, isDeleteForwards) => {
-    if (prevCaretPos === 0 && !isDeleteForwards) {
-      return 0;
-    }
-    let count = 0;
-    for (let i = 0; i < formattedValue.length; i++) {
-      if (/[+0-9]/.test(formattedValue[i])) {
-        count++;
-      }
-      if (count === relevantChars && !isDeleteForwards) {
-        return i + 1;
-      }
-      if (isDeleteForwards && count === relevantChars + 1) {
-        return i;
-      }
-    }
-    return formattedValue.length;
-  };
   var Ini = class {
     constructor(input, customOptions = {}) {
       this.id = import_guid_typescript.Guid.create().toString();
@@ -1636,7 +1654,10 @@ var factoryOutput = (() => {
       this.options = Object.assign({}, InternationalNumberInputOptions_default_default, customOptions);
       this.hadInitialPlaceholder = Boolean(input.getAttribute("placeholder"));
     }
-    //* Can't be private as it's called from internationalNumberInput convenience wrapper.
+    /**
+     * Initialization method.
+     * Can't be private as it's called from internationalNumberInput convenience wrapper.
+     */
     _init() {
       if (this.options.useFullscreenPopup) {
         this.options.fixDropdownWidth = false;
@@ -1644,8 +1665,6 @@ var factoryOutput = (() => {
       if (this.options.useFullscreenPopup && !this.options.dropdownContainer) {
         this.options.dropdownContainer = document.body;
       }
-      this.isAndroid = typeof navigator !== "undefined" ? /Android/i.test(navigator.userAgent) : false;
-      this.isRTL = !!this.numberInput.closest("[dir=rtl]");
       this.options.i18n = { ...en_default, ...this.options.i18n };
       const autoCountryPromise = new Promise((resolve, reject) => {
         this.resolveAutoCountryPromise = resolve;
@@ -1656,23 +1675,27 @@ var factoryOutput = (() => {
         this.rejectUtilsScriptPromise = reject;
       });
       this.promise = Promise.all([autoCountryPromise, utilsScriptPromise]);
-      this.selectedCountryData = {};
+      this.selectedCountryData = null;
       this._processCountryData();
       this._generateMarkup();
       this._setInitialState();
       this._initListeners();
       this._initRequests();
     }
-    //********************
-    //*  PRIVATE METHODS
-    //********************
-    //* Prepare all of the country data, including onlyCountries, excludeCountries, countryOrder options.
+    /**
+     * PRIVATE METHODS
+     */
+    /**
+     * Prepare all of the country data, including onlyCountries, excludeCountries, countryOrder options.
+     */
     _processCountryData() {
       this._processAllCountries();
       this._translateCountryNames();
       this._sortCountries();
     }
-    //* Sort countries by countryOrder option (if present), then name.
+    /**
+     * Sort countries by countryOrder option (if present), then name.
+     */
     _sortCountries() {
       if (this.options.countryOrder) {
         this.options.countryOrder = this.options.countryOrder.map((country) => country.toLowerCase());
@@ -1694,7 +1717,9 @@ var factoryOutput = (() => {
         return a.name.localeCompare(b.name);
       });
     }
-    //* Process onlyCountries or excludeCountries array if present.
+    /**
+     * Process onlyCountries or excludeCountries array if present.
+     */
     _processAllCountries() {
       const { onlyCountries, excludeCountries } = this.options;
       if (onlyCountries.length) {
@@ -1726,7 +1751,9 @@ var factoryOutput = (() => {
         }
       });
     }
-    //* Generate all of the markup for the plugin: the selected country overlay, and the dropdown.
+    /**
+     * Generate all of the markup for the plugin: the selected country overlay, and the dropdown.
+     */
     _generateMarkup() {
       this.numberInput.classList.add(buildElementClass(this.options.styles, "elementNumberInputClass" /* NumberInput */));
       const autocompleteAttribute = "autocomplete";
@@ -1914,7 +1941,9 @@ var factoryOutput = (() => {
         }
       }
     }
-    //* For each country: add a country list item <li> to the countryList <ul> container.
+    /**
+     * For each country: add a country list item <li> to the countryList <ul> container.
+     */
     _appendListItems() {
       this.countries.forEach((country, index) => {
         const extraClass = index === 0 ? buildElementClass(this.options.styles, "elementHighlightClass" /* Highlight */) : "";
@@ -1966,8 +1995,11 @@ var factoryOutput = (() => {
         );
       });
     }
-    //* Set the initial state of the input value and the selected country by:
-    //* 1. Using explicit initialCountry
+    /**
+     * Set the initial state of the input value and the selected country by:
+     * 1. Using explicit initialCountry
+     * @param overrideAutoCountry 
+     */
     _setInitialState(overrideAutoCountry = false) {
       const attributeValue = this.numberInput.getAttribute("value");
       const inputValue = this.numberInput.value;
@@ -1988,7 +2020,9 @@ var factoryOutput = (() => {
         this._updateValFromNumber(val);
       }
     }
-    //* Initialise the main event listeners: input keyup, and click selected country.
+    /**
+     * Initialise the main event listeners: input keyup, and click selected country.
+     */
     _initListeners() {
       this._initNumberInputListeners();
       if (this.options.allowDropdown) {
@@ -1998,7 +2032,9 @@ var factoryOutput = (() => {
         this._initHiddenInputListener();
       }
     }
-    //* Update hidden input on form submit.
+    /**
+     * Update hidden input on form submit.
+     */
     _initHiddenInputListener() {
       this._handleHiddenInputSubmit = () => {
         if (this.hiddenInput) {
@@ -2013,7 +2049,9 @@ var factoryOutput = (() => {
         this._handleHiddenInputSubmit
       );
     }
-    //* initialise the dropdown listeners.
+    /**
+     * Initialise the dropdown listeners.
+     */
     _initDropdownListeners() {
       const elementHideClass = buildElementClass(this.options.styles, "elementHideClass" /* Hide */);
       this._handleLabelClick = (e) => {
@@ -2049,7 +2087,9 @@ var factoryOutput = (() => {
         this._handleCountryContainerKeydown
       );
     }
-    //* Init many requests: utils script / geo ip lookup.
+    /**
+     * Init many requests: utils script / geo ip lookup.
+     */
     _initRequests() {
       const { utilsScriptPath, initialCountry, geoIpLookup } = this.options;
       if (utilsScriptPath && !InternationalNumberInput_default.utils) {
@@ -2064,13 +2104,15 @@ var factoryOutput = (() => {
         this.resolveUtilsScriptPromise();
       }
       const isAutoCountry = initialCountry === "auto" && geoIpLookup;
-      if (isAutoCountry && !this.selectedCountryData.iso2) {
+      if (isAutoCountry && !this.selectedCountryData?.iso2) {
         this._loadAutoCountry();
       } else {
         this.resolveAutoCountryPromise();
       }
     }
-    //* Perform the geo ip lookup.
+    /**
+     * Perform the geo ip lookup.
+     */
     _loadAutoCountry() {
       if (InternationalNumberInput_default.autoCountry) {
         this.handleAutoCountry();
@@ -2097,7 +2139,9 @@ var factoryOutput = (() => {
         }
       }
     }
-    //* Initialize the number input listeners.
+    /**
+     * Initialize the number input listeners.
+     */
     _initNumberInputListeners() {
       const { strictMode, formatAsYouType, formatOnDisplay } = this.options;
       let userOverrideFormatting = false;
@@ -2105,23 +2149,21 @@ var factoryOutput = (() => {
         if (this._updateCountryFromNumber(this.numberInput.value)) {
           this._triggerCountryChange();
         }
-        const isFormattingChar = e?.data && /[^+0-9]/.test(e.data);
+        const isFormattingChar = e?.data && /[^a-zA-Z0-9]/.test(e.data);
         const isPaste = e?.inputType === "insertFromPaste" && this.numberInput.value;
         if (isFormattingChar || isPaste && !strictMode) {
           userOverrideFormatting = true;
         } else if (!/[^+0-9]/.test(this.numberInput.value)) {
           userOverrideFormatting = false;
         }
-        const disableFormatOnSetNumber = e?.detail && e.detail["isSetNumber"] && !formatOnDisplay;
+        const disableFormatOnSetNumber = e?.detail?.isSetNumber && !formatOnDisplay;
         if (formatAsYouType && !userOverrideFormatting && !disableFormatOnSetNumber) {
           const currentCaretPos = this.numberInput.selectionStart || 0;
           const valueBeforeCaret = this.numberInput.value.substring(0, currentCaretPos);
           const relevantCharsBeforeCaret = valueBeforeCaret.replace(/[^+0-9]/g, "").length;
           const isDeleteForwards = e?.inputType === "deleteContentForward";
           const formattedValue = this._formatNumberAsYouType();
-          const newCaretPos = translateCursorPosition(relevantCharsBeforeCaret, formattedValue, currentCaretPos, isDeleteForwards);
           this.numberInput.value = formattedValue;
-          this.numberInput.setSelectionRange(newCaretPos, newCaretPos);
         }
       };
       this.numberInput.addEventListener("input", this._handleInputEvent);
@@ -2134,7 +2176,7 @@ var factoryOutput = (() => {
               const isAllowedChar = isInitialPlus || isNumeric;
               const coreNumber = "123";
               const hasReachedMaxLength = this.maxCoreNumberLength && coreNumber.length >= this.maxCoreNumberLength;
-              const selectedText = this.numberInput.value.substring(this.numberInput.selectionStart, this.numberInput.selectionEnd);
+              const selectedText = this.numberInput.value.substring(this.numberInput.selectionStart || 0, this.numberInput.selectionEnd || 0);
               const hasSelectedDigit = /\d/.test(selectedText);
               if (!isAllowedChar || hasReachedMaxLength && !hasSelectedDigit) {
                 e.preventDefault();
@@ -2145,12 +2187,20 @@ var factoryOutput = (() => {
         this.numberInput.addEventListener("keydown", this._handleKeydownEvent);
       }
     }
-    //* Adhere to the input's maxlength attr.
+    /**
+     * Adhere to the input's maxlength attr.
+     * @param number The number the user inputted.
+     * @returns The number limited to the max length allowed
+     */
     _cap(number) {
       const max = parseInt(this.numberInput.getAttribute("maxlength") || "", 10);
       return max && number.length > max ? number.substring(0, max) : number;
     }
-    //* Trigger a custom event on the input.
+    /**
+     * Trigger a custom event on the input.
+     * @param name The name of the event to be triggered.
+     * @param detailProps The details of the event to send to the catcher.
+     */
     _trigger(name, detailProps = {}) {
       const e = new CustomEvent(name, {
         bubbles: true,
@@ -2159,7 +2209,9 @@ var factoryOutput = (() => {
       });
       this.numberInput.dispatchEvent(e);
     }
-    //* Open the dropdown.
+    /**
+     * Open the dropdown.
+     */
     _openDropdown() {
       const { fixDropdownWidth, countrySearch } = this.options;
       if (fixDropdownWidth) {
@@ -2181,7 +2233,9 @@ var factoryOutput = (() => {
       this.dropdownArrow.classList.add(buildElementClass(this.options.styles, "elementArrowClass" /* Arrow */, "attributeDownClass" /* Down */));
       this._trigger("open:countrydropdown");
     }
-    //* Set the dropdown position
+    /**
+     * Set the dropdown position
+     */
     _setDropdownPosition() {
       if (this.options.dropdownContainer) {
         this.options.dropdownContainer.appendChild(this.dropdown);
@@ -2197,7 +2251,9 @@ var factoryOutput = (() => {
         }
       }
     }
-    //* We only bind dropdown listeners when the dropdown is open.
+    /**
+     * Binds listeners to the dropdown when it is opened.
+     */
     _bindDropdownListeners() {
       const countryClass = buildElementClass(this.options.styles, "elementCountryClass" /* Country */);
       this._handleMouseoverCountryList = (e) => {
@@ -2278,11 +2334,14 @@ var factoryOutput = (() => {
         this.searchInput.addEventListener("click", (e) => e.stopPropagation());
       }
     }
-    //* Hidden search (countrySearch disabled): Find the first list item whose name starts with the query string.
+    /**
+     * Hidden search (countrySearch disabled): Finds the first list item whose name start with the query string.
+     * @param query The string to be queried.
+     */
     _searchForCountry(query) {
       for (let i = 0; i < this.countries.length; i++) {
         const c = this.countries[i];
-        const startsWith = c.name.substr(0, query.length).toLowerCase() === query;
+        const startsWith = c.name.substring(0, query.length).toLowerCase() === query;
         if (startsWith) {
           const listItem = c.nodeById[this.id];
           this._highlightListItem(listItem, false);
@@ -2291,7 +2350,11 @@ var factoryOutput = (() => {
         }
       }
     }
-    //* Country search enabled: Filter the countries according to the search query.
+    /**
+     * Country search enabled: Filter the countries according to the search query.
+     * @param query The string to be queried.
+     * @param isReset 
+     */
     _filterCountries(query, isReset = false) {
       let noCountriesAddedYet = true;
       this.countryList.innerHTML = "";
@@ -2316,7 +2379,9 @@ var factoryOutput = (() => {
       this.countryList.scrollTop = 0;
       this._updateSearchResultsText();
     }
-    //* Update search results text (for a11y).
+    /**
+     * Updates the search results' text (for a11y).
+     */
     _updateSearchResultsText() {
       const { i18n } = this.options;
       const count = this.countryList.childElementCount;
@@ -2326,11 +2391,14 @@ var factoryOutput = (() => {
       } else if (count === 1) {
         searchText = i18n.oneSearchResult;
       } else {
-        searchText = i18n.multipleSearchResults.replace("${count}", count.toString());
+        searchText = i18n.multipleSearchResults?.replace("${count}", count.toString());
       }
-      this.searchResultsA11yText.textContent = searchText;
+      this.searchResultsA11yText.textContent = searchText || "";
     }
-    //* Highlight the next/prev item in the list (and ensure it is visible).
+    /**
+     * Event that highlights the next/previous item in the list (and ensures it is visible).
+     * @param key The key that was used.
+     */
     _handleUpDownKey(key) {
       let next = key === "ArrowUp" /* ArrowUp */ ? this.highlightedItem?.previousElementSibling : this.highlightedItem?.nextElementSibling;
       if (!next && this.countryList.childElementCount > 1) {
@@ -2341,21 +2409,30 @@ var factoryOutput = (() => {
         this._highlightListItem(next, false);
       }
     }
-    //* Select the currently highlighted item.
+    /**
+     * Selects the currently highlighted item.
+     */
     _handleEnterKey() {
       if (this.highlightedItem) {
         this._selectListItem(this.highlightedItem);
       }
     }
-    //* Update the input's value to the given val (format first if possible)
-    //* NOTE: this is called from _setInitialState, handleUtils and setNumber.
+    /**
+     * Update the input's value to the given val (format first if possible)
+     * NOTE: this is called from _setInitialState, handleUtils and setNumber.
+     * @param fullNumber The number the user has inputted.
+     */
     _updateValFromNumber(fullNumber) {
       let number = fullNumber;
       number = this._beforeSetNumber(number);
       this.numberInput.value = number;
     }
-    //* Check if need to select a new country based on the given number
-    //* Note: called from _setInitialState, keyup handler, setNumber.
+    /**
+     * Checks if a new country needs to be selected based on the given number.
+     * NOTE: called from _setInitialState, keyup handler, setNumber.
+     * @param fullNumber The number the user has inputted.
+     * @returns Flag that identifies if an update to the country is necessary.
+     */
     _updateCountryFromNumber(fullNumber) {
       const plusIndex = fullNumber.indexOf("+");
       let number = plusIndex ? fullNumber.substring(plusIndex) : fullNumber;
@@ -2368,7 +2445,11 @@ var factoryOutput = (() => {
       }
       return false;
     }
-    //* Remove highlighting from other list items and highlight the given item.
+    /**
+     * Remove highlighting from other list items and highlight the given item.
+     * @param listItem The HTML list item to be modified.
+     * @param shouldFocus Identifies if the item is to be focused.
+     */
     _highlightListItem(listItem, shouldFocus) {
       const elementHighlightClass = buildElementClass(this.options.styles, "elementHighlightClass" /* Highlight */);
       const prevItem = this.highlightedItem;
@@ -2387,11 +2468,15 @@ var factoryOutput = (() => {
         }
       }
       if (shouldFocus) {
-        this.highlightedItem.focus();
+        this.highlightedItem?.focus();
       }
     }
-    //* Find the country data for the given iso2 code
-    //* the ignoreOnlyCountriesOption is only used during init() while parsing the onlyCountries array
+    /**
+     * Find the country data for the given iso2 code
+     * @param iso2 The country whose information is to be fetched.
+     * @param allowFail Identifies if a gracious fail should be used, retuning null, or an exception should be thrown otherwise.
+     * @returns 
+     */
     _getCountryData(iso2, allowFail) {
       for (let i = 0; i < this.countries.length; i++) {
         if (this.countries[i].iso2 === iso2) {
@@ -2403,13 +2488,17 @@ var factoryOutput = (() => {
       }
       throw new Error(`No country data for '${iso2}'`);
     }
-    //* Update the selected country, dial code (if separateDialCode), placeholder, title, and active list item.
-    //* Note: called from _setInitialState, _updateCountryFromNumber, _selectListItem, setCountry.
+    /**
+     * Updates the selected country, placeholder, title, active list item, and other metedata.
+     * NOTE: called from _setInitialState, _updateCountryFromNumber, _selectListItem, setCountry.
+     * @param iso2 The country to be set as selected.
+     * @returns Identifies if a change to the selected country was made. If false, it means the country was already selected.
+     */
     _setCountry(iso2) {
       const { showFlags, i18n } = this.options;
-      const prevCountry = this.selectedCountryData.iso2 ? this.selectedCountryData : {};
-      this.selectedCountryData = iso2 ? this._getCountryData(iso2, false) || {} : {};
-      if (this.selectedCountryData.iso2) {
+      const prevCountry = this.selectedCountryData?.iso2 ? this.selectedCountryData : null;
+      this.selectedCountryData = iso2 ? this._getCountryData(iso2, false) || null : null;
+      if (this.selectedCountryData?.iso2) {
         this.defaultCountry = this.selectedCountryData.iso2;
       }
       if (this.selectedCountryInner) {
@@ -2420,60 +2509,33 @@ var factoryOutput = (() => {
           a11yText = this.selectedCountryData.name;
         } else {
           flagClass = `${buildElementClass(this.options.styles, "elementFlagClass" /* Flag */)} ${buildElementClass(this.options.styles, "elementGlobeClass" /* Globe */)}`;
-          a11yText = i18n.noCountrySelected;
+          a11yText = i18n.noCountrySelected || "";
         }
         this.selectedCountryInner.className = flagClass;
         this.selectedCountryA11yText.textContent = a11yText;
       }
       this._updatePlaceholder();
       this._updateMaxLength();
-      return prevCountry.iso2 !== iso2;
+      return prevCountry?.iso2 !== iso2;
     }
-    //* Update the maximum valid number length for the currently selected country.
+    /**
+     * Updates the maximum valid number length for the currently selected country.
+     */
     _updateMaxLength() {
       const { strictMode, numberType } = this.options;
       if (strictMode && InternationalNumberInput_default.utils) {
-        if (this.selectedCountryData.iso2) {
+        if (this.selectedCountryData?.iso2) {
           this.maxCoreNumberLength = InternationalNumberInput_default.utils.getMaxLength(
-            this.selectedCountryData.iso2
+            this.selectedCountryData?.iso2
           );
         } else {
           this.maxCoreNumberLength = null;
         }
       }
     }
-    _setSelectedCountryTitleAttribute(iso2 = null) {
-      if (!this.selectedCountry) {
-        return;
-      }
-      let title;
-      if (iso2) {
-        title = this.selectedCountryData.name;
-      } else {
-        title = "Unknown";
-      }
-      this.selectedCountry.setAttribute("title", title);
-    }
-    //* When the input is in a hidden container during initialisation, we must inject some markup
-    //* into the end of the DOM to calculate the correct offsetWidth.
-    //* NOTE: this is only used when separateDialCode is enabled, so countryContainer and selectedCountry
-    //* will definitely exist.
-    _getHiddenSelectedCountryWidth() {
-      if (this.numberInput.parentNode) {
-        const containerClone = this.numberInput.parentNode.cloneNode(false);
-        containerClone.style.visibility = "hidden";
-        document.body.appendChild(containerClone);
-        const countryContainerClone = this.countryContainer.cloneNode();
-        containerClone.appendChild(countryContainerClone);
-        const selectedCountryClone = this.selectedCountry.cloneNode(true);
-        countryContainerClone.appendChild(selectedCountryClone);
-        const width = selectedCountryClone.offsetWidth;
-        document.body.removeChild(containerClone);
-        return width;
-      }
-      return 0;
-    }
-    //* Update the input placeholder to an example number from the currently selected country.
+    /**
+     * Updates the input placeholder to an example number from the currently selected country.
+     */
     _updatePlaceholder() {
       const {
         autoPlaceholder,
@@ -2482,8 +2544,8 @@ var factoryOutput = (() => {
       } = this.options;
       const shouldSetPlaceholder = autoPlaceholder === "agressive" /* Aggressive */ || !this.hadInitialPlaceholder && autoPlaceholder === "polite" /* Polite */;
       if (shouldSetPlaceholder && InternationalNumberInput_default.utils) {
-        let placeholder = this.selectedCountryData.iso2 ? InternationalNumberInput_default.utils.getExampleNumber(
-          this.selectedCountryData.iso2,
+        let placeholder = this.selectedCountryData?.iso2 ? InternationalNumberInput_default.utils.getExampleNumber(
+          this.selectedCountryData?.iso2,
           numberType
         ) : "";
         placeholder = this._beforeSetNumber(placeholder);
@@ -2493,7 +2555,10 @@ var factoryOutput = (() => {
         this.numberInput.setAttribute("placeholder", placeholder);
       }
     }
-    //* Called when the user selects a list item from the dropdown.
+    /**
+     * Called when the user selects a list item from the dropdown.
+     * @param listItem The item HTMLElement that was selected.
+     */
     _selectListItem(listItem) {
       const countryChanged = this._setCountry(
         listItem.getAttribute("data-country-code" /* CountryCode */)
@@ -2504,7 +2569,9 @@ var factoryOutput = (() => {
         this._triggerCountryChange();
       }
     }
-    //* Close the dropdown and unbind any listeners.
+    /**
+     * Closes the dropdown and unbinds any listeners.
+     */
     _closeDropdown() {
       this.dropdownContent.classList.add(buildElementClass(this.options.styles, "elementHideClass" /* Hide */));
       this.selectedCountry.setAttribute("aria-expanded", "false");
@@ -2539,7 +2606,10 @@ var factoryOutput = (() => {
       }
       this._trigger("close:countrydropdown");
     }
-    //* Check if an element is visible within it's container, else scroll until it is.
+    /**
+     * Check if an element is visible within it's container, else scroll until it is.
+     * @param element The element to scroll into for it to be visible.
+     */
     _scrollTo(element) {
       const container = this.countryList;
       const scrollTop = document.documentElement.scrollTop;
@@ -2557,46 +2627,63 @@ var factoryOutput = (() => {
         container.scrollTop = newScrollTop - heightDifference;
       }
     }
-    //* Get the input val
+    /**
+     * Gets the input's value trimmed.
+     * @returns The full number trimmed.
+     */
     _getFullNumber() {
       const val = this.numberInput.value.trim();
       return val;
     }
+    /**
+     * Processes the number before it's set in the input to be valid.
+     * @param fullNumber The number inputted by the user.
+     * @returns The number limitted to the maximum length the number is allowed to have.
+     */
     _beforeSetNumber(fullNumber) {
       const number = fullNumber;
       return this._cap(number);
     }
-    //* Trigger the 'countrychange' event.
+    /**
+     * Triggers a "countrychange" event.
+     */
     _triggerCountryChange() {
       this._trigger("countrychange");
     }
-    //* Format the number as the user types.
+    /**
+     * Formats the number according to it's rules.
+     * @returns The formatted number.
+     */
     _formatNumberAsYouType() {
       const val = this._getFullNumber();
-      const result = InternationalNumberInput_default.utils ? InternationalNumberInput_default.utils.formatNumberAsYouType(val, this.selectedCountryData.iso2) : val;
+      const result = InternationalNumberInput_default.utils ? InternationalNumberInput_default.utils.formatNumberAsYouType(val, this.selectedCountryData?.iso2, this.options.numberType) : val;
       return result;
     }
     //**************************
     //*  SECRET PUBLIC METHODS
     //**************************
-    //* This is called when the geoip call returns.
+    /**
+     * Handles the geoip call return.
+     */
     handleAutoCountry() {
       if (this.options.initialCountry === "auto" && InternationalNumberInput_default.autoCountry) {
         this.defaultCountry = InternationalNumberInput_default.autoCountry;
-        const hasSelectedCountryOrGlobe = this.selectedCountryData.iso2 || this.selectedCountryInner.classList.contains(buildElementClass(this.options.styles, "elementGlobeClass" /* Globe */));
+        const hasSelectedCountryOrGlobe = this.selectedCountryData?.iso2 || this.selectedCountryInner.classList.contains(buildElementClass(this.options.styles, "elementGlobeClass" /* Globe */));
         if (!hasSelectedCountryOrGlobe) {
           this.setCountry(this.defaultCountry);
         }
         this.resolveAutoCountryPromise();
       }
     }
-    //* This is called when the utils request completes.
+    /**
+     * Handles the utils request completion.
+     */
     handleUtils() {
       if (InternationalNumberInput_default.utils) {
         if (this.numberInput.value) {
           this._updateValFromNumber(this.numberInput.value);
         }
-        if (this.selectedCountryData.iso2) {
+        if (this.selectedCountryData?.iso2) {
           this._updatePlaceholder();
           this._updateMaxLength();
         }
@@ -2606,7 +2693,9 @@ var factoryOutput = (() => {
     //********************
     //*  PUBLIC METHODS
     //********************
-    //* Remove plugin.
+    /**
+     * Destroys the instance of the INI.
+     */
     destroy() {
       const { allowDropdown } = this.options;
       if (allowDropdown) {
@@ -2638,27 +2727,34 @@ var factoryOutput = (() => {
       wrapper?.parentNode?.removeChild(wrapper);
       delete InternationalNumberInput_default.instances[this.id];
     }
-    //* Format the number to the given format.
+    /**
+     * Format the number to the given format.
+     * @param format The format to be used.
+     * @returns The number formatted.
+     */
     getNumber(format) {
       if (InternationalNumberInput_default.utils) {
         const { iso2 } = this.selectedCountryData;
         return InternationalNumberInput_default.utils.formatNumber(
           this._getFullNumber(),
           iso2,
-          format
+          this.options.numberType
         );
       }
       return "";
     }
-    //* Get the type of the entered number
-    getNumberType() {
-      return "NIN" /* NationalIdentificationNumber */;
-    }
-    //* Get the country data for the currently selected country.
+    /**
+     * Gets the country data for the currently selected country.
+     * @returns The data of the selected country.
+     */
     getSelectedCountryData() {
       return this.selectedCountryData;
     }
-    //* Get the validation error.
+    //* 
+    /**
+     * Gets the result of the validation process.
+     * @returns The validation result.
+     */
     getValidationError() {
       if (InternationalNumberInput_default.utils) {
         const { iso2 } = this.selectedCountryData;
@@ -2667,33 +2763,31 @@ var factoryOutput = (() => {
       return { isValid: false, error: new ValidationError("An unknown error occurred") };
       ;
     }
-    //* Validate the input val
+    /**
+     * Validates the currently entered number.
+     * @returns Identifies if the entered number is valid.
+     */
     isValidNumber() {
       const val = this._getFullNumber();
-      if (/\p{L}/u.test(val)) {
-        return false;
-      }
-      return InternationalNumberInput_default.utils ? InternationalNumberInput_default.utils.isPossibleNumber(val, this.selectedCountryData.iso2, this.options.numberType) : null;
+      return InternationalNumberInput_default.utils ? InternationalNumberInput_default.utils.isValidNumber(val, this.selectedCountryData?.iso2, this.options.numberType).isValid : false;
     }
-    //* Validate the input val (precise)
-    isValidNumberPrecise() {
-      const val = this._getFullNumber();
-      if (/\p{L}/u.test(val)) {
-        return false;
-      }
-      return InternationalNumberInput_default.utils ? InternationalNumberInput_default.utils.isValidNumber(val, this.selectedCountryData.iso2) : null;
-    }
-    //* Update the selected country, and update the input val accordingly.
+    /**
+     * Update the selected country, and update the input val accordingly.
+     * @param iso2 The selected country's ISO2 code.
+     */
     setCountry(iso2) {
       const iso2Lower = iso2?.toLowerCase();
-      const currentCountry = this.selectedCountryData.iso2;
+      const currentCountry = this.selectedCountryData?.iso2;
       const isCountryChange = iso2 && iso2Lower !== currentCountry || !iso2 && currentCountry;
       if (isCountryChange) {
         this._setCountry(iso2Lower);
         this._triggerCountryChange();
       }
     }
-    //* Set the input value and update the country.
+    /**
+     * Sets the input's value and updates the country.
+     * @param number The number that was entered.
+     */
     setNumber(number) {
       const countryChanged = this._updateCountryFromNumber(number);
       this._updateValFromNumber(number);
@@ -2702,6 +2796,10 @@ var factoryOutput = (() => {
       }
       this._trigger("input", { isSetNumber: true });
     }
+    /**
+     * Sets the disabled status of the selected country.
+     * @param disabled If it's to disable or not.
+     */
     setDisabled(disabled) {
       this.numberInput.disabled = disabled;
       if (disabled) {
@@ -2740,29 +2838,1002 @@ var factoryOutput = (() => {
   );
   var InternationalNumberInput_default = internationalNumberInput;
 
+  // src/js/numberUtils/libraries/strings/index.ts
+  var strings_exports = {};
+  __export(strings_exports, {
+    cleanUnicode: () => cleanUnicode,
+    formatPattern: () => formatPattern,
+    isAlpha: () => isAlpha,
+    isAlphanumeric: () => isAlphanumeric,
+    isDigits: () => isDigits,
+    reverse: () => reverse,
+    splitAt: () => splitAt
+  });
+
+  // src/js/numberUtils/libraries/strings/char.ts
+  var alphanumericRE = /^[A-Za-z0-9]+$/;
+  var digitRE = /^[0-9]+$/;
+  var alphaRE = /^[A-Za-z]+$/;
+  function isAlphanumeric(value) {
+    return alphanumericRE.test(value);
+  }
+  function isDigits(value) {
+    return digitRE.test(value);
+  }
+  function isAlpha(value) {
+    return alphaRE.test(value);
+  }
+
+  // src/js/numberUtils/libraries/strings/clean.ts
+  var mapped = {
+    "-": "-",
+    // HYPHEN-MINUS
+    "\xAD": "-",
+    // SOFT HYPHEN
+    "\xAF": "-",
+    // MACRON
+    "\u02D7": "-",
+    // MODIFIER LETTER MINUS SIGN
+    "\u058A": "-",
+    // ARMENIAN HYPHEN
+    "\u05BE": "-",
+    // HEBREW PUNCTUATION MAQAF
+    "\u180A": "-",
+    // MONGOLIAN NIRUGU
+    "\u2010": "-",
+    // HYPHEN
+    "\u2011": "-",
+    // NON-BREAKING HYPHEN
+    "\u2012": "-",
+    // FIGURE DASH
+    "\u2013": "-",
+    // EN DASH
+    "\u2014": "-",
+    // EM DASH
+    "\u2015": "-",
+    // HORIZONTAL BAR
+    "\u203E": "-",
+    // OVERLINE
+    "\u2043": "-",
+    // HYPHEN BULLET
+    "\u207B": "-",
+    // SUPERSCRIPT MINUS
+    "\u208B": "-",
+    // SUBSCRIPT MINUS
+    "\u2212": "-",
+    // MINUS SIGN
+    "\u23AF": "-",
+    // HORIZONTAL LINE EXTENSION
+    "\u23BA": "-",
+    // HORIZONTAL SCAN LINE-1
+    "\u23BB": "-",
+    // HORIZONTAL SCAN LINE-3
+    "\u23BC": "-",
+    // HORIZONTAL SCAN LINE-7
+    "\u23BD": "-",
+    // HORIZONTAL SCAN LINE-9
+    "\u23E4": "-",
+    // STRAIGHTNESS
+    "\uFF0D": "-",
+    // FULLWIDTH HYPHEN-MINUS
+    "\uFE63": "-",
+    // SMALL HYPHEN-MINUS
+    "\uFFE3": "-",
+    // FULLWIDTH MACRON
+    "*": "*",
+    "\u066D": "*",
+    // ARABIC FIVE POINTED STAR
+    "\u070D": "*",
+    // SYRIAC HARKLEAN ASTERISCUS
+    "\u2055": "*",
+    // FLOWER PUNCTUATION MARK
+    "\uA60E": "*",
+    // VAI FULL STOP
+    "\u2217": "*",
+    // ASTERISK OPERATOR
+    "\u22C6": "*",
+    // STAR OPERATOR
+    "\u204E": "*",
+    // LOW ASTERISK
+    "\u2731": "*",
+    // HEAVY ASTERISK
+    "\u2732": "*",
+    // OPEN CENTRE ASTERISK
+    "\u2733": "*",
+    // EIGHT SPOKED ASTERISK
+    "\u273A": "*",
+    // SIXTEEN POINTED ASTERISK
+    "\u273B": "*",
+    // TEARDROP-SPOKED ASTERISK
+    "\u273C": "*",
+    // OPEN CENTRE TEARDROP-SPOKED ASTERISK
+    "\u273D": "*",
+    // HEAVY TEARDROP-SPOKED ASTERISK
+    "\u2743": "*",
+    // HEAVY TEARDROP-PINWHEEL ASTERISK
+    "\u2749": "*",
+    // BALLON-SPOKED ASTERISK
+    "\u274A": "*",
+    // EIGHT TEARDROP-SPOKED PROPELLER ASTERISK
+    "\u274B": "*",
+    // HEAVY EIGHT TEARDROP-SPOKED PROPELLER ASTERISK
+    "\uFE61": "*",
+    // SMALL ASTERISK
+    "\uFF0A": "*",
+    // FULLWIDTH ASTERISK
+    ",": ",",
+    "\xB8": ",",
+    // CEDILLA
+    "\u060C": ",",
+    // ARABIC COMMA
+    "\u066B": ",",
+    // ARABIC DECIMAL SEPARATOR
+    "\u066C": ",",
+    // ARABIC THOUSANDS SEPARATOR
+    "\u201A": ",",
+    // SINGLE LOW-9 QUOTATION MARK
+    "\u2032": ",",
+    // PRIME
+    "\u2E34": ",",
+    // RAISED COMMA
+    "\u3001": ",",
+    // IDEOGRAPHIC COMMA
+    "\uFF0C": ",",
+    // FULLWIDTH COMMA
+    "\uFE11": ",",
+    // PRESENTATION FORM FOR VERTICAL COMMA
+    "\uFE50": ",",
+    // SMALL COMMA
+    "\uFE51": ",",
+    // SMALL IDEOGRAPHIC COMMA
+    "\uFF64": ",",
+    // HALFWIDTH IDEOGRAPHIC COMMA
+    ".": ".",
+    // FULL STOP
+    "\xB7": ".",
+    // MIDDLE DOT
+    "\u02D9": ".",
+    // DOT ABOVE
+    "\u0387": ".",
+    // GREEK ANO TELEIA
+    "\u06D4": ".",
+    // ARABIC FULL STOP
+    "\u0701": ".",
+    // SYRIAC SUPRALINEAR FULL STOP
+    "\u0702": ".",
+    // SYRIAC SUBLINEAR FULL STOP
+    "\u0830": ".",
+    // SAMARITAN PUNCTUATION NEQUDAA
+    "\u0F0B": ".",
+    // TIBETAN MARK INTERSYLLABIC TSHEG
+    "\u0F0C": ".",
+    // TIBETAN MARK DELIMITER TSHEG BSTAR
+    // prettier-ignore
+    "\u1427": ".",
+    // CANADIAN SYLLABICS FINAL MIDDLE DOT
+    "\u16EB": ".",
+    // RUNIC SINGLE PUNCTUATION
+    "\u2219": ".",
+    // BULLET OPERATOR
+    "\u2022": ".",
+    // BULLET
+    "\u2024": ".",
+    // ONE DOT LEADER
+    "\u2027": ".",
+    // HYPHENATION POINT
+    "\u22C5": ".",
+    // DOT OPERATOR
+    "\u2E31": ".",
+    // WORD SEPARATOR MIDDLE DOT
+    "\u2E33": ".",
+    // RAISED DOT
+    "\u3002": ".",
+    // IDEOGRAPHIC FULL STOP
+    "\u30FB": ".",
+    // KATAKANA MIDDLE DOT
+    "\uFE52": ".",
+    // SMALL FULL STOP
+    "\uFF0E": ".",
+    // FULLWIDTH FULL STOP
+    "\uFF65": ".",
+    // HALFWIDTH KATAKANA MIDDLE DOT
+    "\uFBB2": ".",
+    // ARABIC SYMBOL DOT ABOVE
+    "\uFBB3": ".",
+    // ARABIC SYMBOL DOT BELOW
+    "\u{10101}": ".",
+    // AEGEAN WORD SEPARATOR DOT
+    "\u{1091F}": ".",
+    // PHOENICIAN WORD SEPARATOR
+    "\u{10A50}": ".",
+    // KHAROSHTHI PUNCTUATION DOT
+    "/": "/",
+    "\u2044": "/",
+    // FRACTION SLASH
+    "\u2215": "/",
+    // DIVISION SLASH
+    "\u29F8": "/",
+    // BIG SOLIDUS
+    "\uFF0F": "/",
+    // FULLWIDTH SOLIDUS
+    "\u083C": "/",
+    // SAMARITAN PUNCTUATION ARKAANU
+    "\u27CB": "/",
+    // MATHEMATICAL RISING DIAGONAL
+    ":": ":",
+    "\u1361": ":",
+    // ETHIOPIC WORDSPACE
+    "\u16EC": ":",
+    // RUNIC MULTIPLE PUNCTUATION
+    "\u1804": ":",
+    // MONGOLIAN COLON
+    "\uFE13": ":",
+    // PRESENTATION FORM FOR VERTICAL COLON
+    "\uFE30": ":",
+    // PRESENTATION FORM FOR VERTICAL TWO DOT LEADER
+    "\uFF1A": ":",
+    // FULLWIDTH COLON
+    "\uFE55": ":",
+    // SMALL COLON
+    " ": " ",
+    "	": " ",
+    // TAB
+    "\v": " ",
+    // VERTICAL TAB
+    "\f": " ",
+    // FORM FEED
+    "\xA0": " ",
+    // NO-BREAK-SPACE
+    "\u1680": " ",
+    // Ogham Space Mark
+    "\u2000": " ",
+    // EN QUAD
+    "\u2001": " ",
+    // EM QUAD
+    "\u2002": " ",
+    // EN SPACE
+    "\u2003": " ",
+    // EM SPACE
+    "\u2004": " ",
+    // THREE-PER-EM SPACE
+    "\u2005": " ",
+    // FOUR-PER-EM SPACE
+    "\u2006": " ",
+    // SIX-PER-EM SPACE
+    "\u2007": " ",
+    // FIGURE SPACE
+    "\u2008": " ",
+    // PUNCTUATION SPACE
+    "\u2009": " ",
+    // THIN SPACE
+    "\u200A": " ",
+    // HAIR SPACE
+    "\u2028": " ",
+    // LINE SEPARATOR
+    "\u2029": " ",
+    // PARAGRAPH SEPARATOR
+    "\u202F": " ",
+    // NARROW NO-BREAK SPACE
+    "\u205F": " ",
+    // MEDIUM MATHEMATICAL SPACE
+    "\u3000": " ",
+    // IDEOGRAPHIC SPACE
+    "'": "'",
+    "`": "'",
+    // GRAVE ACCENT
+    "\xB4": "'",
+    // ACUTE ACCENT
+    // prettier-ignore
+    "\u02BE": "'",
+    // MODIFIER LETTER RIGHT HALF RING
+    // prettier-ignore
+    "\u02BF": "'",
+    // MODIFIER LETTER LEFT HALF RING
+    // prettier-ignore
+    "\u02B9": "'",
+    // MODIFIER LETTER PRIME
+    // prettier-ignore
+    "\u02BB": "'",
+    // MODIFIER LETTER TURNED COMMA
+    // prettier-ignore
+    "\u02BC": "'",
+    // MODIFIER LETTER APOSTROPHE
+    // prettier-ignore
+    "\u02C8": "'",
+    // MODIFIER LETTER VERTICAL LINE
+    // prettier-ignore
+    "\u0300": "'",
+    // COMBINING GRAVE ACCENT
+    "\u0301": "'",
+    // COMBINING ACUTE ACCENT
+    "\u0312": "'",
+    // COMBINING TURNED COMMA ABOVE
+    "\u0313": "'",
+    // COMBINING COMMA ABOVE
+    "\u055A": "'",
+    // ARMENIAN APOSTROPHE
+    "\u201B": "'",
+    // SINGLE HIGH-REVERSED-9 QUOTATION MARK
+    "\u2018": "'",
+    // LEFT SINGLE QUOTATION MARK
+    "\u2019": "'",
+    // RIGHT SINGLE QUOTATION MARK
+    "0": "0",
+    "\u0660": "0",
+    // ARABIC-INDIC DIGIT ZERO
+    "\u06F0": "0",
+    // EASTERN-ARABIC DIGIT ZERO
+    "\uFF10": "0",
+    // FULLWIDTH DIGIT ZERO
+    "\u{1D7CE}": "0",
+    // MATHEMATICAL BOLD DIGIT ZERO
+    "\u{1D7D8}": "0",
+    // MATHEMATICAL DOUBLE-STRUCK DIGIT ZERO
+    "\u{1D7E2}": "0",
+    // MATHEMATICAL SANS-SERIF DIGIT ZERO
+    "\u{1D7EC}": "0",
+    // MATHEMATICAL SANS-SERIF BOLD DIGIT ZERO
+    "\u{1D7F6}": "0",
+    // MATHEMATICAL MONOSPACE DIGIT ZERO
+    "1": "1",
+    "\u0661": "1",
+    // ARABIC-INDIC DIGIT ONE
+    "\u06F1": "1",
+    // EASTERN-ARABIC DIGIT ONE
+    "\uFF11": "1",
+    // FULLWIDTH DIGIT ONE
+    "\u{1D7CF}": "1",
+    // MATHEMATICAL BOLD DIGIT ONE
+    "\u{1D7D9}": "1",
+    // MATHEMATICAL DOUBLE-STRUCK DIGIT ONE
+    "\u{1D7E3}": "1",
+    // MATHEMATICAL SANS-SERIF DIGIT ONE
+    "\u{1D7ED}": "1",
+    // MATHEMATICAL SANS-SERIF BOLD DIGIT ONE
+    "\u{1D7F7}": "1",
+    // MATHEMATICAL MONOSPACE DIGIT ONE
+    "2": "2",
+    "\u06F2": "2",
+    // EASTERN-ARABIC DIGIT TWO
+    "\u0662": "2",
+    // ARABIC-INDIC DIGIT TWO
+    "\uFF12": "2",
+    // FULLWIDTH DIGIT TWO
+    "\u{1D7D0}": "2",
+    // MATHEMATICAL BOLD DIGIT TWO
+    "\u{1D7DA}": "2",
+    // MATHEMATICAL DOUBLE-STRUCK DIGIT TWO
+    "\u{1D7E4}": "2",
+    // MATHEMATICAL SANS-SERIF DIGIT TWO
+    "\u{1D7EE}": "2",
+    // MATHEMATICAL SANS-SERIF BOLD DIGIT TWO
+    "\u{1D7F8}": "2",
+    // MATHEMATICAL MONOSPACE DIGIT TWO
+    "3": "3",
+    "\u06F3": "3",
+    // EASTERN-ARABIC DIGIT THREE
+    "\u0663": "3",
+    // ARABIC-INDIC DIGIT THREE
+    "\uFF13": "3",
+    // FULLWIDTH DIGIT THREE
+    "\u{1D7D1}": "3",
+    // MATHEMATICAL BOLD DIGIT THREE
+    "\u{1D7DB}": "3",
+    // MATHEMATICAL DOUBLE-STRUCK DIGIT THREE
+    "\u{1D7E5}": "3",
+    // MATHEMATICAL SANS-SERIF DIGIT THREE
+    "\u{1D7EF}": "3",
+    // MATHEMATICAL SANS-SERIF BOLD DIGIT THREE
+    "\u{1D7F9}": "3",
+    // MATHEMATICAL MONOSPACE DIGIT THREE
+    "4": "4",
+    "\u06F4": "4",
+    // EASTERN-ARABIC DIGIT FOUR
+    "\u0664": "4",
+    // ARABIC-INDIC DIGIT FOUR
+    "\uFF14": "4",
+    // FULLWIDTH DIGIT FOUR
+    "\u{1D7D2}": "4",
+    // MATHEMATICAL BOLD DIGIT FOUR
+    "\u{1D7DC}": "4",
+    // MATHEMATICAL DOUBLE-STRUCK DIGIT FOUR
+    "\u{1D7E6}": "4",
+    // MATHEMATICAL SANS-SERIF DIGIT FOUR
+    "\u{1D7F0}": "4",
+    // MATHEMATICAL SANS-SERIF BOLD DIGIT FOUR
+    "\u{1D7FA}": "4",
+    // MATHEMATICAL MONOSPACE DIGIT FOUR
+    "5": "5",
+    "\u06F5": "5",
+    // EASTERN-ARABIC DIGIT FIVE
+    "\u0665": "5",
+    // ARABIC-INDIC DIGIT FIVE
+    "\uFF15": "5",
+    // FULLWIDTH DIGIT FIVE
+    "\u{1D7D3}": "5",
+    // MATHEMATICAL BOLD DIGIT FIVE
+    "\u{1D7DD}": "5",
+    // MATHEMATICAL DOUBLE-STRUCK DIGIT FIVE
+    "\u{1D7E7}": "5",
+    // MATHEMATICAL SANS-SERIF DIGIT FIVE
+    "\u{1D7F1}": "5",
+    // MATHEMATICAL SANS-SERIF BOLD DIGIT FIVE
+    "\u{1D7FB}": "5",
+    // MATHEMATICAL MONOSPACE DIGIT FIVE
+    "6": "6",
+    "\u06F6": "6",
+    // EASTERN-ARABIC DIGIT SIX
+    "\u0666": "6",
+    // ARABIC-INDIC DIGIT SIX
+    "\uFF16": "6",
+    // FULLWIDTH DIGIT SIX
+    "\u{1D7D4}": "6",
+    // MATHEMATICAL BOLD DIGIT SIX
+    "\u{1D7DE}": "6",
+    // MATHEMATICAL DOUBLE-STRUCK DIGIT SIX
+    "\u{1D7E8}": "6",
+    // MATHEMATICAL SANS-SERIF DIGIT SIX
+    "\u{1D7F2}": "6",
+    // MATHEMATICAL SANS-SERIF BOLD DIGIT SIX
+    "\u{1D7FC}": "6",
+    // MATHEMATICAL MONOSPACE DIGIT SIX
+    "7": "7",
+    "\u06F7": "7",
+    // EASTERN-ARABIC DIGIT SEVEN
+    "\u0667": "7",
+    // ARABIC-INDIC DIGIT SEVEN
+    "\uFF17": "7",
+    // FULLWIDTH DIGIT SEVEN
+    "\u{1D7D5}": "7",
+    // MATHEMATICAL BOLD DIGIT SEVEN
+    "\u{1D7DF}": "7",
+    // MATHEMATICAL DOUBLE-STRUCK DIGIT SEVEN
+    "\u{1D7E9}": "7",
+    // MATHEMATICAL SANS-SERIF DIGIT SEVEN
+    "\u{1D7F3}": "7",
+    // MATHEMATICAL SANS-SERIF BOLD DIGIT SEVEN
+    "\u{1D7FD}": "7",
+    // MATHEMATICAL MONOSPACE DIGIT SEVEN
+    "8": "8",
+    "\u06F8": "8",
+    // EASTERN-ARABIC DIGIT EIGHT
+    "\u0668": "8",
+    // ARABIC-INDIC DIGIT EIGHT
+    "\uFF18": "8",
+    // FULLWIDTH DIGIT EIGHT
+    "\u{1D7D6}": "8",
+    // MATHEMATICAL BOLD DIGIT EIGHT
+    "\u{1D7E0}": "8",
+    // MATHEMATICAL DOUBLE-STRUCK DIGIT EIGHT
+    "\u{1D7EA}": "8",
+    // MATHEMATICAL SANS-SERIF DIGIT EIGHT
+    "\u{1D7F4}": "8",
+    // MATHEMATICAL SANS-SERIF BOLD DIGIT EIGHT
+    "\u{1D7FE}": "8",
+    // MATHEMATICAL MONOSPACE DIGIT EIGHT
+    // 9
+    "9": "9",
+    "\u06F9": "9",
+    // EASTERN-ARABIC DIGIT NINE
+    "\u0669": "9",
+    // ARABIC-INDIC DIGIT NINE
+    "\uFF19": "9",
+    // FULLWIDTH DIGIT NINE
+    "\u{1D7D7}": "9",
+    // MATHEMATICAL BOLD DIGIT NINE
+    "\u{1D7E1}": "9",
+    // MATHEMATICAL DOUBLE-STRUCK DIGIT NINE
+    "\u{1D7EB}": "9",
+    // MATHEMATICAL SANS-SERIF DIGIT NINE
+    "\u{1D7F5}": "9",
+    // MATHEMATICAL SANS-SERIF BOLD DIGIT NINE
+    "\u{1D7FF}": "9"
+    // MATHEMATICAL MONOSPACE DIGIT NINE
+  };
+  function cleanUnicode(value, deletechars = " ", stripPrefix) {
+    if (typeof value !== "string") {
+      return ["", new InvalidFormat()];
+    }
+    const cleaned = [...value].map((c) => mapped[c] ?? c).filter((c) => !deletechars.includes(c)).join("").toLocaleUpperCase();
+    if (stripPrefix && stripPrefix.length !== 0) {
+      let prefix;
+      if (Array.isArray(stripPrefix)) {
+        prefix = stripPrefix.find((p) => cleaned.startsWith(p));
+      } else if (cleaned.startsWith(stripPrefix)) {
+        prefix = stripPrefix;
+      }
+      if (prefix !== void 0) {
+        return [cleaned.substring(prefix.length), null];
+      }
+    }
+    return [cleaned, null];
+  }
+
+  // src/js/numberUtils/libraries/strings/reverseString.ts
+  function reverse(str) {
+    return str.split("").reverse().join("");
+  }
+
+  // src/js/numberUtils/libraries/strings/splitAt.ts
+  function splitAt(value, ...points) {
+    const parts = [0, ...points, value.length].map((p, idx, arr) => {
+      const start = p < 0 ? value.length + p : p;
+      const end = arr[idx + 1] < 0 ? value.length + arr[idx + 1] : arr[idx + 1];
+      return value.substring(start, end);
+    });
+    return parts.filter((v) => v.length !== 0);
+  }
+
+  // src/js/numberUtils/libraries/strings/format.ts
+  function formatPattern(pattern, input) {
+    const values = input.split("");
+    return pattern.split("").map((c) => {
+      if (c === "?") {
+        return values.shift();
+      }
+      return c;
+    }).join("");
+  }
+
+  // src/js/numberUtils/libraries/checksum.ts
+  function sumAllDigits(value) {
+    let localValue = value;
+    let sum = 0;
+    while (localValue) {
+      sum += localValue % 10;
+      localValue = Math.floor(localValue / 10);
+    }
+    return sum;
+  }
+  function weightedSum(value, {
+    alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    reverse: reverse2 = false,
+    weights = [1],
+    modulus = 0,
+    sumByDigit = false
+  }) {
+    const wlen = weights.length;
+    const numbers = value.split("").map((v) => alphabet.indexOf(v));
+    const weighted = (reverse2 ? numbers.reverse() : numbers).map(
+      (v, idx) => v * weights[idx % wlen]
+    );
+    return weighted.reduce((acc, v) => {
+      let vv = v;
+      while (vv < 0) {
+        vv += modulus;
+      }
+      if (sumByDigit && vv > 9) {
+        return (acc + sumAllDigits(vv)) % modulus;
+      }
+      return (acc + vv) % modulus;
+    }, 0);
+  }
+  function luhnChecksumValidate(value, alphabet = "0123456789") {
+    const parity = value.length % 2;
+    const sum = value.split("").map((v) => alphabet.indexOf(v)).reduce((acc, val, idx) => {
+      let v = val;
+      if (idx % 2 === parity) {
+        v = val * 2;
+        if (v > 9) {
+          v -= 9;
+        }
+      }
+      return acc + v;
+    }, 0);
+    return sum % 10 === 0;
+  }
+  function luhnChecksumValue(value, alphabet = "0123456789") {
+    const alen = alphabet.length;
+    return value.split("").reverse().map((v) => alphabet.indexOf(v)).reduce((acc, v, idx) => {
+      if (idx % 2 === 0) {
+        return (acc + v) % alen;
+      }
+      return (acc + Math.floor(v * 2 / alen) + v * 2 % alen) % alen;
+    });
+  }
+  function luhnChecksumDigit(value, alphabet = "0123456789") {
+    const cs = luhnChecksumValue(`${value}${alphabet[0]}`);
+    return alphabet[(alphabet.length - cs) % alphabet.length];
+  }
+
+  // src/js/numberUtils/countriesData/es/dni.ts
+  var checkDigits = "TRWAGMYFPDXBNJZSQVHLCKE";
+  function calcCheckDigit(value) {
+    return checkDigits[parseInt(value.substring(0, 8), 10) % 23];
+  }
+  function clean(input) {
+    return strings_exports.cleanUnicode(input, " -");
+  }
+  var validator = {
+    type: "NIN" /* NationalIdentificationNumber */,
+    name: "Spanish Personal Identify Code",
+    localName: "Documento Nacional de Identidad",
+    abbreviation: "DNI",
+    placeholder: "54362315-K",
+    maxLength: 9,
+    minLength: 9,
+    compact(input) {
+      const [value, err] = clean(input);
+      if (err) {
+        throw err;
+      }
+      return value;
+    },
+    format(input) {
+      const [value] = clean(input);
+      return strings_exports.splitAt(value, 8).join("-");
+    },
+    validate(input) {
+      const [value, error] = clean(input);
+      if (error) {
+        return { isValid: false, error };
+      }
+      if (value.length !== this.minLength) {
+        return { isValid: false, error: new InvalidLength() };
+      }
+      const [body, check] = strings_exports.splitAt(value, 8);
+      if ("KLM".includes(body[0]) && strings_exports.isDigits(body.substring(1))) {
+      } else if (!strings_exports.isDigits(body)) {
+        return { isValid: false, error: new InvalidComponent() };
+      } else if (calcCheckDigit(body) !== check) {
+        return { isValid: false, error: new InvalidChecksum() };
+      }
+      return {
+        isValid: true,
+        compact: value,
+        isIndividual: true,
+        isCompany: false
+      };
+    }
+  };
+  var dni_default = validator;
+
+  // src/js/numberUtils/countriesData/es/nie.ts
+  var checkDigits2 = "XYZ";
+  function clean2(input) {
+    return strings_exports.cleanUnicode(input, " -");
+  }
+  var validator2 = {
+    type: "NIN" /* NationalIdentificationNumber */,
+    name: "Spanish Foreign Number",
+    localName: "N\xFAmero de Identificaci\xF3n de Extranjero",
+    abbreviation: "NIE",
+    placeholder: "X-2482300-W",
+    maxLength: 9,
+    minLength: 9,
+    compact(input) {
+      const [value, err] = clean2(input);
+      if (err) {
+        throw err;
+      }
+      return value;
+    },
+    format(input) {
+      const [value] = clean2(input);
+      return strings_exports.splitAt(value, 1, 8).join("-");
+    },
+    validate(input) {
+      const [value, error] = clean2(input);
+      if (error) {
+        return { isValid: false, error };
+      }
+      if (value.length !== this.minLength) {
+        return { isValid: false, error: new InvalidLength() };
+      }
+      const [first, body, check] = strings_exports.splitAt(value, 1, 8);
+      if (!strings_exports.isDigits(body) || !checkDigits2.includes(first) || strings_exports.isDigits(check)) {
+        return { isValid: false, error: new InvalidComponent() };
+      }
+      if (calcCheckDigit(`${checkDigits2.indexOf(first)}${body}`) !== check) {
+        return { isValid: false, error: new InvalidChecksum() };
+      }
+      return {
+        isValid: true,
+        compact: value,
+        isIndividual: true,
+        isCompany: false
+      };
+    }
+  };
+  var nie_default = validator2;
+
+  // src/js/numberUtils/countriesData/es/cif.ts
+  var entityTypes = "ABCDEFGHJNPQRSUVW";
+  var letterCheckDigits = "JABCDEFGHI";
+  function clean3(input) {
+    return strings_exports.cleanUnicode(input, " -");
+  }
+  var validator3 = {
+    type: "TIN" /* TaxpayerIdentificationNumber */,
+    name: "Spanish Company Tax Number",
+    localName: "C\xF3digo de Identificaci\xF3n Fiscal",
+    abbreviation: "CIF",
+    maxLength: 9,
+    minLength: 9,
+    compact(input) {
+      const [value, err] = clean3(input);
+      if (err) {
+        throw err;
+      }
+      return value;
+    },
+    format(input) {
+      const [value] = clean3(input);
+      return strings_exports.splitAt(value, 1, 8).join("-");
+    },
+    validate(input) {
+      const [value, error] = clean3(input);
+      if (error) {
+        return { isValid: false, error };
+      }
+      if (value.length !== 9) {
+        return { isValid: false, error: new InvalidLength() };
+      }
+      const [first, body, check] = strings_exports.splitAt(value, 1, 8);
+      if (!strings_exports.isDigits(body) || !entityTypes.includes(first) || !(strings_exports.isDigits(check) || letterCheckDigits.includes(check))) {
+        return { isValid: false, error: new InvalidComponent() };
+      }
+      const cs = parseInt(luhnChecksumDigit(body), 10);
+      const possibleCheckDigits = letterCheckDigits[cs] + String(cs);
+      if (!possibleCheckDigits.includes(check)) {
+        return { isValid: false, error: new InvalidChecksum() };
+      }
+      return {
+        isValid: true,
+        compact: value,
+        isIndividual: false,
+        isCompany: true
+      };
+    }
+  };
+  var cif_default = validator3;
+
+  // src/js/numberUtils/countriesData/es/nif.ts
+  function clean4(input) {
+    const [value, err] = strings_exports.cleanUnicode(input, " -./");
+    if (err) {
+      return [value, err];
+    }
+    if (value.startsWith("ES")) {
+      return [value.substring(2), null];
+    }
+    return [value, null];
+  }
+  var validator4 = {
+    type: "TIN" /* TaxpayerIdentificationNumber */,
+    name: "Spanish VAT Number",
+    localName: "N\xFAmero de Identificaci\xF3n Fiscal",
+    abbreviation: "NIF",
+    placeholder: "B-58378431",
+    maxLength: 9,
+    minLength: 9,
+    compact(input) {
+      const [value, err] = clean4(input);
+      if (err) {
+        throw err;
+      }
+      return value;
+    },
+    format(input) {
+      const [value] = clean4(input);
+      return strings_exports.splitAt(value, 1).join("-");
+    },
+    validate(input) {
+      const [value, error] = clean4(input);
+      if (error) {
+        return { isValid: false, error };
+      }
+      if (value.length !== this.minLength) {
+        return { isValid: false, error: new InvalidLength() };
+      }
+      if ("KLM".includes(value[0])) {
+        if (value[value.length - 1] !== calcCheckDigit(value.substring(1))) {
+          return { isValid: false, error: new InvalidChecksum() };
+        }
+        return {
+          isValid: true,
+          compact: value,
+          isIndividual: true,
+          isCompany: false
+        };
+      }
+      if (strings_exports.isDigits(value[0])) {
+        return dni_default.validate(value);
+      }
+      if ("XYZ".includes(value[0])) {
+        return nie_default.validate(value);
+      }
+      return cif_default.validate(value);
+    }
+  };
+  var nif_default = validator4;
+
+  // src/js/numberUtils/countriesData/es/index.ts
+  var countryNumberUtils = {
+    iso2: "ES",
+    numberUtils: [
+      dni_default,
+      nif_default
+    ]
+  };
+  var es_default = countryNumberUtils;
+
+  // src/js/numberUtils/countriesData/pt/cc.ts
+  var ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  var validRe = /^\d{9}[A-Z0-9]{2}\d$/i;
+  function clean5(input) {
+    return strings_exports.cleanUnicode(input, " ");
+  }
+  var validator5 = {
+    type: "NIN" /* NationalIdentificationNumber */,
+    name: "Portuguese National Identification Number",
+    localName: "N\xFAmero de Cart\xE3o de Cidad\xE3o",
+    abbreviation: "CC",
+    placeholder: "12345678 9 ZZ0",
+    maxLength: 12,
+    minLength: 12,
+    compact(input) {
+      const [value, err] = clean5(input);
+      if (err) {
+        throw err;
+      }
+      return value;
+    },
+    format(input) {
+      const [value] = clean5(input);
+      return strings_exports.splitAt(value, 8, 9).join(" ");
+    },
+    validate(input) {
+      const [value, error] = clean5(input);
+      if (error) {
+        return { isValid: false, error };
+      }
+      if (value.length !== this.minLength) {
+        return { isValid: false, error: new InvalidLength() };
+      }
+      if (!validRe.test(value)) {
+        return { isValid: false, error: new InvalidFormat() };
+      }
+      if (!luhnChecksumValidate(value, ALPHABET)) {
+        return { isValid: false, error: new InvalidChecksum() };
+      }
+      return {
+        isValid: true,
+        compact: value,
+        isIndividual: "1234".includes(value[0]),
+        isCompany: !"1234".includes(value[0])
+      };
+    }
+  };
+  var cc_default = validator5;
+
+  // src/js/numberUtils/countriesData/pt/nif.ts
+  function clean6(input) {
+    return strings_exports.cleanUnicode(input, " -.", "PT");
+  }
+  var validator6 = {
+    type: "TIN" /* TaxpayerIdentificationNumber */,
+    name: "Portuguese Taxpayer Identification Number",
+    localName: "N\xFAmero de Identifica\xE7\xE3o Fiscal",
+    abbreviation: "NIF",
+    placeholder: "123 456 789",
+    maxLength: 9,
+    minLength: 9,
+    compact(input) {
+      const [value, err] = clean6(input);
+      if (err) {
+        throw err;
+      }
+      return value;
+    },
+    format(input) {
+      const [value] = clean6(input);
+      return strings_exports.splitAt(value, 3, 6).join(" ");
+    },
+    validate(input) {
+      const [value, error] = clean6(input);
+      if (error) {
+        return { isValid: false, error };
+      }
+      if (value.length !== this.minLength) {
+        return { isValid: false, error: new InvalidLength() };
+      }
+      if (!strings_exports.isDigits(value) || value[0] === "0") {
+        return { isValid: false, error: new InvalidFormat() };
+      }
+      const [front, check] = strings_exports.splitAt(value, -1);
+      const sum = weightedSum(front, {
+        weights: [9, 8, 7, 6, 5, 4, 3, 2, 1],
+        modulus: 11
+      });
+      if (String((11 - sum) % 11 % 10) !== check) {
+        return { isValid: false, error: new InvalidChecksum() };
+      }
+      return {
+        isValid: true,
+        compact: value,
+        isIndividual: "1234".includes(value[0]),
+        isCompany: !"1234".includes(value[0])
+      };
+    }
+  };
+  var nif_default2 = validator6;
+
+  // src/js/numberUtils/countriesData/pt/index.ts
+  var countryNumberUtils2 = {
+    iso2: "PT",
+    numberUtils: [
+      cc_default,
+      nif_default2
+    ]
+  };
+  var pt_default = countryNumberUtils2;
+
+  // src/js/numberUtils/countriesData/index.ts
+  var countryNumberUtils3 = [
+    es_default,
+    pt_default
+  ];
+  var countriesData_default = countryNumberUtils3;
+
+  // src/js/numberUtils/index.ts
+  var numberUtils_default = countriesData_default;
+
   // src/js/input/utils.ts
-  var formatNumberAsYouType = (number, countryCode) => {
-    return countryCode ? number : number;
-  };
-  var formatNumber = (number, countryCode, formatArg) => {
-    let arg = countryCode ? countryCode : formatArg;
-    return arg ? number : number;
-  };
-  var getExampleNumber = (countryCode, numberType) => {
-    return countryCode ? numberType : "";
-  };
+  function getNumberUtils(countryCode, numberType) {
+    const countryNumberUtils4 = numberUtils_default.find(({ iso2 }) => iso2.toLowerCase() === countryCode.toLowerCase());
+    if (!countryNumberUtils4) {
+      throw new InvalidCountry();
+    }
+    const countryNumberTypeUtils = countryNumberUtils4.numberUtils.find(({ type }) => type === numberType);
+    if (!countryNumberTypeUtils) {
+      throw new InvalidNumberType();
+    }
+    return countryNumberTypeUtils;
+  }
+  function formatNumberAsYouType(number, countryISO2, numberType) {
+    try {
+      const numberUtils = getNumberUtils(countryISO2, numberType);
+      return numberUtils.format(number);
+    } catch (e) {
+      return number;
+    }
+  }
+  function formatNumber(number, countryISO2, numberType) {
+    try {
+      const numberUtils = getNumberUtils(countryISO2, numberType);
+      return numberUtils.format(number);
+    } catch (e) {
+      return number;
+    }
+  }
+  function getExampleNumber(countryISO2, numberType) {
+    try {
+      const numberUtils = getNumberUtils(countryISO2, numberType);
+      return numberUtils.placeholder || "";
+    } catch (e) {
+      return "";
+    }
+  }
   var getCoreNumber = (number, countryCode) => {
     return countryCode ? number : number;
   };
   var getValidationError = (number, countryCode) => {
     return countryCode ? number : number;
   };
-  var isValidNumber = (number, countryCode) => {
-    return countryCode ? number : number;
-  };
-  var isPossibleNumber = (number, countryCode, numberTypeName) => {
-    return countryCode ? number : number;
-  };
+  function isValidNumber(number, countryISO2, numberType) {
+    try {
+      const numberUtils = getNumberUtils(countryISO2, numberType);
+      return numberUtils.validate(number);
+    } catch (e) {
+      const error = e instanceof ValidationError ? e : new ValidationError(e);
+      const validateReturn = {
+        isValid: false,
+        error
+      };
+      return validateReturn;
+    }
+  }
   var getMaxLength = (countryCode) => {
     return 10;
   };
@@ -2774,7 +3845,7 @@ var factoryOutput = (() => {
     getCoreNumber,
     getExampleNumber,
     getValidationError,
-    isPossibleNumber,
+    isPossibleNumber: void 0,
     isValidNumber,
     getMaxLength,
     numberType: "NIN" /* NationalIdentificationNumber */

@@ -44,6 +44,18 @@ declare module "exceptions" {
     export class InvalidComponent extends ValidationError {
         constructor(msg?: string);
     }
+    /**
+     * The provided country is not supported.
+     */
+    export class InvalidCountry extends ValidationError {
+        constructor(msg?: string);
+    }
+    /**
+     * The number type is not supported for the provided country.
+     */
+    export class InvalidNumberType extends ValidationError {
+        constructor(msg?: string);
+    }
 }
 declare module "types" {
     import { ValidationError } from "exceptions";
@@ -84,9 +96,10 @@ declare module "types" {
     } & (ValidateSuccess | ValidateFail);
     export enum NumberType {
         NationalIdentificationNumber = "NIN",
-        TaxpayerIdentificationNumber = "TIN"
+        TaxpayerIdentificationNumber = "TIN",
+        SocialSecurityIdentificationNumber = "SSN"
     }
-    export interface Validator {
+    export interface StandardNumberUtils {
         /**
          * The type of number being validated
          */
@@ -130,15 +143,15 @@ declare module "types" {
          */
         validate(value: string): ValidateReturn;
     }
-    export interface CountryValidator {
+    export interface CountryStandardNumberUtils {
         /**
          * The ISO2 code of the country
          */
         iso2: string;
         /**
-         * The list of validations possible for the country
+         * The list of number utilities possible for the country
          */
-        validators: Validator[];
+        numberUtils: StandardNumberUtils[];
     }
 }
 declare module "input/libraries/AutoPlaceholderType.enum" {
@@ -163,7 +176,7 @@ declare module "input/InternationalNumberInputOptions" {
          * Countries not provided in the list will be ordered alphabetically.
          * If not set, the entire list will be ordered alphabetically.
          */
-        countryOrder: string[];
+        countryOrder: string[] | null;
         countrySearch: boolean;
         customPlaceholder: ((selectedCountryPlaceholder: string, selectedCountryData: object) => string) | null;
         dropdownContainer: HTMLElement | null;
@@ -438,7 +451,7 @@ declare module "input/InternationalNumberInputOptions" {
          * It can also be set as `auto`, the component will try to automatically infer the value.
          */
         initialCountry: string;
-        numberType: NumberType | null;
+        numberType: NumberType;
         /**
          * List of countries to exclusively be displayed, instead of using all countries.
          * If set, it will supersede the {@link excludeCountries} parameter.
@@ -1115,7 +1128,7 @@ declare module "input/libraries/DataAttributes.enum" {
     }
 }
 declare module "input/InternationalNumberInput.class" {
-    import { NumberType, ValidateReturn } from "types";
+    import { ValidateReturn } from "types";
     import { SomeOptions } from "input/InternationalNumberInputOptions";
     import { Country } from "input/international-number-input/data";
     type SelectedCountryData = Country | {
@@ -1130,9 +1143,8 @@ declare module "input/InternationalNumberInput.class" {
         private highlightedItem;
         private options;
         private hadInitialPlaceholder;
-        private isRTL;
-        private isAndroid;
         private selectedCountryData;
+        private selectedNumberType;
         private countries;
         private countryContainer;
         private selectedCountry;
@@ -1148,8 +1160,6 @@ declare module "input/InternationalNumberInput.class" {
         private hiddenInputCountry;
         private maxCoreNumberLength;
         private defaultCountry;
-        private originalPaddingRight;
-        private originalPaddingLeft;
         private _handleHiddenInputSubmit;
         private _handleLabelClick;
         private _handleClickSelectedCountry;
@@ -1167,60 +1177,238 @@ declare module "input/InternationalNumberInput.class" {
         private resolveUtilsScriptPromise;
         private rejectUtilsScriptPromise;
         constructor(input: HTMLInputElement, customOptions?: SomeOptions);
+        /**
+         * Initialization method.
+         * Can't be private as it's called from internationalNumberInput convenience wrapper.
+         */
         _init(): void;
+        /**
+         * PRIVATE METHODS
+         */
+        /**
+         * Prepare all of the country data, including onlyCountries, excludeCountries, countryOrder options.
+         */
         private _processCountryData;
+        /**
+         * Sort countries by countryOrder option (if present), then name.
+         */
         private _sortCountries;
+        /**
+         * Process onlyCountries or excludeCountries array if present.
+         */
         private _processAllCountries;
         /**
          * Translate countries according to the configurations provided.
          */
         private _translateCountryNames;
+        /**
+         * Generate all of the markup for the plugin: the selected country overlay, and the dropdown.
+         */
         private _generateMarkup;
+        /**
+         * For each country: add a country list item <li> to the countryList <ul> container.
+         */
         private _appendListItems;
+        /**
+         * Set the initial state of the input value and the selected country by:
+         * 1. Using explicit initialCountry
+         * @param overrideAutoCountry
+         */
         private _setInitialState;
+        /**
+         * Initialise the main event listeners: input keyup, and click selected country.
+         */
         private _initListeners;
+        /**
+         * Update hidden input on form submit.
+         */
         private _initHiddenInputListener;
+        /**
+         * Initialise the dropdown listeners.
+         */
         private _initDropdownListeners;
+        /**
+         * Init many requests: utils script / geo ip lookup.
+         */
         private _initRequests;
+        /**
+         * Perform the geo ip lookup.
+         */
         private _loadAutoCountry;
+        /**
+         * Initialize the number input listeners.
+         */
         private _initNumberInputListeners;
+        /**
+         * Adhere to the input's maxlength attr.
+         * @param number The number the user inputted.
+         * @returns The number limited to the max length allowed
+         */
         private _cap;
+        /**
+         * Trigger a custom event on the input.
+         * @param name The name of the event to be triggered.
+         * @param detailProps The details of the event to send to the catcher.
+         */
         private _trigger;
+        /**
+         * Open the dropdown.
+         */
         private _openDropdown;
+        /**
+         * Set the dropdown position
+         */
         private _setDropdownPosition;
+        /**
+         * Binds listeners to the dropdown when it is opened.
+         */
         private _bindDropdownListeners;
+        /**
+         * Hidden search (countrySearch disabled): Finds the first list item whose name start with the query string.
+         * @param query The string to be queried.
+         */
         private _searchForCountry;
+        /**
+         * Country search enabled: Filter the countries according to the search query.
+         * @param query The string to be queried.
+         * @param isReset
+         */
         private _filterCountries;
+        /**
+         * Updates the search results' text (for a11y).
+         */
         private _updateSearchResultsText;
+        /**
+         * Event that highlights the next/previous item in the list (and ensures it is visible).
+         * @param key The key that was used.
+         */
         private _handleUpDownKey;
+        /**
+         * Selects the currently highlighted item.
+         */
         private _handleEnterKey;
+        /**
+         * Update the input's value to the given val (format first if possible)
+         * NOTE: this is called from _setInitialState, handleUtils and setNumber.
+         * @param fullNumber The number the user has inputted.
+         */
         private _updateValFromNumber;
+        /**
+         * Checks if a new country needs to be selected based on the given number.
+         * NOTE: called from _setInitialState, keyup handler, setNumber.
+         * @param fullNumber The number the user has inputted.
+         * @returns Flag that identifies if an update to the country is necessary.
+         */
         private _updateCountryFromNumber;
+        /**
+         * Remove highlighting from other list items and highlight the given item.
+         * @param listItem The HTML list item to be modified.
+         * @param shouldFocus Identifies if the item is to be focused.
+         */
         private _highlightListItem;
+        /**
+         * Find the country data for the given iso2 code
+         * @param iso2 The country whose information is to be fetched.
+         * @param allowFail Identifies if a gracious fail should be used, retuning null, or an exception should be thrown otherwise.
+         * @returns
+         */
         private _getCountryData;
+        /**
+         * Updates the selected country, placeholder, title, active list item, and other metedata.
+         * NOTE: called from _setInitialState, _updateCountryFromNumber, _selectListItem, setCountry.
+         * @param iso2 The country to be set as selected.
+         * @returns Identifies if a change to the selected country was made. If false, it means the country was already selected.
+         */
         private _setCountry;
+        /**
+         * Updates the maximum valid number length for the currently selected country.
+         */
         private _updateMaxLength;
-        private _setSelectedCountryTitleAttribute;
-        private _getHiddenSelectedCountryWidth;
+        /**
+         * Updates the input placeholder to an example number from the currently selected country.
+         */
         private _updatePlaceholder;
+        /**
+         * Called when the user selects a list item from the dropdown.
+         * @param listItem The item HTMLElement that was selected.
+         */
         private _selectListItem;
+        /**
+         * Closes the dropdown and unbinds any listeners.
+         */
         private _closeDropdown;
+        /**
+         * Check if an element is visible within it's container, else scroll until it is.
+         * @param element The element to scroll into for it to be visible.
+         */
         private _scrollTo;
+        /**
+         * Gets the input's value trimmed.
+         * @returns The full number trimmed.
+         */
         private _getFullNumber;
+        /**
+         * Processes the number before it's set in the input to be valid.
+         * @param fullNumber The number inputted by the user.
+         * @returns The number limitted to the maximum length the number is allowed to have.
+         */
         private _beforeSetNumber;
+        /**
+         * Triggers a "countrychange" event.
+         */
         private _triggerCountryChange;
+        /**
+         * Formats the number according to it's rules.
+         * @returns The formatted number.
+         */
         private _formatNumberAsYouType;
+        /**
+         * Handles the geoip call return.
+         */
         handleAutoCountry(): void;
+        /**
+         * Handles the utils request completion.
+         */
         handleUtils(): void;
+        /**
+         * Destroys the instance of the INI.
+         */
         destroy(): void;
+        /**
+         * Format the number to the given format.
+         * @param format The format to be used.
+         * @returns The number formatted.
+         */
         getNumber(format?: number): string;
-        getNumberType(): NumberType;
+        /**
+         * Gets the country data for the currently selected country.
+         * @returns The data of the selected country.
+         */
         getSelectedCountryData(): SelectedCountryData;
+        /**
+         * Gets the result of the validation process.
+         * @returns The validation result.
+         */
         getValidationError(): ValidateReturn;
-        isValidNumber(): boolean | null;
-        isValidNumberPrecise(): boolean | null;
+        /**
+         * Validates the currently entered number.
+         * @returns Identifies if the entered number is valid.
+         */
+        isValidNumber(): Boolean;
+        /**
+         * Update the selected country, and update the input val accordingly.
+         * @param iso2 The selected country's ISO2 code.
+         */
         setCountry(iso2: string): void;
+        /**
+         * Sets the input's value and updates the country.
+         * @param number The number that was entered.
+         */
         setNumber(number: string): void;
+        /**
+         * Sets the disabled status of the selected country.
+         * @param disabled If it's to disable or not.
+         */
         setDisabled(disabled: boolean): void;
     }
 }
@@ -1246,14 +1434,13 @@ declare module "input/InternationalNumberInput" {
         utils?: IniUtils;
     }
     export type IniUtils = {
-        formatNumber(number: string, countryISO2: string | undefined, format?: number): string;
-        formatNumberAsYouType(number: string, countryISO2: string | undefined): string;
+        formatNumber(number: string, countryISO2: string, numberType: NumberType): string;
+        formatNumberAsYouType(number: string, countryISO2: string, numberType: NumberType): string;
         getCoreNumber(number: string, countryISO2: string | undefined): string;
-        getExampleNumber(countryISO2: string | undefined, numberType: NumberType): string;
+        getExampleNumber(countryISO2: string, numberType: NumberType): string;
         getMaxLength(countryISO2: string): number;
         getValidationError(number: string, countryISO2: string | undefined): ValidateReturn;
-        isPossibleNumber(number: string, countryISO2: string | undefined, numberType?: NumberType): boolean;
-        isValidNumber: (number: string, countryISO2: string | undefined) => boolean;
+        isValidNumber: (number: string, countryISO2: string, numberType: NumberType) => ValidateReturn;
         numberType: NumberType;
     };
     export const internationalNumberInput: InternationalNumberInputInterface;
