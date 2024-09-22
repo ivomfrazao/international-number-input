@@ -9,6 +9,8 @@
 		"rootDir": "./src/js",
 		"outDir": "./build/js",
 		"allowJs": false, // allow importing .mjs files e.g. i18n files
+		"strict": true,
+		"forceConsistentCasingInFileNames": true,
 	},
 	"include": [
 		"src/js/input/InternationalNumberInput.ts",
