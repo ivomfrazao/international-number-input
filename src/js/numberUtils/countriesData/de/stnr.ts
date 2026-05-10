@@ -22,7 +22,7 @@ import {
     ValidateReturn,
     NumberType,
 } from '../../../types';
-// import { mod11mod10Validate } from '../util/checksum';
+// import { mod11mod10Validate } from '../../libraries/checksum';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
     return strings.cleanUnicode(input, ' -./,');
@@ -119,10 +119,14 @@ function findMatch(value: string): Match | null {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.TaxpayerIdentificationNumber,
     name: 'German Tax Number',
     localName: 'Steuernummer',
     abbreviation: ' St.-Nr.',
 
+    maxLength: 13,
+    minLength: 10,
+    countryPrefix: 'DE',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

@@ -8,7 +8,7 @@
  */
 
 import * as exceptions from '../../../exceptions';
-import { isValidDate, strings, weightedSum } from '../util';
+import { isValidDate, strings, weightedSum } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
@@ -16,9 +16,13 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Icelandic Identity Code',
 	localName: 'Kennitala',
 	
+	maxLength: 10,
+	minLength: 10,
+	countryPrefix: 'IS',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

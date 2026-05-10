@@ -1,6 +1,21 @@
-export * as idnr from './idnr';
-export * as pwnr from './pwnr';
-export * as stnr from './stnr';
-export * as svnr from './svnr';
-export * as vat from './vat';
-export * as passport from './passport';
+import { CountryStandardNumberUtils } from '../../../types';
+import idnr from './idnr';
+import passport from './passport';
+import pwnr from './pwnr';
+import stnr from './stnr';
+import svnr from './svnr';
+import vat from './vat';
+
+const countryNumberUtils: CountryStandardNumberUtils = {
+	iso2: "DE",
+	numberUtils: [
+		idnr,
+		passport,
+		pwnr,
+		stnr,
+		svnr,
+		vat
+	]
+}
+
+export default countryNumberUtils;

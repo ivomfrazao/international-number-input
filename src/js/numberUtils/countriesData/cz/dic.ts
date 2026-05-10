@@ -17,7 +17,7 @@ import {
     ValidateReturn,
     NumberType,
 } from '../../../types';
-import { validate as rcValidate } from './rc';
+import rc from './rc';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
     const [value, err] = strings.cleanUnicode(input, ' -');
@@ -61,10 +61,14 @@ function checkSpecial(value: string): boolean {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.TaxpayerIdentificationNumber,
     name: 'Czech VAT Number',
     localName: 'Daňové identifikační číslo',
     abbreviation: 'DIČ',
 
+    maxLength: 10,
+    minLength: 8,
+    countryPrefix: 'CZ',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 
@@ -132,7 +136,7 @@ const validator: StandardNumberUtils = {
             };
         }
 
-        return rcValidate(value);
+        return rc.validate(value);
     },
 };
 

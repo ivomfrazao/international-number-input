@@ -27,10 +27,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Paraguay Tax Number',
 	localName: 'Registro Único del Contribuyentes',
 	abbreviation: 'RUC',
 	
+	maxLength: 8,
+	minLength: 8,
+	countryPrefix: 'PY',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

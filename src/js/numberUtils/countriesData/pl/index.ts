@@ -1,3 +1,15 @@
-export * as nip from './nip';
-export * as pesel from './pesel';
-export * as regon from './regon';
+import { CountryStandardNumberUtils } from '../../../types';
+import nip from './nip';
+import pesel from './pesel';
+import regon from './regon';
+
+const countryNumberUtils: CountryStandardNumberUtils = {
+	iso2: "PL",
+	numberUtils: [
+		nip,
+		pesel,
+		regon
+	]
+}
+
+export default countryNumberUtils;

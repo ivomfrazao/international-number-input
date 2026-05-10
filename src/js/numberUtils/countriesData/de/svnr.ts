@@ -80,10 +80,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.SocialSecurityIdentificationNumber,
 	name: 'German Pension Insurance Number',
 	localName: 'Sozialversicherungsnummer',
 	abbreviation: 'SVNR',
 	
+	maxLength: 12,
+	minLength: 12,
+	countryPrefix: 'DE',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

@@ -12,10 +12,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Italian VAT Number',
 	localName: 'Partita Imposta sul Valore Aggiunto',
 	abbreviation: 'P.IVA',
 	
+	maxLength: 11,
+	minLength: 11,
+	countryPrefix: 'IT',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

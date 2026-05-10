@@ -13,7 +13,7 @@
  */
 
 import * as exceptions from '../../../exceptions';
-import { isValidDateCompactYYMMDD, strings } from '../util';
+import { isValidDateCompactYYMMDD, strings } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
@@ -37,10 +37,14 @@ const UNASSIGNED = [
 ];
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Malaysian National Registration Identity Card Number',
 	localName: 'National Registration Identity Card Number',
 	abbreviation: 'NRIC No.',
 	
+	maxLength: 12,
+	minLength: 12,
+	countryPrefix: 'MY',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

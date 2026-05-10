@@ -32,11 +32,15 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 const validRe = /^[A-Z]{3}[0-9]{7}$/;
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Electoral Photo Identity Card',
 	localName: '',
 	abbreviation: 'EPIC',
 
 	
+	maxLength: 10,
+	minLength: 10,
+	countryPrefix: 'IN',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

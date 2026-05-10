@@ -42,10 +42,14 @@ const centuryPrefix: Record<string, number> = {
 };
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'South Korean Resident Registration Number',
 	localName: '주민등록번호',
 	abbreviation: 'RRN',
 	
+	maxLength: 13,
+	minLength: 13,
+	countryPrefix: 'KR',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

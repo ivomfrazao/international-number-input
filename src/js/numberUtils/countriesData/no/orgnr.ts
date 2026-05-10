@@ -20,11 +20,15 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Norwegian Organization Number',
 	localName: 'Organisasjonsnummer',
 	abbreviation: 'Orgnr',
 
 	
+	maxLength: 9,
+	minLength: 9,
+	countryPrefix: 'NO',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

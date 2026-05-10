@@ -27,11 +27,15 @@ const validRe = /^\d{10}[a-z]{2}\d{4}$/i;
 // const ALPHABET = '0123456789X';
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Quebec Sales Tax Number',
 	localName: '',
 	abbreviation: 'QST',
 
 	
+	maxLength: 16,
+	minLength: 16,
+	countryPrefix: 'CA',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

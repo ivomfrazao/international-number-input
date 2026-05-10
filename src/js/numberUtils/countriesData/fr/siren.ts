@@ -18,11 +18,15 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'French Company Identification Number',
 	localName: "Système d'Identification du Répertoire des Entreprises",
 	abbreviation: 'SIREN',
 
 	
+	maxLength: 9,
+	minLength: 9,
+	countryPrefix: 'FR',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

@@ -18,10 +18,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Croatian Personal Identification Number',
 	localName: 'Osobni Identifikacijski Broj',
 	abbreviation: 'OIB',
 	
+	maxLength: 11,
+	minLength: 11,
+	countryPrefix: 'HR',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

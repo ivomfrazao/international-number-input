@@ -27,10 +27,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.TaxpayerIdentificationNumber,
     name: 'German Personal Tax Number',
     localName: 'Steuerliche Identifikationsnummer',
     abbreviation: 'IdNr',
 
+    maxLength: 11,
+    minLength: 11,
+    countryPrefix: 'DE',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

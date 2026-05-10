@@ -28,9 +28,13 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Estonian Organisation Registration Code',
 	localName: 'Registrikood',
 	
+	maxLength: 8,
+	minLength: 8,
+	countryPrefix: 'EE',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

@@ -25,10 +25,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.NationalIdentificationNumber,
     name: 'Argentinian National Identity Document',
     localName: 'Documento Nacional de Identidad',
     abbreviation: 'DNI',
 
+    maxLength: 8,
+    minLength: 7,
+    countryPrefix: 'AR',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

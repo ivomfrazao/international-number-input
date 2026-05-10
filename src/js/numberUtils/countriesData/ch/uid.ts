@@ -28,10 +28,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.TaxpayerIdentificationNumber,
     name: 'Swiss Business Identifier',
     localName: 'Unternehmens-Identifikationsnummer',
     abbreviation: 'UID',
 
+    maxLength: 12,
+    minLength: 12,
+    countryPrefix: 'CH',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

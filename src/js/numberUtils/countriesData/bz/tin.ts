@@ -20,10 +20,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.TaxpayerIdentificationNumber,
     name: 'Belize Tax Identification Number',
     localName: 'Tax Identification Number',
     abbreviation: 'TIN',
 
+    maxLength: 8,
+    minLength: 6,
+    countryPrefix: 'BZ',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

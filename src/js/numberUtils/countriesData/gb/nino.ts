@@ -34,11 +34,15 @@ function validFormat(value: string): boolean {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'United Kingdom National Insurance Number',
 	localName: 'National Insurance Number',
 	abbreviation: 'NINO',
 
 	
+	maxLength: 9,
+	minLength: 8,
+	countryPrefix: 'GB',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

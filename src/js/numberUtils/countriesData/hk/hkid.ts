@@ -27,10 +27,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Hong Kong Identity Card Number',
 	localName: '香港身份證',
 	abbreviation: 'HKID',
 	
+	maxLength: 9,
+	minLength: 7,
+	countryPrefix: 'HK',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

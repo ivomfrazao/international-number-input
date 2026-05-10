@@ -39,11 +39,15 @@ function clean(input: string) {
 // const NEW_FMT = /^[A-Z][89]\d{8}$/;
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'UI Number',
 	localName: '中華民國國民身分證',
 	abbreviation: 'UI',
 
 	
+	maxLength: 10,
+	minLength: 10,
+	countryPrefix: 'TW',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

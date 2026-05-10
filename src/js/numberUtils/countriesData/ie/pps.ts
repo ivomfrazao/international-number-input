@@ -26,10 +26,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 const ppsRe = /^\d{7}[A-W][AHWTX]?$/;
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Irish Personal Number',
 	localName: 'Personal Public Service Number',
 	abbreviation: 'PPS',
 	
+	maxLength: 9,
+	minLength: 8,
+	countryPrefix: 'IE',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

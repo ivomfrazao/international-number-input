@@ -33,10 +33,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.NationalIdentificationNumber,
     name: 'Belgian National Number',
     localName: 'Numéro National',
     abbreviation: 'NN, RN',
 
+    maxLength: 11,
+    minLength: 11,
+    countryPrefix: 'BE',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

@@ -21,10 +21,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: "Ukrainian Registration Number of the Taxpayer's Registration Card",
 	localName: 'Реєстраційний номер облікової картки платника податків',
 	abbreviation: 'РНОКПП',
 	
+	maxLength: 10,
+	minLength: 10,
+	countryPrefix: 'UA',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

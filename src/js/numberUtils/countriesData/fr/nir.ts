@@ -30,10 +30,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.SocialSecurityIdentificationNumber,
 	name: 'French Personal Identification Number',
 	localName: 'Numéro d’Inscription au RNIPP',
 	abbreviation: 'NIR',
 	
+	maxLength: 15,
+	minLength: 15,
+	countryPrefix: 'FR',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

@@ -13,7 +13,7 @@
  */
 
 import * as exceptions from '../../../exceptions';
-import { strings, isValidDateCompactYYMMDD } from '../util';
+import { strings, isValidDateCompactYYMMDD } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
 import { luhnChecksumValidate } from '../../libraries/checksum';
 
@@ -22,10 +22,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'South African Identity Document Number',
 	localName: 'Identity Document Number',
 	abbreviation: 'IDNR',
 	
+	maxLength: 13,
+	minLength: 13,
+	countryPrefix: 'ZA',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

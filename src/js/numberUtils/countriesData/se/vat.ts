@@ -18,10 +18,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Swedish VAT Number',
 	localName: 'Momsregistreringsnummer',
 	abbreviation: 'Momsnr.',
 	
+	maxLength: 12,
+	minLength: 12,
+	countryPrefix: 'SE',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

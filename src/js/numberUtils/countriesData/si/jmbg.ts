@@ -6,14 +6,15 @@
  * This is really the EMSO -- here for legacy support
  */
 
-import { Validator } from '../types';
-import * as jmbg from '../ba/jmbg';
+import { StandardNumberUtils } from '../../../types';
+import jmbg from '../ba/jmbg';
 
 const validator: StandardNumberUtils = {
 	...jmbg,
 	name: 'Slovene Unique Master Citizen Number',
 	localName: 'Enotna Matična Številka Občana',
 	abbreviation: 'EMŠO',
+	countryPrefix: 'SI',
 };
 
 export default validator;

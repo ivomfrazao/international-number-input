@@ -14,7 +14,7 @@
  */
 
 import * as exceptions from '../../../exceptions';
-import { isValidDateCompactDDMMYY, strings, weightedSum } from '../util';
+import { isValidDateCompactDDMMYY, strings, weightedSum } from '../../libraries';
 import {
     StandardNumberUtils,
     ValidateReturn,
@@ -26,10 +26,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.SocialSecurityIdentificationNumber,
     name: 'Austrian Social Security Number',
     localName: 'Versicherungsnummer',
     abbreviation: 'VSNR',
 
+    maxLength: 10,
+    minLength: 8,
+    countryPrefix: 'AT',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

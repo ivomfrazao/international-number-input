@@ -82,10 +82,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.TaxpayerIdentificationNumber,
     name: 'Austrian Tax Identification Number',
     localName: 'Abgabenkontonummer',
     abbreviation: 'TIN',
 
+    maxLength: 9,
+    minLength: 9,
+    countryPrefix: 'AT',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

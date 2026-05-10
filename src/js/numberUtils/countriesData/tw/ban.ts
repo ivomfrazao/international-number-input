@@ -21,10 +21,14 @@ function clean(input: string) {
 
 const validator: StandardNumberUtils = {
 	abbreviation: 'BAN',
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Taiwanese Unified Business Number',
 	localName: '統一編號',
 
 	
+	maxLength: 8,
+	minLength: 8,
+	countryPrefix: 'TW',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

@@ -35,11 +35,15 @@ const validRe = /^[PCGQV]{1}00[A-Z0-9]{8}$/;
 const ALPHABET = '0123456789X';
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Taxpayer Identification Number',
 	localName: '',
 	abbreviation: 'TIN',
 
 	
+	maxLength: 11,
+	minLength: 11,
+	countryPrefix: 'GH',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

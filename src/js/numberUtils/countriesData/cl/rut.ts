@@ -34,10 +34,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.TaxpayerIdentificationNumber,
     name: 'Chilean National Tax Number',
     localName: 'Rol Único Tributario ',
     abbreviation: 'RUT',
 
+    maxLength: 9,
+    minLength: 8,
+    countryPrefix: 'CL',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

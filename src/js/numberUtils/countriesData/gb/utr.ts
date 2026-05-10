@@ -20,11 +20,15 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'United Kingdom Unique Taxpayer Reference',
 	localName: 'Unique Taxpayer Reference',
 	abbreviation: 'UTR',
 
 	
+	maxLength: 10,
+	minLength: 10,
+	countryPrefix: 'GB',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

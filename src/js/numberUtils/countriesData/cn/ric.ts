@@ -22,17 +22,21 @@ import {
     ValidateReturn,
     NumberType,
 } from '../../../types';
-import { isValidDateCompactYYYYMMDD } from '../util/isValidDate';
+import { isValidDateCompactYYYYMMDD } from '../../libraries/isValidDate';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
     return strings.cleanUnicode(input, ' ');
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.NationalIdentificationNumber,
     name: 'Chinese Resident Identity Card Number',
     localName: '居民身份证',
     abbreviation: 'RIC No',
 
+    maxLength: 18,
+    minLength: 18,
+    countryPrefix: 'CN',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

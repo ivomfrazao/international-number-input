@@ -41,10 +41,14 @@ function toDob(firstSix: string): string {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.NationalIdentificationNumber,
     name: 'Belgian Number for Foreigners',
     localName: 'Numéro BIS',
     abbreviation: 'BIS',
 
+    maxLength: 11,
+    minLength: 11,
+    countryPrefix: 'BE',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

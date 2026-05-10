@@ -1,5 +1,19 @@
-export * as ubn from './ubn';
-export * as ban from './ban';
-export * as natid from './natid';
-export * as ui from './ui';
-export * as tax_code from './tax_code';
+import { CountryStandardNumberUtils } from '../../../types';
+import ban from './ban';
+import natid from './natid';
+import tax_code from './tax_code';
+import ubn from './ubn';
+import ui from './ui';
+
+const countryNumberUtils: CountryStandardNumberUtils = {
+	iso2: "TW",
+	numberUtils: [
+		ban,
+		natid,
+		tax_code,
+		ubn,
+		ui
+	]
+}
+
+export default countryNumberUtils;

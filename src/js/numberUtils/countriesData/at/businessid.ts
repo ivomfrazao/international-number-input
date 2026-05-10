@@ -31,9 +31,13 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.TaxpayerIdentificationNumber,
     name: 'Austrian Company Register Number',
     localName: 'Company Register Number',
 
+    maxLength: 7,
+    minLength: 2,
+    countryPrefix: 'AT',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

@@ -30,10 +30,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Venezuelan VAT Number',
 	localName: 'Registro Único de Información Fiscal',
 	abbreviation: 'RIF',
 	
+	maxLength: 10,
+	minLength: 10,
+	countryPrefix: 'VE',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

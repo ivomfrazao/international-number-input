@@ -25,11 +25,15 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Danish VAT Number',
 	localName: 'Momsregistreringsnummer',
 	abbreviation: 'CVR',
 
 	
+	maxLength: 8,
+	minLength: 8,
+	countryPrefix: 'DK',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

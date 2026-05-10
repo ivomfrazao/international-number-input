@@ -15,11 +15,15 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Peruvian ID Card for Foreigners',
 	localName: 'Carné de Extranjería',
 	abbreviation: 'CE',
 
 	
+	maxLength: 9,
+	minLength: 9,
+	countryPrefix: 'PE',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

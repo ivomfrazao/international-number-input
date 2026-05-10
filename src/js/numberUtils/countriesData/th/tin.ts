@@ -13,19 +13,23 @@
 
 import { strings } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
-import * as idnr from './idnr';
-import * as moa from './moa';
+import idnr from './idnr';
+import moa from './moa';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 	return strings.cleanUnicode(input, ' -');
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Thailand Taxpayer Identification Number',
 	localName: '',
 	abbreviation: 'TIN',
 
 	
+	maxLength: 13,
+	minLength: 13,
+	countryPrefix: 'TH',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

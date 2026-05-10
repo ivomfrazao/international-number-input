@@ -165,10 +165,14 @@ function validateOther(value: string): ValidateReturn {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Singapore Unique Entity Number',
 	localName: 'Unique Entity Number',
 	abbreviation: 'UEN',
 	
+	maxLength: 10,
+	minLength: 9,
+	countryPrefix: 'SG',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

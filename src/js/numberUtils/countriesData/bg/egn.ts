@@ -23,10 +23,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.NationalIdentificationNumber,
     name: 'Bulgarian Personal Identity Codes',
     localName: 'Единен граждански номер',
     abbreviation: 'ЕГН (EGN)',
 
+    maxLength: 10,
+    minLength: 10,
+    countryPrefix: 'BG',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

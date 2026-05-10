@@ -21,10 +21,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Turkish Identificatio Number',
 	localName: 'Türkiye Cumhuriyeti Kimlik Numarası',
 	abbreviation: 'T.C. Kimlik No.',
 	
+	maxLength: 11,
+	minLength: 11,
+	countryPrefix: 'TR',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

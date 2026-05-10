@@ -167,9 +167,13 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'New Zealand Bank Account Number',
 	localName: 'Bank Account Number',
 	
+	maxLength: 16,
+	minLength: 4,
+	countryPrefix: 'NZ',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

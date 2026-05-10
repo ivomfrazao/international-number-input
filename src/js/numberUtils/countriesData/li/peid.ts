@@ -26,10 +26,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Liechtenstein Tax Code',
 	localName: 'Personenidentifikationsnummer',
 	abbreviation: 'PEID',
 	
+	maxLength: 12,
+	minLength: 4,
+	countryPrefix: 'LI',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

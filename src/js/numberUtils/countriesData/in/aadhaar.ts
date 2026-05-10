@@ -24,16 +24,20 @@
 import * as exceptions from '../../../exceptions';
 import { strings } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
-import { verhoeffValidate } from '../util/checksum';
+import { verhoeffValidate } from '../../libraries/checksum';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 	return strings.cleanUnicode(input, ' -');
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Indian Digital Resident Personal Identity Number',
 	localName: 'Aadhaar',
 	
+	maxLength: 12,
+	minLength: 12,
+	countryPrefix: 'IN',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

@@ -26,7 +26,7 @@ import {
 	isValidDateCompactYYMMDD,
 	isValidDateCompactYYYYMMDD,
 	strings,
-} from '../util';
+} from '../../libraries';
 
 function clean(input: string) {
 	return strings.cleanUnicode(input, ' -');
@@ -35,9 +35,13 @@ function clean(input: string) {
 const validator: StandardNumberUtils = {
 	abbreviation: '',
 	localName: '',
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Tax Code',
 
 	
+	maxLength: 10,
+	minLength: 7,
+	countryPrefix: 'TW',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

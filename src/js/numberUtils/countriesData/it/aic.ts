@@ -21,10 +21,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 const alphabet = '0123456789BCDFGHJKLMNPQRSTUVWXYZ';
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Italian Code for Identification of Drugs',
 	localName: 'Autorizzazione all’Immissione in Commercio',
 	abbreviation: 'AIC',
 	
+	maxLength: 9,
+	minLength: 6,
+	countryPrefix: 'IT',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

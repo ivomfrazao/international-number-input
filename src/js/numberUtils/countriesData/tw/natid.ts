@@ -39,9 +39,13 @@ export const ALPHABET = '0123456789ABCDEFGHJKLMNPQRSTUVXYWZIO';
 const validator: StandardNumberUtils = {
 	localName: '中華民國國民身分證',
 	abbreviation: 'NATID',
+	type: NumberType.NationalIdentificationNumber,
 	name: 'National ID Number',
 
 	
+	maxLength: 10,
+	minLength: 10,
+	countryPrefix: 'TW',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

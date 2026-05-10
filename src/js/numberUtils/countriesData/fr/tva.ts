@@ -15,7 +15,7 @@
 import * as exceptions from '../../../exceptions';
 import { strings } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
-import * as siren from './siren';
+import siren from './siren';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 	const [value, err] = strings.cleanUnicode(input, ' -.');
@@ -34,10 +34,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 const alphabet = '0123456789ABCDEFGHJKLMNPQRSTUVWXYZ';
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'French VAT Number',
 	localName: "Numéro d'Identification à la Taxe sur la Valeur Ajoutée",
 	abbreviation: 'n°TVA',
 	
+	maxLength: 11,
+	minLength: 11,
+	countryPrefix: 'FR',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

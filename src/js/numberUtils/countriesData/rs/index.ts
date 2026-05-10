@@ -1,2 +1,13 @@
-export * as pib from './pib';
-export * as jmbg from './jmbg';
+import { CountryStandardNumberUtils } from '../../../types';
+import jmbg from './jmbg';
+import pib from './pib';
+
+const countryNumberUtils: CountryStandardNumberUtils = {
+	iso2: "RS",
+	numberUtils: [
+		jmbg,
+		pib
+	]
+}
+
+export default countryNumberUtils;

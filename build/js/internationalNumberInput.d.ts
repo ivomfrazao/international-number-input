@@ -14,10 +14,10 @@ declare module "exceptions" {
         constructor(msg: string);
     }
     /**
-     *  Something is wrong with the format of the number.
+     *	Something is wrong with the format of the number.
      *
-     *  This generally means characters or delimiters that are not allowed are
-     *  part of the number or required parts are missing.
+     *	This generally means characters or delimiters that are not allowed are
+     *	part of the number or required parts are missing.
      */
     export class InvalidFormat extends ValidationError {
         constructor(msg?: string);

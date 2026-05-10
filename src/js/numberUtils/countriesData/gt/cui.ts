@@ -45,10 +45,14 @@ const citiesPerRegion: Record<string, number> = {
 };
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Guatemala Identity Number',
 	localName: 'Código Único de Identificación',
 	abbreviation: 'CUI',
 	
+	maxLength: 13,
+	minLength: 13,
+	countryPrefix: 'GT',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

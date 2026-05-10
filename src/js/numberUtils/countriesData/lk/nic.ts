@@ -19,9 +19,13 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Sri Lankan National Identity Card Number',
 	localName: 'NIC Number',
 	
+	maxLength: 12,
+	minLength: 10,
+	countryPrefix: 'LK',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

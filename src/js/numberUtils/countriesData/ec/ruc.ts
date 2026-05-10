@@ -11,7 +11,7 @@
  */
 
 import * as exceptions from '../../../exceptions';
-import * as ci from './ci';
+import ci, { validPrefix } from './ci';
 import { strings, weightedSum } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
 
@@ -20,10 +20,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Ecuadorian Company Tax Number',
 	localName: 'Registro Único de Contribuyentes',
 	abbreviation: 'RUC',
 	
+	maxLength: 13,
+	minLength: 13,
+	countryPrefix: 'EC',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 
@@ -52,7 +56,7 @@ const validator: StandardNumberUtils = {
 		if (!strings.isDigits(value)) {
 			return { isValid: false, error: new exceptions.InvalidFormat() };
 		}
-		if (!ci.validPrefix(value)) {
+		if (!validPrefix(value)) {
 			// Invalid province
 			return { isValid: false, error: new exceptions.InvalidComponent() };
 		}

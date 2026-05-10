@@ -1,3 +1,15 @@
-export * as egn from './egn';
-export * as pnf from './pnf';
-export * as vat from './vat';
+import { CountryStandardNumberUtils } from '../../../types';
+import egn from './egn';
+import pnf from './pnf';
+import vat from './vat';
+
+const countryNumberUtils: CountryStandardNumberUtils = {
+	iso2: "BG",
+	numberUtils: [
+		egn,
+		pnf,
+		vat
+	]
+}
+
+export default countryNumberUtils;

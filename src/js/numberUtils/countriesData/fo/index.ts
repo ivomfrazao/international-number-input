@@ -1,1 +1,11 @@
-export * as vn from './vn';
+import { CountryStandardNumberUtils } from '../../../types';
+import vn from './vn';
+
+const countryNumberUtils: CountryStandardNumberUtils = {
+	iso2: "FO",
+	numberUtils: [
+		vn
+	]
+}
+
+export default countryNumberUtils;

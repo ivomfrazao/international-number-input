@@ -20,10 +20,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Turkish Tax Identification Number',
 	localName: 'Vergi Kimlik Numarası',
 	abbreviation: 'VKN',
 	
+	maxLength: 10,
+	minLength: 10,
+	countryPrefix: 'TR',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

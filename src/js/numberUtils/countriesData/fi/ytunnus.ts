@@ -8,17 +8,21 @@
 
 import { strings } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
-import { validate as alvValidate } from './alv';
+import alv from './alv';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 	return strings.cleanUnicode(input, ' -');
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Finnish Business Identifier',
 	localName: 'Yritys- ja yhteisötunnus',
 	abbreviation: 'Y-tunnus',
 	
+	maxLength: 9,
+	minLength: 8,
+	countryPrefix: 'FI',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 
@@ -42,7 +46,7 @@ const validator: StandardNumberUtils = {
 			return { isValid: false, error };
 		}
 
-		return alvValidate(value);
+		return alv.validate(value);
 	},
 };
 

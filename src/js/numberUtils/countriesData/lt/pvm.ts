@@ -19,10 +19,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Lithuanian VAT Number',
 	localName: 'Pridėtinės Vertės Mokestis Mokėtojo Kodas',
 	abbreviation: 'PVM Kodas',
 	
+	maxLength: 12,
+	minLength: 9,
+	countryPrefix: 'LT',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

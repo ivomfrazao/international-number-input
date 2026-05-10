@@ -32,11 +32,15 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Inland Revenue Department Number',
 	localName: 'Te Tari Taake',
 	abbreviation: 'IRD',
 
 	
+	maxLength: 9,
+	minLength: 8,
+	countryPrefix: 'NZ',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

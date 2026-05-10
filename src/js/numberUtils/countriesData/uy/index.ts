@@ -1,3 +1,15 @@
-export * as nie from './nie';
-export * as cedula from './cedula';
-export * as rut from './rut';
+import { CountryStandardNumberUtils } from '../../../types';
+import cedula from './cedula';
+import nie from './nie';
+import rut from './rut';
+
+const countryNumberUtils: CountryStandardNumberUtils = {
+	iso2: "UY",
+	numberUtils: [
+		cedula,
+		nie,
+		rut
+	]
+}
+
+export default countryNumberUtils;

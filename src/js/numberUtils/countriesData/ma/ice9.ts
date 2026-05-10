@@ -18,9 +18,13 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Moroccan Company Number',
 	localName: "Numero d'Entreprise",
 	
+	maxLength: 9,
+	minLength: 9,
+	countryPrefix: 'MA',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

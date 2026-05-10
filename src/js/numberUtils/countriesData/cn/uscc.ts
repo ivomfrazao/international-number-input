@@ -55,10 +55,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 const alphabet = '0123456789ABCDEFGHJKLMNPQRTUWXY';
 
 const validator: StandardNumberUtils = {
+    type: NumberType.TaxpayerIdentificationNumber,
     name: 'Chinese Unified Social Credit Code',
     localName: '统一社会信用代码',
     abbreviation: 'USCC',
 
+    maxLength: 18,
+    minLength: 18,
+    countryPrefix: 'CN',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

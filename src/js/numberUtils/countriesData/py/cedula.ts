@@ -23,10 +23,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Paraguay CI Number',
 	localName: 'Cedula de la Identidad civil',
 	abbreviation: 'CI',
 	
+	maxLength: 7,
+	minLength: 5,
+	countryPrefix: 'PY',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

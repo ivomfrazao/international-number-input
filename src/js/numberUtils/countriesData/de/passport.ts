@@ -25,10 +25,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 const idRegexp = /([CFGHJK][0-9CFGHJKLMNPRTVWXYZ]{8})([0-9]?)[A-Z]?/;
 
 const validator: StandardNumberUtils = {
+    type: NumberType.NationalIdentificationNumber,
     name: 'German Passport Number',
     localName: 'Ausweisen',
     abbreviation: 'Passport',
 
+    maxLength: 11,
+    minLength: 9,
+    countryPrefix: 'DE',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

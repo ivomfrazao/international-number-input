@@ -1,9 +1,9 @@
-import { NumberType, ValidateReturn } from '../types';
-import { AllOptions, SomeOptions } from './InternationalNumberInputOptions';
-import { defaults } from './InternationalNumberInputOptions.default';
-import allCountries, { Country } from './international-number-input/data';
-import { Ini } from './InternationalNumberInput.class';
-import { loadUtils } from './libraries/InstancesUtils';
+import { NumberType, ValidateReturn } from "../types";
+import { AllOptions, SomeOptions } from "./InternationalNumberInputOptions";
+import { defaults } from "./InternationalNumberInputOptions.default";
+import allCountries, { Country } from "./international-number-input/data";
+import { Ini } from "./InternationalNumberInput.class";
+import { loadUtils } from "./libraries/InstancesUtils";
 
 interface InternationalNumberInputInterface {
     (input: HTMLInputElement, options?: SomeOptions): Ini;
@@ -61,7 +61,7 @@ export const internationalNumberInput: InternationalNumberInputInterface =
             const ini = new Ini(input, options);
             ini._init();
             input.setAttribute(
-                'data-international-number-input-id',
+                "data-international-number-input-id",
                 ini.id.toString(),
             );
             internationalNumberInput.instances[ini.id] = ini;
@@ -70,13 +70,13 @@ export const internationalNumberInput: InternationalNumberInputInterface =
         {
             defaults,
             //* Using a static var like this allows us to mock it in the tests.
-            documentReady: (): boolean => document.readyState === 'complete',
+            documentReady: (): boolean => document.readyState === "complete",
             //* Get the country data object.
             getCountryData: (): Country[] => allCountries,
             //* A getter for the plugin instance.
             getInstance: (input: HTMLInputElement): Ini | null => {
                 const id = input.getAttribute(
-                    'data-international-number-input-id',
+                    "data-international-number-input-id",
                 );
                 return id ? internationalNumberInput.instances[id] : null;
             },

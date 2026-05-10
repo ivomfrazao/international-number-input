@@ -58,10 +58,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.SocialSecurityIdentificationNumber,
 	name: 'U.S. Social Security Number',
 	localName: 'Social Security Number',
 	abbreviation: 'SSN',
 	
+	maxLength: 9,
+	minLength: 9,
+	countryPrefix: 'US',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

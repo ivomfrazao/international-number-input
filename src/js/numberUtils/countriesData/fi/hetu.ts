@@ -10,7 +10,7 @@
  */
 
 import * as exceptions from '../../../exceptions';
-import { isValidDate, strings } from '../util';
+import { isValidDate, strings } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
@@ -36,11 +36,15 @@ const CENTURY: Record<string, string> = {
 const VALID_CENTURY = Object.keys(CENTURY);
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Finnish Personal Identity Code',
 	localName: 'Henkilötunnus',
 	abbreviation: 'HETU',
 
 	
+	maxLength: 11,
+	minLength: 11,
+	countryPrefix: 'FI',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

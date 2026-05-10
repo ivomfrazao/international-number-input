@@ -29,10 +29,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.TaxpayerIdentificationNumber,
     name: 'Australian Tax File Number',
     localName: 'Tax File Number',
     abbreviation: 'TFN',
 
+    maxLength: 9,
+    minLength: 8,
+    countryPrefix: 'AU',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

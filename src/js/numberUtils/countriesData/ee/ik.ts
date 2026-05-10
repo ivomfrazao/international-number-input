@@ -65,10 +65,14 @@ export function ikCheckDate(value: string): boolean {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Estonian Personal ID Number',
 	localName: 'Isikukood',
 	abbreviation: 'IK',
 	
+	maxLength: 11,
+	minLength: 11,
+	countryPrefix: 'EE',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

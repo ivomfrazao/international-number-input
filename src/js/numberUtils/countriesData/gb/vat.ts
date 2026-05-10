@@ -26,10 +26,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'United Kingdom (and Isle of Man) VAT Number',
 	localName: 'Value Added Tax Registration Number',
 	abbreviation: 'VAT Reg No',
 	
+	maxLength: 12,
+	minLength: 5,
+	countryPrefix: 'GB',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

@@ -22,10 +22,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Ukrainian Unified State Register of Enterprises and Organizations',
 	localName: 'Єдиного державного реєстру підприємств та організацій України',
 	abbreviation: 'ЄДРПОУ',
 	
+	maxLength: 8,
+	minLength: 8,
+	countryPrefix: 'UA',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

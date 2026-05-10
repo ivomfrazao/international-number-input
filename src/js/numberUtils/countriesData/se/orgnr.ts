@@ -19,10 +19,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Swedish Company Number',
 	localName: 'Organisationsnummer',
 	abbreviation: 'Orgnr',
 	
+	maxLength: 10,
+	minLength: 10,
+	countryPrefix: 'SE',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

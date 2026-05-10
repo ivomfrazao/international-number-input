@@ -25,10 +25,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Romanian Company Identifier',
 	localName: 'Codul Unic de Înregistrare',
 	abbreviation: 'CUI',
 	
+	maxLength: 10,
+	minLength: 2,
+	countryPrefix: 'RO',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

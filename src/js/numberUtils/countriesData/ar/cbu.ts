@@ -26,10 +26,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.TaxpayerIdentificationNumber,
     name: 'Single Banking Code',
     localName: 'Clave Bancaria Uniforme',
     abbreviation: 'CBU',
 
+    maxLength: 22,
+    minLength: 22,
+    countryPrefix: 'AR',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

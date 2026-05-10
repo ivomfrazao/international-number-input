@@ -37,10 +37,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.TaxpayerIdentificationNumber,
     name: 'Belgian VAT Number',
     localName: 'Ondernemingsnummer',
     abbreviation: 'BTW, NWSt',
 
+    maxLength: 10,
+    minLength: 9,
+    countryPrefix: 'BE',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

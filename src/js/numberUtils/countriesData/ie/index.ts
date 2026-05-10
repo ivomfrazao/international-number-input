@@ -1,2 +1,13 @@
-export * as vat from './vat';
-export * as pps from './pps';
+import { CountryStandardNumberUtils } from '../../../types';
+import pps from './pps';
+import vat from './vat';
+
+const countryNumberUtils: CountryStandardNumberUtils = {
+	iso2: "IE",
+	numberUtils: [
+		pps,
+		vat
+	]
+}
+
+export default countryNumberUtils;

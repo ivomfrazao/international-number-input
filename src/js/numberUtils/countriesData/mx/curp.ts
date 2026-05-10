@@ -19,7 +19,7 @@ import {
 	isValidDateCompactYYMMDD,
 	strings,
 	validBirthdate,
-} from '../util';
+} from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
@@ -152,10 +152,14 @@ const checkAlphabetDict: Record<string, number> = checkAlphabet
 	.reduce((acc, c, idx) => ({ ...acc, [c]: idx }), {});
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Mexican Personal Identification',
 	localName: 'Clave Única de Registro de Población',
 	abbreviation: 'CURP',
 	
+	maxLength: 18,
+	minLength: 18,
+	countryPrefix: 'MX',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

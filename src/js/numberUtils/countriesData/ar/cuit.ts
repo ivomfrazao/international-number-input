@@ -40,10 +40,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.TaxpayerIdentificationNumber,
     name: 'Argentinian VAT Number',
     localName: 'Código Único de Identificación Tributaria',
     abbreviation: 'CUIT',
 
+    maxLength: 11,
+    minLength: 11,
+    countryPrefix: 'AR',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

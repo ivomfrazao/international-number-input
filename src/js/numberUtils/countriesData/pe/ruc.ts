@@ -22,11 +22,15 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Peruvian Company Tax Number',
 	localName: 'Registro Único de Contribuyentes',
 	abbreviation: 'RUC',
 
 	
+	maxLength: 11,
+	minLength: 9,
+	countryPrefix: 'PE',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

@@ -24,17 +24,21 @@ import {
     ValidateReturn,
     NumberType,
 } from '../../../types';
-import { validate as uidValidate } from './uid';
+import uid from './uid';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
     return strings.cleanUnicode(input, ' -.');
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.TaxpayerIdentificationNumber,
     name: 'Swiss VAT Number',
     localName: 'Mehrwertsteuernummer',
     abbreviation: 'MWST/TVA/IVA',
 
+    maxLength: 16,
+    minLength: 15,
+    countryPrefix: 'CH',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 
@@ -68,7 +72,7 @@ const validator: StandardNumberUtils = {
             return { isValid: false, error: new exceptions.InvalidComponent() };
         }
 
-        const result = uidValidate(front);
+        const result = uid.validate(front);
 
         if (!result.isValid && result.error) {
             return { isValid: false, error: result.error };

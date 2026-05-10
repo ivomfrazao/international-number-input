@@ -24,7 +24,7 @@
 import * as exceptions from '../../../exceptions';
 import { strings } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
-import { validate as panValidate } from './pan';
+import pan from './pan';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 	return strings.cleanUnicode(input, ' -');
@@ -77,11 +77,15 @@ const STATE_CODES: Record<string, string> = {
 const VALID_STATE_CODES = Object.keys(STATE_CODES);
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Indian VAT Number',
 	localName: 'Goods and Services Tax Identification Number',
 	abbreviation: 'GSTIN',
 
 	
+	maxLength: 15,
+	minLength: 15,
+	countryPrefix: 'IN',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 
@@ -119,7 +123,7 @@ const validator: StandardNumberUtils = {
 		if (value[12] === '0' || value[13] !== 'Z') {
 			return { isValid: false, error: new exceptions.InvalidComponent() };
 		}
-		if (!panValidate(panValue).isValid) {
+		if (!pan.validate(panValue).isValid) {
 			return { isValid: false, error: new exceptions.InvalidComponent() };
 		}
 

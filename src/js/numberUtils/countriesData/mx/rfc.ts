@@ -29,7 +29,7 @@
  */
 
 import * as exceptions from '../../../exceptions';
-import { isValidDateCompactYYMMDD, strings, weightedSum } from '../util';
+import { isValidDateCompactYYMMDD, strings, weightedSum } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
@@ -86,10 +86,14 @@ const checkAlphabet = '0123456789ABCDEFGHIJKLMN&OPQRSTUVWXYZ Ñ';
 //	 .reduce((acc, c, idx) => ({ ...acc, [c]: idx }), {});
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Mexican Tax Number',
 	localName: 'Registro Federal de Contribuyentes',
 	abbreviation: 'RFC',
 	
+	maxLength: 13,
+	minLength: 10,
+	countryPrefix: 'MX',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

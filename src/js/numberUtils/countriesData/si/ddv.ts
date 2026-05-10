@@ -18,10 +18,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Slovenian VAT Number',
 	localName: 'Identifikacijska številka za DDV',
 	abbreviation: 'ID za DDV',
 	
+	maxLength: 8,
+	minLength: 8,
+	countryPrefix: 'SI',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

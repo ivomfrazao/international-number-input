@@ -9,8 +9,8 @@
  */
 
 import * as exceptions from '../../../exceptions';
-import * as egn from './egn';
-import * as pnf from './pnf';
+import egn from './egn';
+import pnf from './pnf';
 import { strings } from '../../libraries';
 import {
     StandardNumberUtils,
@@ -63,10 +63,14 @@ function checkOther(value: string): boolean {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.TaxpayerIdentificationNumber,
     name: 'Bulgarian VAT Number',
     localName: 'Идентификационен номер по ДДС',
     abbreviation: 'ДДС номер',
 
+    maxLength: 10,
+    minLength: 9,
+    countryPrefix: 'BG',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

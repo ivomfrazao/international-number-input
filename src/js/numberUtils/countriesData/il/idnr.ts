@@ -22,9 +22,13 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Israeli Identify Number',
 	localName: 'Mispar Zehut, מספר זהות',
 	
+	maxLength: 9,
+	minLength: 9,
+	countryPrefix: 'IL',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

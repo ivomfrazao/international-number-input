@@ -13,7 +13,7 @@
  */
 
 import * as exceptions from '../../../exceptions';
-import { isValidDate, strings, weightedSum } from '../util';
+import { isValidDate, strings, weightedSum } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
@@ -52,9 +52,13 @@ function checkBirthdate(value: string) {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Norwegian National Identity Number',
 	localName: 'Fødselsnummer',
 	
+	maxLength: 11,
+	minLength: 11,
+	countryPrefix: 'NO',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

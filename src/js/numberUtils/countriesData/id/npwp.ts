@@ -63,10 +63,14 @@ const NPWP_TAX_IDENTITIES = [
 ];
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Indonesian VAT Number',
 	localName: 'Nomor Pokok Wajib Pajak',
 	abbreviation: 'NPWP',
 	
+	maxLength: 15,
+	minLength: 15,
+	countryPrefix: 'ID',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

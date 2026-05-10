@@ -18,7 +18,7 @@
 import * as exceptions from '../../../exceptions';
 import { strings, weightedSum } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
-import { pymod } from '../util/pymod';
+import { pymod } from '../../libraries/pymod';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 	const [value, err] = strings.cleanUnicode(input, ' -');
@@ -32,10 +32,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Uruguayan Tax Number',
 	localName: 'Registro Único Tributario',
 	abbreviation: 'RUT',
 	
+	maxLength: 12,
+	minLength: 12,
+	countryPrefix: 'UY',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

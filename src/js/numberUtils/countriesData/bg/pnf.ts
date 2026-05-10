@@ -21,10 +21,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.NationalIdentificationNumber,
     name: 'Bulgarian Number of a Foreigner',
     localName: 'Личен номер на чужденец',
     abbreviation: 'PNF (ЛНЧ)',
 
+    maxLength: 10,
+    minLength: 10,
+    countryPrefix: 'BG',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

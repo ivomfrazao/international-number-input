@@ -6,7 +6,7 @@
  */
 
 import * as exceptions from '../../../exceptions';
-import * as strings from '../util/strings';
+import * as strings from '../../libraries/strings';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
 import { weightedSum } from '../../libraries/checksum';
 

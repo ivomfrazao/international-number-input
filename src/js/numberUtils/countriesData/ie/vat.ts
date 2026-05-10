@@ -37,10 +37,14 @@ export function calcCheckDigit(valueIn: string): string {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Irish VAT Number',
 	localName: 'Cáin Bhreisluacha',
 	abbreviation: 'CBL',
 	
+	maxLength: 9,
+	minLength: 8,
+	countryPrefix: 'IE',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

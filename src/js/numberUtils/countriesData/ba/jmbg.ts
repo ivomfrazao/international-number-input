@@ -8,7 +8,7 @@
  */
 
 import * as exceptions from '../../../exceptions';
-import { isValidDate, strings } from '../util';
+import { isValidDate, strings } from '../../libraries';
 import {
     StandardNumberUtils,
     ValidateReturn,
@@ -21,10 +21,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.NationalIdentificationNumber,
     name: 'Bosnia Unique Master Citizen Number',
     localName: 'Jedinstveni matični broj građana',
     abbreviation: 'JMBG',
 
+    maxLength: 13,
+    minLength: 13,
+    countryPrefix: 'BA',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

@@ -20,10 +20,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.NationalIdentificationNumber,
     name: 'Azerbaijani Personal Identification Number',
     localName: 'Fərdi İdentifikasiya Nömrəsidir',
     abbreviation: 'PIN',
 
+    maxLength: 10,
+    minLength: 10,
+    countryPrefix: 'AZ',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

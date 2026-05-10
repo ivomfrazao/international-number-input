@@ -13,17 +13,21 @@
 import * as exceptions from '../../../exceptions';
 import { strings } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
-import { mod11mod10Validate } from '../util/checksum';
+import { mod11mod10Validate } from '../../libraries/checksum';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 	return strings.cleanUnicode(input, ' -.', 'RS');
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Serbian Tax Identification Number',
 	localName: 'Poreski Identifikacioni Broj',
 	abbreviation: 'PIB',
 	
+	maxLength: 9,
+	minLength: 9,
+	countryPrefix: 'RS',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

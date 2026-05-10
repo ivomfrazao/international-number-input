@@ -34,11 +34,15 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 // const ALPHABET = '0123456789X';
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Algeria tax number',
 	localName: "Numéro d'Identification Fiscale",
 	abbreviation: 'NIF',
 
 	
+	maxLength: 20,
+	minLength: 15,
+	countryPrefix: 'DZ',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

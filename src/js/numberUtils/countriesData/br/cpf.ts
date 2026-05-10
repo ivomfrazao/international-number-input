@@ -35,10 +35,14 @@ function computeDigit(input: string): number {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.TaxpayerIdentificationNumber,
     name: 'Brazilian National Identifier',
     localName: 'Cadastro de Pessoas Físicas',
     abbreviation: 'CPF',
 
+    maxLength: 11,
+    minLength: 11,
+    countryPrefix: 'BR',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

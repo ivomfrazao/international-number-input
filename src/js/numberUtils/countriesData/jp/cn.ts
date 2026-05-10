@@ -21,10 +21,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Japanese Corporate Number',
 	localName: '法人番号 (hōjin bangō)',
 	abbreviation: 'CN',
 	
+	maxLength: 13,
+	minLength: 13,
+	countryPrefix: 'JP',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

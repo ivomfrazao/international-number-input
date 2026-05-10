@@ -1,4 +1,17 @@
-export * as fodselsnummer from './fodselsnummer';
-export * as kontonr from './kontonr';
-export * as mva from './mva';
-export * as orgnr from './orgnr';
+import { CountryStandardNumberUtils } from '../../../types';
+import fodselsnummer from './fodselsnummer';
+import kontonr from './kontonr';
+import mva from './mva';
+import orgnr from './orgnr';
+
+const countryNumberUtils: CountryStandardNumberUtils = {
+	iso2: "NO",
+	numberUtils: [
+		fodselsnummer,
+		kontonr,
+		mva,
+		orgnr
+	]
+}
+
+export default countryNumberUtils;

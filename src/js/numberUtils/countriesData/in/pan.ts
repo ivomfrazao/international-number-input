@@ -41,10 +41,14 @@ const PAN_HOLDER_TYPES: Record<string, string> = {
 const VALID_PAN_HOLDERS = Object.keys(PAN_HOLDER_TYPES);
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Indian Income Tax Identifier',
 	localName: 'Permanent Account Number',
 	abbreviation: 'PAN',
 	
+	maxLength: 10,
+	minLength: 10,
+	countryPrefix: 'IN',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

@@ -22,7 +22,7 @@
 import * as exceptions from '../../../exceptions';
 import { strings } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
-import { mod97base10Validate, weightedSum } from '../util/checksum';
+import { mod97base10Validate, weightedSum } from '../../libraries/checksum';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 	const [value, err] = strings.cleanUnicode(input, ' -.', 'NL');
@@ -37,10 +37,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Dutch VAT Number',
 	localName: 'Btw-identificatienummer',
 	abbreviation: 'Btw-nr.',
 	
+	maxLength: 12,
+	minLength: 12,
+	countryPrefix: 'NL',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

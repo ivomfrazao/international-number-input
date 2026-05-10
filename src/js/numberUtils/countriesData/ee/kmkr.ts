@@ -20,10 +20,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Estronian VAT Number',
 	localName: 'Käibemaksukohuslase',
 	abbreviation: 'KMKR',
 	
+	maxLength: 9,
+	minLength: 9,
+	countryPrefix: 'EE',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

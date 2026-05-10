@@ -22,11 +22,15 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Polish Statistical Identificaiton Number',
 	localName: 'Rejestr Gospodarki Narodowej',
 	abbreviation: 'REGON',
 
 	
+	maxLength: 14,
+	minLength: 9,
+	countryPrefix: 'PL',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

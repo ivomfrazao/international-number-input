@@ -13,17 +13,21 @@
 import * as exceptions from '../../../exceptions';
 import { strings } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
-import { validate as frValidate } from '../fr/tva';
+import frTva from '../fr/tva';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 	return strings.cleanUnicode(input, ' ', 'FR');
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Monacan VAT Number',
 	localName: "Numéro d'Identification à la Taxe sur la Valeur Ajoutée",
 	abbreviation: 'n° TVA',
 	
+	maxLength: 11,
+	minLength: 11,
+	countryPrefix: 'MC',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 
@@ -47,7 +51,7 @@ const validator: StandardNumberUtils = {
 			return { isValid: false, error };
 		}
 
-		const r = frValidate(value);
+		const r = frTva.validate(value);
 		if (!r.isValid) {
 			return r;
 		}

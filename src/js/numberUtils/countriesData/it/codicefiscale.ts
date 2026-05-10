@@ -108,10 +108,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Italian Tax Code',
 	localName: 'Codice Fiscale',
 	abbreviation: 'CF',
 	
+	maxLength: 16,
+	minLength: 16,
+	countryPrefix: 'IT',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

@@ -12,7 +12,7 @@
  */
 
 import * as exceptions from '../../../exceptions';
-import { isValidDate, strings } from '../util';
+import { isValidDate, strings } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
 import { weightedSum } from '../../libraries/checksum';
 
@@ -21,10 +21,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Latvian VAT Number',
 	localName: 'Pievienotās Vērtības Nodokļa',
 	abbreviation: 'PVN',
 	
+	maxLength: 11,
+	minLength: 11,
+	countryPrefix: 'LV',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

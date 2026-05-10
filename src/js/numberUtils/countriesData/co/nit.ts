@@ -25,10 +25,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.TaxpayerIdentificationNumber,
     name: 'Colombian Tax Identification Number',
     localName: 'Número de Identificación Tributaria',
     abbreviation: 'NIT',
 
+    maxLength: 16,
+    minLength: 8,
+    countryPrefix: 'CO',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

@@ -13,7 +13,7 @@
  */
 
 import * as exceptions from '../../../exceptions';
-import { isValidDate, strings } from '../util';
+import { isValidDate, strings } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
 import { luhnChecksumValidate } from '../../libraries/checksum';
 
@@ -22,10 +22,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.SocialSecurityIdentificationNumber,
 	name: 'Greek Social Security Number',
 	localName: 'Αριθμός Μητρώου Κοινωνικής Ασφάλισης',
 	abbreviation: 'AMKA',
 	
+	maxLength: 11,
+	minLength: 11,
+	countryPrefix: 'GR',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

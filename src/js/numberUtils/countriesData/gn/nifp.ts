@@ -21,11 +21,15 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: "Numéro d'Identification Fiscale Permanent",
 	localName: '',
 	abbreviation: 'NIFP',
 
 	
+	maxLength: 9,
+	minLength: 9,
+	countryPrefix: 'GN',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

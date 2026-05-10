@@ -20,10 +20,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Polish VAT Number',
 	localName: 'Numer Identyfikacji Podatkowej',
 	abbreviation: 'NIP',
 	
+	maxLength: 10,
+	minLength: 10,
+	countryPrefix: 'PL',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

@@ -16,7 +16,7 @@
 import * as exceptions from '../../../exceptions';
 import { strings } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
-import { validate as bnValidate } from './bn';
+import bn from './bn';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 	return strings.cleanUnicode(input, ' -');
@@ -27,11 +27,15 @@ const validRe = /^\d{9}[A-Z]{2}\d{4}$/i;
 // const ALPHABET = '0123456789X';
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Goods and service Tax Number',
 	localName: 'Goods and service Tax Number',
 	abbreviation: 'GST',
 
 	
+	maxLength: 15,
+	minLength: 15,
+	countryPrefix: 'CA',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 
@@ -63,7 +67,7 @@ const validator: StandardNumberUtils = {
 		}
 
 		// The BN15 is the same as a GST
-		return bnValidate(value);
+		return bn.validate(value);
 	},
 };
 

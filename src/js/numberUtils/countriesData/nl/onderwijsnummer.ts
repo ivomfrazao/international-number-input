@@ -21,9 +21,13 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Dutch Student Identification Number',
 	localName: 'Onderwijsnummer',
 	
+	maxLength: 9,
+	minLength: 9,
+	countryPrefix: 'NL',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

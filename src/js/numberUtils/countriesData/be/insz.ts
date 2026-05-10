@@ -10,8 +10,8 @@
  */
 
 import { strings } from '../../libraries';
-import { validate as nnValidate } from './nn';
-import { validate as bisValidate } from './bis';
+import nn from './nn';
+import bis from './bis';
 import {
     StandardNumberUtils,
     ValidateReturn,
@@ -23,10 +23,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.SocialSecurityIdentificationNumber,
     name: 'Belgian Social Security Identification Number',
     localName: 'Identificatienummer van de Sociale Zekerheid',
     abbreviation: 'INSZ, NISS',
 
+    maxLength: 11,
+    minLength: 11,
+    countryPrefix: 'BE',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 
@@ -41,7 +45,7 @@ const validator: StandardNumberUtils = {
         return value;
     },
     validate(input: string): ValidateReturn {
-        const results = [nnValidate(input), bisValidate(input)];
+        const results = [nn.validate(input), bis.validate(input)];
         const validResult = results.find(r => r.isValid);
         if (validResult) return validResult;
 

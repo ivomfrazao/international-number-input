@@ -27,10 +27,14 @@ export function validPrefix(value: string): boolean {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Ecuadorian Personal Identity Code',
 	localName: 'Cédula de Identidad',
 	abbreviation: 'CI',
 	
+	maxLength: 10,
+	minLength: 10,
+	countryPrefix: 'EC',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

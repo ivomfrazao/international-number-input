@@ -30,11 +30,15 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'San Marino National Tax Number',
 	localName: 'Codice Operatore Eeconomico',
 	abbreviation: 'COE',
 
 	
+	maxLength: 5,
+	minLength: 3,
+	countryPrefix: 'SM',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

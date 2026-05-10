@@ -20,11 +20,15 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Russian Tax Identifier',
 	localName: 'Идентификационный номер налогоплательщика',
 	abbreviation: 'ИНН',
 
 	
+	maxLength: 12,
+	minLength: 10,
+	countryPrefix: 'RU',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

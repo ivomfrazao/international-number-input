@@ -19,10 +19,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Luxembourgian VAT Number',
 	localName: "Numéro d'Identification à la Taxe sur la Valeur Ajoutée",
 	abbreviation: 'n° TVA',
 	
+	maxLength: 8,
+	minLength: 8,
+	countryPrefix: 'LU',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

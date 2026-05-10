@@ -62,10 +62,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.TaxpayerIdentificationNumber,
     name: 'Costa Rica Tax Number',
     localName: 'Cédula de Persona Jurídica',
     abbreviation: 'CPJ',
 
+    maxLength: 10,
+    minLength: 10,
+    countryPrefix: 'CR',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

@@ -1,5 +1,19 @@
-export * as nif from './nif';
-export * as nir from './nir';
-export * as siren from './siren';
-export * as siret from './siret';
-export * as tva from './tva';
+import { CountryStandardNumberUtils } from '../../../types';
+import nif from './nif';
+import nir from './nir';
+import siren from './siren';
+import siret from './siret';
+import tva from './tva';
+
+const countryNumberUtils: CountryStandardNumberUtils = {
+	iso2: "FR",
+	numberUtils: [
+		nif,
+		nir,
+		siren,
+		siret,
+		tva
+	]
+}
+
+export default countryNumberUtils;

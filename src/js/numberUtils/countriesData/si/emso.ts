@@ -13,14 +13,15 @@
  *	 https://sl.wikipedia.org/wiki/Enotna_matična_številka_občana
  */
 
-import { Validator } from '../types';
-import * as jmbg from '../ba/jmbg';
+import { StandardNumberUtils } from '../../../types';
+import jmbg from '../ba/jmbg';
 
 const validator: StandardNumberUtils = {
 	...jmbg,
 	name: 'Slovene Unique Master Citizen Number',
 	localName: 'Enotna Matična Številka Občana',
 	abbreviation: 'EMŠO',
+	countryPrefix: 'SI',
 };
 
 export default validator;

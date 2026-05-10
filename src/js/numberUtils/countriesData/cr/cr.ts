@@ -31,10 +31,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.NationalIdentificationNumber,
     name: 'Costa Rica Foreigners ID Number',
     localName: 'Cédula de Residencia',
     abbreviation: 'CR',
 
+    maxLength: 12,
+    minLength: 12,
+    countryPrefix: 'CR',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

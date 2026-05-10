@@ -39,11 +39,15 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Pakistani Computerized National Identification Number',
 	localName: 'Computerized National Identification Number',
 	abbreviation: 'CNIC',
 
 	
+	maxLength: 13,
+	minLength: 13,
+	countryPrefix: 'PK',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

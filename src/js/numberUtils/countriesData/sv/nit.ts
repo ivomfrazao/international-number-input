@@ -46,10 +46,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'El Salvador Tax Number',
 	localName: 'Número de Identificación Tributaria',
 	abbreviation: 'NIT',
 	
+	maxLength: 14,
+	minLength: 14,
+	countryPrefix: 'SV',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

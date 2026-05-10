@@ -6,7 +6,7 @@
 import * as exceptions from '../../../exceptions';
 import { strings } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
-import { luhnChecksumValidate, weightedSum } from '../util/checksum';
+import { luhnChecksumValidate, weightedSum } from '../../libraries/checksum';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 	const [value, err] = strings.cleanUnicode(input, ' -.');
@@ -23,10 +23,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Norwegian Bank Account Number',
 	localName: 'Kontonummer',
 	abbreviation: 'Konto Nr.',
 	
+	maxLength: 11,
+	minLength: 7,
+	countryPrefix: 'NO',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

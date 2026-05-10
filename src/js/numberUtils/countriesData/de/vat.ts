@@ -25,10 +25,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'German VAT Number',
 	localName: 'Umsatzsteuer Identifikationsnummer',
 	abbreviation: 'USt ID Nr.',
 	
+	maxLength: 9,
+	minLength: 9,
+	countryPrefix: 'DE',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

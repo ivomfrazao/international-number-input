@@ -20,10 +20,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Thai National Identity Card Number',
 	localName: 'บัตรประจำตัวประชาชนไทย',
 	abbreviation: 'IDNR',
 	
+	maxLength: 13,
+	minLength: 13,
+	countryPrefix: 'TH',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

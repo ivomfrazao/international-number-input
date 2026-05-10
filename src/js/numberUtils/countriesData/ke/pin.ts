@@ -30,11 +30,15 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 const validRe = /^[A|P]{1}[0-9]{9}[A-Z]{1}$/i;
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Personal Identification Number',
 	localName: '',
 	abbreviation: 'PIN',
 
 	
+	maxLength: 11,
+	minLength: 11,
+	countryPrefix: 'KE',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

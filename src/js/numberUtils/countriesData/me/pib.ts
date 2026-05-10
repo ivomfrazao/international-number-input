@@ -19,11 +19,15 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Montenegro tax number',
 	localName: 'Poreski Identifikacioni Broj',
 	abbreviation: 'PIB',
 
 	
+	maxLength: 8,
+	minLength: 8,
+	countryPrefix: 'ME',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

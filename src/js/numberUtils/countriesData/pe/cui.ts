@@ -22,11 +22,15 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Peruvian Personal Identification Card',
 	localName: 'Cédula Única de Identidad',
 	abbreviation: 'CUI',
 
 	
+	maxLength: 9,
+	minLength: 8,
+	countryPrefix: 'PE',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

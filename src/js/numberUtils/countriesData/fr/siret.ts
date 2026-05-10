@@ -15,17 +15,21 @@
 import * as exceptions from '../../../exceptions';
 import { strings } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
-import { luhnChecksumValidate, weightedSum } from '../util/checksum';
+import { luhnChecksumValidate, weightedSum } from '../../libraries/checksum';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 	return strings.cleanUnicode(input, ' -/');
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'French Company Establishment Identification Number',
 	localName: "Système d'Identification du Répertoire des Établissements",
 	abbreviation: 'SIRET',
 	
+	maxLength: 14,
+	minLength: 14,
+	countryPrefix: 'FR',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

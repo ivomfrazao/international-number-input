@@ -13,7 +13,7 @@
  */
 
 import * as exceptions from '../../../exceptions';
-import { isValidDateCompactYYYYMMDD, buildDate, strings } from '../util';
+import { isValidDateCompactYYYYMMDD, buildDate, strings } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
 import { luhnChecksumValidate } from '../../libraries/checksum';
 
@@ -69,9 +69,13 @@ function formatImpl(input: string): string {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Swedish Personal Identity Number',
 	localName: 'Personnummer',
 	
+	maxLength: 13,
+	minLength: 10,
+	countryPrefix: 'SE',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

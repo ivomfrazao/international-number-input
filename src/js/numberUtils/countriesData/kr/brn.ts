@@ -22,10 +22,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'South Korean Business Registration Number',
 	localName: '사업자 등록 번호',
 	abbreviation: 'BRN',
 	
+	maxLength: 10,
+	minLength: 10,
+	countryPrefix: 'KR',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

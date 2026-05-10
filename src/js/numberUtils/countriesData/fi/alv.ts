@@ -23,10 +23,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Finnish VAT Number',
 	localName: 'Arvonlisäveronumero Mervärdesskattenummer',
 	abbreviation: 'ALV nro',
 	
+	maxLength: 8,
+	minLength: 8,
+	countryPrefix: 'FI',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

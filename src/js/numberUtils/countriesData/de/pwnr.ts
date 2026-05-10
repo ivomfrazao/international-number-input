@@ -151,9 +151,13 @@ export function validateNew(value: string): ValidateReturn {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'German Personalausweisnummer',
 	localName: 'Personalausweisnummer',
 	abbreviation: 'PwNr',
+	maxLength: 26,
+	minLength: 10,
+	countryPrefix: 'DE',
 	compact(input: string): string {
 		const [value, err] = clean(input);
 

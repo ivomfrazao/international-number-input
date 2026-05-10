@@ -24,10 +24,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Canadian Business Number',
 	localName: 'Business Number',
 	abbreviation: 'BN',
 	
+	maxLength: 15,
+	minLength: 9,
+	countryPrefix: 'CA',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

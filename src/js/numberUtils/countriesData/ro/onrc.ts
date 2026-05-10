@@ -50,10 +50,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Romanian Trade Register Identifier',
 	localName: 'Ordine din Registrul Comerţului',
 	abbreviation: 'NRC',
 	
+	maxLength: 4,
+	minLength: 4,
+	countryPrefix: 'RO',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

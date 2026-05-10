@@ -36,10 +36,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Vietnamese Tax Number',
 	localName: 'Mã số thuế',
 	abbreviation: 'MST',
 	
+	maxLength: 13,
+	minLength: 10,
+	countryPrefix: 'VN',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

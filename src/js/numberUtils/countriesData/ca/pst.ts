@@ -24,11 +24,15 @@ const validRe = /^PST\d{8}$/;
 // const ALPHABET = '0123456789X';
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Provincial Sales Tax',
 	localName: '',
 	abbreviation: 'PST',
 
 	
+	maxLength: 11,
+	minLength: 11,
+	countryPrefix: 'CA',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

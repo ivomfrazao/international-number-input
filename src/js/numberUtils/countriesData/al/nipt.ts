@@ -38,10 +38,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.NationalIdentificationNumber,
     name: 'Albanian VAT Number',
     localName: 'Numri i Identifikimit për Personin e Tatueshëm',
     abbreviation: 'NIPT',
 
+    maxLength: 10,
+    minLength: 10,
+    countryPrefix: 'AL',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

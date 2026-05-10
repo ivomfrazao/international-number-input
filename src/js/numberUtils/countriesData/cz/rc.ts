@@ -12,7 +12,7 @@
  */
 
 import * as exceptions from '../../../exceptions';
-import { isValidDate, strings } from '../util';
+import { isValidDate, strings } from '../../libraries';
 import {
     StandardNumberUtils,
     ValidateReturn,
@@ -24,10 +24,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.NationalIdentificationNumber,
     name: 'Czech Birth Number',
     localName: 'Rodné číslo',
     abbreviation: 'RČ',
 
+    maxLength: 10,
+    minLength: 9,
+    countryPrefix: 'CZ',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

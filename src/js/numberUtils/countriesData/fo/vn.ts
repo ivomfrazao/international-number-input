@@ -24,11 +24,15 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 // const ALPHABET = '0123456789X';
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Vinnutal',
 	localName: 'NAME',
 	abbreviation: 'VN',
 
 	
+	maxLength: 6,
+	minLength: 6,
+	countryPrefix: 'FO',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

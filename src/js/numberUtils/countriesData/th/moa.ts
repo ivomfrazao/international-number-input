@@ -24,10 +24,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Thailand Memorandum of Association Number',
 	localName: '',
 	abbreviation: 'MOA',
 	
+	maxLength: 13,
+	minLength: 13,
+	countryPrefix: 'TH',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

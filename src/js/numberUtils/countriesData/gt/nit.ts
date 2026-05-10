@@ -25,10 +25,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 const checkDigit = '0123456789K';
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Guatemala Tax Number',
 	localName: 'Número de Identificación Tributaria',
 	abbreviation: 'NIT',
 	
+	maxLength: 12,
+	minLength: 2,
+	countryPrefix: 'GT',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

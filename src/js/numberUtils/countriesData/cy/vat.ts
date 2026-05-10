@@ -39,11 +39,15 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Cypriot VAT Number',
 	localName: 'Αριθμός Εγγραφής Φ.Π.Α.',
 	abbreviation: 'ΦΠΑ',
 
 	
+	maxLength: 9,
+	minLength: 9,
+	countryPrefix: 'CY',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

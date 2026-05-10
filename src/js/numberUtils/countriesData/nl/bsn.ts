@@ -33,10 +33,14 @@ function checksum(value: string): boolean {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Dutch Citizen Identification Number',
 	localName: 'Burgerservicenummer',
 	abbreviation: 'BSN',
 	
+	maxLength: 9,
+	minLength: 8,
+	countryPrefix: 'NL',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

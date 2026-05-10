@@ -37,10 +37,14 @@ function computeDigit(input: string): number {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.TaxpayerIdentificationNumber,
     name: 'Brazilian Company Identifier',
     localName: 'Cadastro Nacional da Pessoa Jurídica',
     abbreviation: 'CNPJ',
 
+    maxLength: 14,
+    minLength: 14,
+    countryPrefix: 'BR',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

@@ -15,10 +15,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Icelandic VAT Number',
 	localName: 'Virðisaukaskattsnúmer',
 	abbreviation: 'VSK',
 	
+	maxLength: 6,
+	minLength: 5,
+	countryPrefix: 'IS',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

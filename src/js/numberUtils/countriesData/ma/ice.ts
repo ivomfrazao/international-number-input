@@ -14,7 +14,7 @@
  */
 
 import * as exceptions from '../../../exceptions';
-import { strings, mod97base10Validate } from '../util';
+import { strings, mod97base10Validate } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
@@ -22,10 +22,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Moroccan Company Establishment Identification Number',
 	localName: "Identifiant Commun de l'Entreprises",
 	abbreviation: 'ICE',
 	
+	maxLength: 15,
+	minLength: 15,
+	countryPrefix: 'MA',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

@@ -23,10 +23,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Moldavian Company Identification Number',
 	localName: 'Unique State Identification Number',
 	abbreviation: 'IDNO',
 	
+	maxLength: 13,
+	minLength: 13,
+	countryPrefix: 'MD',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

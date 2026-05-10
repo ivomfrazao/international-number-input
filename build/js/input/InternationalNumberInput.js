@@ -198,1067 +198,311 @@ var factoryOutput = (() => {
 
   // src/js/input/international-number-input/data.ts
   var rawCountryData = [
-    [
-      "af",
-      "93"
-    ],
-    [
-      "al",
-      "355"
-    ],
-    [
-      "dz",
-      "213"
-    ],
-    [
-      "as",
-      "1",
-      5,
-      ["684"]
-    ],
-    [
-      "ad",
-      "376"
-    ],
-    [
-      "ao",
-      "244"
-    ],
-    [
-      "ai",
-      "1",
-      6,
-      ["264"]
-    ],
-    [
-      "ag",
-      "1",
-      7,
-      ["268"]
-    ],
-    [
-      "ar",
-      "54"
-    ],
-    [
-      "am",
-      "374"
-    ],
-    [
-      "aw",
-      "297"
-    ],
-    [
-      "ac",
-      "247"
-    ],
-    [
-      "au",
-      "61",
-      0
-    ],
-    [
-      "at",
-      "43"
-    ],
-    [
-      "az",
-      "994"
-    ],
-    [
-      "bs",
-      "1",
-      8,
-      ["242"]
-    ],
-    [
-      "bh",
-      "973"
-    ],
-    [
-      "bd",
-      "880"
-    ],
-    [
-      "bb",
-      "1",
-      9,
-      ["246"]
-    ],
-    [
-      "by",
-      "375"
-    ],
-    [
-      "be",
-      "32"
-    ],
-    [
-      "bz",
-      "501"
-    ],
-    [
-      "bj",
-      "229"
-    ],
-    [
-      "bm",
-      "1",
-      10,
-      ["441"]
-    ],
-    [
-      "bt",
-      "975"
-    ],
-    [
-      "bo",
-      "591"
-    ],
-    [
-      "ba",
-      "387"
-    ],
-    [
-      "bw",
-      "267"
-    ],
-    [
-      "br",
-      "55"
-    ],
-    [
-      "io",
-      "246"
-    ],
-    [
-      "vg",
-      "1",
-      11,
-      ["284"]
-    ],
-    [
-      "bn",
-      "673"
-    ],
-    [
-      "bg",
-      "359"
-    ],
-    [
-      "bf",
-      "226"
-    ],
-    [
-      "bi",
-      "257"
-    ],
-    [
-      "kh",
-      "855"
-    ],
-    [
-      "cm",
-      "237"
-    ],
+    ["af", "93"],
+    ["al", "355"],
+    ["dz", "213"],
+    ["as", "1", 5, ["684"]],
+    ["ad", "376"],
+    ["ao", "244"],
+    ["ai", "1", 6, ["264"]],
+    ["ag", "1", 7, ["268"]],
+    ["ar", "54"],
+    ["am", "374"],
+    ["aw", "297"],
+    ["ac", "247"],
+    ["au", "61", 0],
+    ["at", "43"],
+    ["az", "994"],
+    ["bs", "1", 8, ["242"]],
+    ["bh", "973"],
+    ["bd", "880"],
+    ["bb", "1", 9, ["246"]],
+    ["by", "375"],
+    ["be", "32"],
+    ["bz", "501"],
+    ["bj", "229"],
+    ["bm", "1", 10, ["441"]],
+    ["bt", "975"],
+    ["bo", "591"],
+    ["ba", "387"],
+    ["bw", "267"],
+    ["br", "55"],
+    ["io", "246"],
+    ["vg", "1", 11, ["284"]],
+    ["bn", "673"],
+    ["bg", "359"],
+    ["bf", "226"],
+    ["bi", "257"],
+    ["kh", "855"],
+    ["cm", "237"],
     [
       "ca",
       "1",
       1,
-      ["204", "226", "236", "249", "250", "263", "289", "306", "343", "354", "365", "367", "368", "382", "387", "403", "416", "418", "428", "431", "437", "438", "450", "584", "468", "474", "506", "514", "519", "548", "579", "581", "584", "587", "604", "613", "639", "647", "672", "683", "705", "709", "742", "753", "778", "780", "782", "807", "819", "825", "867", "873", "879", "902", "905"]
-    ],
-    [
-      "cv",
-      "238"
-    ],
-    [
-      "bq",
-      "599",
-      1,
-      ["3", "4", "7"]
-    ],
-    [
-      "ky",
-      "1",
-      12,
-      ["345"]
-    ],
-    [
-      "cf",
-      "236"
-    ],
-    [
-      "td",
-      "235"
-    ],
-    [
-      "cl",
-      "56"
-    ],
-    [
-      "cn",
-      "86"
-    ],
-    [
-      "cx",
-      "61",
-      2,
-      ["89164"]
-    ],
-    [
-      "cc",
-      "61",
-      1,
-      ["89162"]
-    ],
-    [
-      "co",
-      "57"
-    ],
-    [
-      "km",
-      "269"
-    ],
-    [
-      "cg",
-      "242"
-    ],
-    [
-      "cd",
-      "243"
-    ],
-    [
-      "ck",
-      "682"
-    ],
-    [
-      "cr",
-      "506"
-    ],
-    [
-      "ci",
-      "225"
-    ],
-    [
-      "hr",
-      "385"
-    ],
-    [
-      "cu",
-      "53"
-    ],
-    [
-      "cw",
-      "599",
-      0
-    ],
-    [
-      "cy",
-      "357"
-    ],
-    [
-      "cz",
-      "420"
-    ],
-    [
-      "dk",
-      "45"
-    ],
-    [
-      "dj",
-      "253"
-    ],
-    [
-      "dm",
-      "1",
-      13,
-      ["767"]
-    ],
-    [
-      "do",
-      "1",
-      2,
-      ["809", "829", "849"]
-    ],
-    [
-      "ec",
-      "593"
-    ],
-    [
-      "eg",
-      "20"
-    ],
-    [
-      "sv",
-      "503"
-    ],
-    [
-      "gq",
-      "240"
-    ],
-    [
-      "er",
-      "291"
-    ],
-    [
-      "ee",
-      "372"
-    ],
-    [
-      "sz",
-      "268"
-    ],
-    [
-      "et",
-      "251"
-    ],
-    [
-      "fk",
-      "500"
-    ],
-    [
-      "fo",
-      "298"
-    ],
-    [
-      "fj",
-      "679"
-    ],
-    [
-      "fi",
-      "358",
-      0
-    ],
-    [
-      "fr",
-      "33"
-    ],
-    [
-      "gf",
-      "594"
-    ],
-    [
-      "pf",
-      "689"
-    ],
-    [
-      "ga",
-      "241"
-    ],
-    [
-      "gm",
-      "220"
-    ],
-    [
-      "ge",
-      "995"
-    ],
-    [
-      "de",
-      "49"
-    ],
-    [
-      "gh",
-      "233"
-    ],
-    [
-      "gi",
-      "350"
-    ],
-    [
-      "gr",
-      "30"
-    ],
-    [
-      "gl",
-      "299"
-    ],
-    [
-      "gd",
-      "1",
-      14,
-      ["473"]
-    ],
-    [
-      "gp",
-      "590",
-      0
-    ],
-    [
-      "gu",
-      "1",
-      15,
-      ["671"]
-    ],
-    [
-      "gt",
-      "502"
-    ],
-    [
-      "gg",
-      "44",
-      1,
-      ["1481", "7781", "7839", "7911"]
-    ],
-    [
-      "gn",
-      "224"
-    ],
-    [
-      "gw",
-      "245"
-    ],
-    [
-      "gy",
-      "592"
-    ],
-    [
-      "ht",
-      "509"
-    ],
-    [
-      "hn",
-      "504"
-    ],
-    [
-      "hk",
-      "852"
-    ],
-    [
-      "hu",
-      "36"
-    ],
-    [
-      "is",
-      "354"
-    ],
-    [
-      "in",
-      "91"
-    ],
-    [
-      "id",
-      "62"
-    ],
-    [
-      "ir",
-      "98"
-    ],
-    [
-      "iq",
-      "964"
-    ],
-    [
-      "ie",
-      "353"
-    ],
-    [
-      "im",
-      "44",
-      2,
-      ["1624", "74576", "7524", "7924", "7624"]
-    ],
-    [
-      "il",
-      "972"
-    ],
-    [
-      "it",
-      "39",
-      0
-    ],
-    [
-      "jm",
-      "1",
-      4,
-      ["876", "658"]
-    ],
-    [
-      "jp",
-      "81"
-    ],
-    [
-      "je",
-      "44",
-      3,
-      ["1534", "7509", "7700", "7797", "7829", "7937"]
-    ],
-    [
-      "jo",
-      "962"
-    ],
-    [
-      "kz",
-      "7",
-      1,
-      ["33", "7"]
-    ],
-    [
-      "ke",
-      "254"
-    ],
-    [
-      "ki",
-      "686"
-    ],
-    [
-      "xk",
-      "383"
-    ],
-    [
-      "kw",
-      "965"
-    ],
-    [
-      "kg",
-      "996"
-    ],
-    [
-      "la",
-      "856"
-    ],
-    [
-      "lv",
-      "371"
-    ],
-    [
-      "lb",
-      "961"
-    ],
-    [
-      "ls",
-      "266"
-    ],
-    [
-      "lr",
-      "231"
-    ],
-    [
-      "ly",
-      "218"
-    ],
-    [
-      "li",
-      "423"
-    ],
-    [
-      "lt",
-      "370"
-    ],
-    [
-      "lu",
-      "352"
-    ],
-    [
-      "mo",
-      "853"
-    ],
-    [
-      "mg",
-      "261"
-    ],
-    [
-      "mw",
-      "265"
-    ],
-    [
-      "my",
-      "60"
-    ],
-    [
-      "mv",
-      "960"
-    ],
-    [
-      "ml",
-      "223"
-    ],
-    [
-      "mt",
-      "356"
-    ],
-    [
-      "mh",
-      "692"
-    ],
-    [
-      "mq",
-      "596"
-    ],
-    [
-      "mr",
-      "222"
-    ],
-    [
-      "mu",
-      "230"
-    ],
-    [
-      "yt",
-      "262",
-      1,
-      ["269", "639"]
-    ],
-    [
-      "mx",
-      "52"
-    ],
-    [
-      "fm",
-      "691"
-    ],
-    [
-      "md",
-      "373"
-    ],
-    [
-      "mc",
-      "377"
-    ],
-    [
-      "mn",
-      "976"
-    ],
-    [
-      "me",
-      "382"
-    ],
-    [
-      "ms",
-      "1",
-      16,
-      ["664"]
-    ],
-    [
-      "ma",
-      "212",
-      0
-    ],
-    [
-      "mz",
-      "258"
-    ],
-    [
-      "mm",
-      "95"
-    ],
-    [
-      "na",
-      "264"
-    ],
-    [
-      "nr",
-      "674"
-    ],
-    [
-      "np",
-      "977"
-    ],
-    [
-      "nl",
-      "31"
-    ],
-    [
-      "nc",
-      "687"
-    ],
-    [
-      "nz",
-      "64"
-    ],
-    [
-      "ni",
-      "505"
-    ],
-    [
-      "ne",
-      "227"
-    ],
-    [
-      "ng",
-      "234"
-    ],
-    [
-      "nu",
-      "683"
-    ],
-    [
-      "nf",
-      "672"
-    ],
-    [
-      "kp",
-      "850"
-    ],
-    [
-      "mk",
-      "389"
-    ],
-    [
-      "mp",
-      "1",
-      17,
-      ["670"]
-    ],
-    [
-      "no",
-      "47",
-      0
-    ],
-    [
-      "om",
-      "968"
-    ],
-    [
-      "pk",
-      "92"
-    ],
-    [
-      "pw",
-      "680"
-    ],
-    [
-      "ps",
-      "970"
-    ],
-    [
-      "pa",
-      "507"
-    ],
-    [
-      "pg",
-      "675"
-    ],
-    [
-      "py",
-      "595"
-    ],
-    [
-      "pe",
-      "51"
-    ],
-    [
-      "ph",
-      "63"
-    ],
-    [
-      "pl",
-      "48"
-    ],
-    [
-      "pt",
-      "351"
-    ],
-    [
-      "pr",
-      "1",
-      3,
-      ["787", "939"]
-    ],
-    [
-      "qa",
-      "974"
-    ],
-    [
-      "re",
-      "262",
-      0
-    ],
-    [
-      "ro",
-      "40"
-    ],
-    [
-      "ru",
-      "7",
-      0
-    ],
-    [
-      "rw",
-      "250"
-    ],
-    [
-      "ws",
-      "685"
-    ],
-    [
-      "sm",
-      "378"
-    ],
-    [
-      "st",
-      "239"
-    ],
-    [
-      "sa",
-      "966"
-    ],
-    [
-      "sn",
-      "221"
-    ],
-    [
-      "rs",
-      "381"
-    ],
-    [
-      "sc",
-      "248"
-    ],
-    [
-      "sl",
-      "232"
-    ],
-    [
-      "sg",
-      "65"
-    ],
-    [
-      "sx",
-      "1",
-      21,
-      ["721"]
-    ],
-    [
-      "sk",
-      "421"
-    ],
-    [
-      "si",
-      "386"
-    ],
-    [
-      "sb",
-      "677"
-    ],
-    [
-      "so",
-      "252"
-    ],
-    [
-      "za",
-      "27"
-    ],
-    [
-      "kr",
-      "82"
-    ],
-    [
-      "ss",
-      "211"
-    ],
-    [
-      "es",
-      "34"
-    ],
-    [
-      "lk",
-      "94"
-    ],
-    [
-      "bl",
-      "590",
-      1
-    ],
-    [
-      "sh",
-      "290"
-    ],
-    [
-      "kn",
-      "1",
-      18,
-      ["869"]
-    ],
-    [
-      "lc",
-      "1",
-      19,
-      ["758"]
-    ],
-    [
-      "mf",
-      "590",
-      2
-    ],
-    [
-      "pm",
-      "508"
-    ],
-    [
-      "vc",
-      "1",
-      20,
-      ["784"]
-    ],
-    [
-      "sd",
-      "249"
-    ],
-    [
-      "sr",
-      "597"
-    ],
-    [
-      "sj",
-      "47",
-      1,
-      ["79"]
-    ],
-    [
-      "se",
-      "46"
-    ],
-    [
-      "ch",
-      "41"
-    ],
-    [
-      "sy",
-      "963"
-    ],
-    [
-      "tw",
-      "886"
-    ],
-    [
-      "tj",
-      "992"
-    ],
-    [
-      "tz",
-      "255"
-    ],
-    [
-      "th",
-      "66"
-    ],
-    [
-      "tl",
-      "670"
-    ],
-    [
-      "tg",
-      "228"
-    ],
-    [
-      "tk",
-      "690"
-    ],
-    [
-      "to",
-      "676"
-    ],
-    [
-      "tt",
-      "1",
-      22,
-      ["868"]
-    ],
-    [
-      "tn",
-      "216"
-    ],
-    [
-      "tr",
-      "90"
-    ],
-    [
-      "tm",
-      "993"
-    ],
-    [
-      "tc",
-      "1",
-      23,
-      ["649"]
-    ],
-    [
-      "tv",
-      "688"
-    ],
-    [
-      "ug",
-      "256"
-    ],
-    [
-      "ua",
-      "380"
-    ],
-    [
-      "ae",
-      "971"
-    ],
-    [
-      "gb",
-      "44",
-      0
-    ],
-    [
-      "us",
-      "1",
-      0
-    ],
-    [
-      "uy",
-      "598"
-    ],
-    [
-      "vi",
-      "1",
-      24,
-      ["340"]
-    ],
-    [
-      "uz",
-      "998"
-    ],
-    [
-      "vu",
-      "678"
-    ],
-    [
-      "va",
-      "39",
-      1,
-      ["06698"]
-    ],
-    [
-      "ve",
-      "58"
-    ],
-    [
-      "vn",
-      "84"
-    ],
-    [
-      "wf",
-      "681"
-    ],
-    [
-      "eh",
-      "212",
-      1,
-      ["5288", "5289"]
-    ],
-    [
-      "ye",
-      "967"
-    ],
-    [
-      "zm",
-      "260"
-    ],
-    [
-      "zw",
-      "263"
-    ],
-    [
-      "ax",
-      "358",
-      1,
-      ["18"]
-    ]
+      [
+        "204",
+        "226",
+        "236",
+        "249",
+        "250",
+        "263",
+        "289",
+        "306",
+        "343",
+        "354",
+        "365",
+        "367",
+        "368",
+        "382",
+        "387",
+        "403",
+        "416",
+        "418",
+        "428",
+        "431",
+        "437",
+        "438",
+        "450",
+        "584",
+        "468",
+        "474",
+        "506",
+        "514",
+        "519",
+        "548",
+        "579",
+        "581",
+        "584",
+        "587",
+        "604",
+        "613",
+        "639",
+        "647",
+        "672",
+        "683",
+        "705",
+        "709",
+        "742",
+        "753",
+        "778",
+        "780",
+        "782",
+        "807",
+        "819",
+        "825",
+        "867",
+        "873",
+        "879",
+        "902",
+        "905"
+      ]
+    ],
+    ["cv", "238"],
+    ["bq", "599", 1, ["3", "4", "7"]],
+    ["ky", "1", 12, ["345"]],
+    ["cf", "236"],
+    ["td", "235"],
+    ["cl", "56"],
+    ["cn", "86"],
+    ["cx", "61", 2, ["89164"]],
+    ["cc", "61", 1, ["89162"]],
+    ["co", "57"],
+    ["km", "269"],
+    ["cg", "242"],
+    ["cd", "243"],
+    ["ck", "682"],
+    ["cr", "506"],
+    ["ci", "225"],
+    ["hr", "385"],
+    ["cu", "53"],
+    ["cw", "599", 0],
+    ["cy", "357"],
+    ["cz", "420"],
+    ["dk", "45"],
+    ["dj", "253"],
+    ["dm", "1", 13, ["767"]],
+    ["do", "1", 2, ["809", "829", "849"]],
+    ["ec", "593"],
+    ["eg", "20"],
+    ["sv", "503"],
+    ["gq", "240"],
+    ["er", "291"],
+    ["ee", "372"],
+    ["sz", "268"],
+    ["et", "251"],
+    ["fk", "500"],
+    ["fo", "298"],
+    ["fj", "679"],
+    ["fi", "358", 0],
+    ["fr", "33"],
+    ["gf", "594"],
+    ["pf", "689"],
+    ["ga", "241"],
+    ["gm", "220"],
+    ["ge", "995"],
+    ["de", "49"],
+    ["gh", "233"],
+    ["gi", "350"],
+    ["gr", "30"],
+    ["gl", "299"],
+    ["gd", "1", 14, ["473"]],
+    ["gp", "590", 0],
+    ["gu", "1", 15, ["671"]],
+    ["gt", "502"],
+    ["gg", "44", 1, ["1481", "7781", "7839", "7911"]],
+    ["gn", "224"],
+    ["gw", "245"],
+    ["gy", "592"],
+    ["ht", "509"],
+    ["hn", "504"],
+    ["hk", "852"],
+    ["hu", "36"],
+    ["is", "354"],
+    ["in", "91"],
+    ["id", "62"],
+    ["ir", "98"],
+    ["iq", "964"],
+    ["ie", "353"],
+    ["im", "44", 2, ["1624", "74576", "7524", "7924", "7624"]],
+    ["il", "972"],
+    ["it", "39", 0],
+    ["jm", "1", 4, ["876", "658"]],
+    ["jp", "81"],
+    ["je", "44", 3, ["1534", "7509", "7700", "7797", "7829", "7937"]],
+    ["jo", "962"],
+    ["kz", "7", 1, ["33", "7"]],
+    ["ke", "254"],
+    ["ki", "686"],
+    ["xk", "383"],
+    ["kw", "965"],
+    ["kg", "996"],
+    ["la", "856"],
+    ["lv", "371"],
+    ["lb", "961"],
+    ["ls", "266"],
+    ["lr", "231"],
+    ["ly", "218"],
+    ["li", "423"],
+    ["lt", "370"],
+    ["lu", "352"],
+    ["mo", "853"],
+    ["mg", "261"],
+    ["mw", "265"],
+    ["my", "60"],
+    ["mv", "960"],
+    ["ml", "223"],
+    ["mt", "356"],
+    ["mh", "692"],
+    ["mq", "596"],
+    ["mr", "222"],
+    ["mu", "230"],
+    ["yt", "262", 1, ["269", "639"]],
+    ["mx", "52"],
+    ["fm", "691"],
+    ["md", "373"],
+    ["mc", "377"],
+    ["mn", "976"],
+    ["me", "382"],
+    ["ms", "1", 16, ["664"]],
+    ["ma", "212", 0],
+    ["mz", "258"],
+    ["mm", "95"],
+    ["na", "264"],
+    ["nr", "674"],
+    ["np", "977"],
+    ["nl", "31"],
+    ["nc", "687"],
+    ["nz", "64"],
+    ["ni", "505"],
+    ["ne", "227"],
+    ["ng", "234"],
+    ["nu", "683"],
+    ["nf", "672"],
+    ["kp", "850"],
+    ["mk", "389"],
+    ["mp", "1", 17, ["670"]],
+    ["no", "47", 0],
+    ["om", "968"],
+    ["pk", "92"],
+    ["pw", "680"],
+    ["ps", "970"],
+    ["pa", "507"],
+    ["pg", "675"],
+    ["py", "595"],
+    ["pe", "51"],
+    ["ph", "63"],
+    ["pl", "48"],
+    ["pt", "351"],
+    ["pr", "1", 3, ["787", "939"]],
+    ["qa", "974"],
+    ["re", "262", 0],
+    ["ro", "40"],
+    ["ru", "7", 0],
+    ["rw", "250"],
+    ["ws", "685"],
+    ["sm", "378"],
+    ["st", "239"],
+    ["sa", "966"],
+    ["sn", "221"],
+    ["rs", "381"],
+    ["sc", "248"],
+    ["sl", "232"],
+    ["sg", "65"],
+    ["sx", "1", 21, ["721"]],
+    ["sk", "421"],
+    ["si", "386"],
+    ["sb", "677"],
+    ["so", "252"],
+    ["za", "27"],
+    ["kr", "82"],
+    ["ss", "211"],
+    ["es", "34"],
+    ["lk", "94"],
+    ["bl", "590", 1],
+    ["sh", "290"],
+    ["kn", "1", 18, ["869"]],
+    ["lc", "1", 19, ["758"]],
+    ["mf", "590", 2],
+    ["pm", "508"],
+    ["vc", "1", 20, ["784"]],
+    ["sd", "249"],
+    ["sr", "597"],
+    ["sj", "47", 1, ["79"]],
+    ["se", "46"],
+    ["ch", "41"],
+    ["sy", "963"],
+    ["tw", "886"],
+    ["tj", "992"],
+    ["tz", "255"],
+    ["th", "66"],
+    ["tl", "670"],
+    ["tg", "228"],
+    ["tk", "690"],
+    ["to", "676"],
+    ["tt", "1", 22, ["868"]],
+    ["tn", "216"],
+    ["tr", "90"],
+    ["tm", "993"],
+    ["tc", "1", 23, ["649"]],
+    ["tv", "688"],
+    ["ug", "256"],
+    ["ua", "380"],
+    ["ae", "971"],
+    ["gb", "44", 0],
+    ["us", "1", 0],
+    ["uy", "598"],
+    ["vi", "1", 24, ["340"]],
+    ["uz", "998"],
+    ["vu", "678"],
+    ["va", "39", 1, ["06698"]],
+    ["ve", "58"],
+    ["vn", "84"],
+    ["wf", "681"],
+    ["eh", "212", 1, ["5288", "5289"]],
+    ["ye", "967"],
+    ["zm", "260"],
+    ["zw", "263"],
+    ["ax", "358", 1, ["18"]]
   ];
   var allCountries = [];
   for (let i = 0; i < rawCountryData.length; i++) {
@@ -1663,7 +907,9 @@ var factoryOutput = (() => {
      */
     _sortCountries() {
       if (this.options.countryOrder) {
-        this.options.countryOrder = this.options.countryOrder.map((country) => country.toLowerCase());
+        this.options.countryOrder = this.options.countryOrder.map(
+          (country) => country.toLowerCase()
+        );
       }
       this.countries.sort((a, b) => {
         const { countryOrder } = this.options;
@@ -1720,7 +966,9 @@ var factoryOutput = (() => {
      * Generate all of the markup for the plugin: the selected country overlay, and the dropdown.
      */
     _generateMarkup() {
-      this.numberInput.classList.add(buildElementClass(this.options.styles, "elementNumberInputClass" /* NumberInput */));
+      this.numberInput.classList.add(
+        buildElementClass(this.options.styles, "elementNumberInputClass" /* NumberInput */)
+      );
       const autocompleteAttribute = "autocomplete";
       if (!this.numberInput.hasAttribute(autocompleteAttribute) && !(this.numberInput.form && this.numberInput.form.hasAttribute(autocompleteAttribute))) {
         this.numberInput.setAttribute(autocompleteAttribute, "off");
@@ -1749,18 +997,18 @@ var factoryOutput = (() => {
       if (!useFullscreenPopup) {
         parentClass += ` ${buildElementClass(styles, void 0, "attributeInlineDropdownClass" /* InlineDropdown */)}`;
       }
-      const wrapper = createDOMElement(
-        "div",
-        {
-          class: parentClass
-        }
-      );
+      const wrapper = createDOMElement("div", {
+        class: parentClass
+      });
       this.numberInput.parentNode?.insertBefore(wrapper, this.numberInput);
       if (allowDropdown || showFlags) {
         this.countryContainer = createDOMElement(
           "div",
           {
-            class: buildElementClass(this.options.styles, "elementCountryContainerClass" /* CountryContainer */)
+            class: buildElementClass(
+              this.options.styles,
+              "elementCountryContainerClass" /* CountryContainer */
+            )
           },
           wrapper
         );
@@ -1769,12 +1017,15 @@ var factoryOutput = (() => {
             "button",
             {
               type: "button",
-              class: buildElementClass(this.options.styles, "elementSelectedCountryClass" /* SelectedCountry */),
+              class: buildElementClass(
+                this.options.styles,
+                "elementSelectedCountryClass" /* SelectedCountry */
+              ),
               "aria-expanded": "false",
               "aria-label": this.options.i18n.selectedCountryAriaLabel,
               "aria-haspopup": "true",
               "aria-controls": `${buildElementClass(this.options.styles, "elementDropdownContentClass" /* DropdownContent */)}-${this.id}`,
-              "role": "combobox"
+              role: "combobox"
             },
             this.countryContainer
           );
@@ -1785,7 +1036,10 @@ var factoryOutput = (() => {
           this.selectedCountry = createDOMElement(
             "div",
             {
-              class: buildElementClass(styles, "elementSelectedCountryClass" /* SelectedCountry */)
+              class: buildElementClass(
+                styles,
+                "elementSelectedCountryClass" /* SelectedCountry */
+              )
             },
             this.countryContainer
           );
@@ -1793,7 +1047,10 @@ var factoryOutput = (() => {
         const selectedCountryPrimary = createDOMElement(
           "div",
           {
-            class: buildElementClass(this.options.styles, "elementSelectedCountryPrimaryClass" /* SelectedCountryPrimary */)
+            class: buildElementClass(
+              this.options.styles,
+              "elementSelectedCountryPrimaryClass" /* SelectedCountryPrimary */
+            )
           },
           this.selectedCountry
         );
@@ -1805,7 +1062,10 @@ var factoryOutput = (() => {
         this.selectedCountryA11yText = createDOMElement(
           "span",
           {
-            class: buildElementClass(this.options.styles, "elementAccessibilityTextClass" /* AccessibilityText */)
+            class: buildElementClass(
+              this.options.styles,
+              "elementAccessibilityTextClass" /* AccessibilityText */
+            )
           },
           this.selectedCountryInner
         );
@@ -1813,12 +1073,19 @@ var factoryOutput = (() => {
           this.dropdownArrow = createDOMElement(
             "div",
             {
-              class: buildElementClass(this.options.styles, "elementArrowClass" /* Arrow */),
+              class: buildElementClass(
+                this.options.styles,
+                "elementArrowClass" /* Arrow */
+              ),
               "aria-hidden": "true"
             },
             selectedCountryPrimary
           );
-          const extraClasses = fixDropdownWidth ? "" : buildElementClass(styles, void 0, "attributeFlexibleDropdownWidthClass" /* FlexibleDropdownWidth */);
+          const extraClasses = fixDropdownWidth ? "" : buildElementClass(
+            styles,
+            void 0,
+            "attributeFlexibleDropdownWidthClass" /* FlexibleDropdownWidth */
+          );
           this.dropdownContent = createDOMElement("div", {
             id: `${buildElementClass(this.options.styles, "elementDropdownContentClass" /* DropdownContent */)}-${this.id}`,
             class: `${buildElementClass(this.options.styles, "elementDropdownContentClass" /* DropdownContent */)} ${buildElementClass(this.options.styles, "elementHideClass" /* Hide */)} ${extraClasses}`
@@ -1828,21 +1095,27 @@ var factoryOutput = (() => {
               "input",
               {
                 type: "text",
-                class: buildElementClass(styles, "elementSearchInputClass" /* SearchInput */),
+                class: buildElementClass(
+                  styles,
+                  "elementSearchInputClass" /* SearchInput */
+                ),
                 placeholder: i18n.searchPlaceholder,
                 role: "combobox",
                 "aria-expanded": "true",
                 "aria-label": i18n.searchPlaceholder,
                 "aria-controls": `${buildElementClass(this.options.styles, "elementCountryListboxClass" /* CountryListbox */)}-${this.id}`,
                 "aria-autocomplete": "list",
-                "autocomplete": "off"
+                autocomplete: "off"
               },
               this.dropdownContent
             );
             this.searchResultsA11yText = createDOMElement(
               "span",
               {
-                class: buildElementClass(this.options.styles, "elementAccessibilityTextClass" /* AccessibilityText */)
+                class: buildElementClass(
+                  this.options.styles,
+                  "elementAccessibilityTextClass" /* AccessibilityText */
+                )
               },
               this.dropdownContent
             );
@@ -1850,7 +1123,10 @@ var factoryOutput = (() => {
           this.countryList = createDOMElement(
             "ul",
             {
-              class: buildElementClass(this.options.styles, "elementCountryListboxClass" /* CountryListbox */),
+              class: buildElementClass(
+                this.options.styles,
+                "elementCountryListboxClass" /* CountryListbox */
+              ),
               id: `${buildElementClass(this.options.styles, "elementCountryListboxClass" /* CountryListbox */)}-${this.id}`,
               role: "listbox",
               "aria-label": i18n.countryListAriaLabel
@@ -1868,12 +1144,9 @@ var factoryOutput = (() => {
             } else {
               dropdownClasses += ` ${buildElementClass(this.options.styles, void 0, "attributeInlineDropdownClass" /* InlineDropdown */)}`;
             }
-            this.dropdown = createDOMElement(
-              "div",
-              {
-                class: dropdownClasses
-              }
-            );
+            this.dropdown = createDOMElement("div", {
+              class: dropdownClasses
+            });
             this.dropdown.appendChild(this.dropdownContent);
           } else {
             this.countryContainer.appendChild(this.dropdownContent);
@@ -1885,23 +1158,17 @@ var factoryOutput = (() => {
         const numberInputName = this.numberInput.getAttribute("name") || "";
         const names = hiddenInput(numberInputName);
         if (names.phone) {
-          this.hiddenInput = createDOMElement(
-            "input",
-            {
-              type: "hidden",
-              name: names.phone
-            }
-          );
+          this.hiddenInput = createDOMElement("input", {
+            type: "hidden",
+            name: names.phone
+          });
           wrapper.appendChild(this.hiddenInput);
         }
         if (names.country) {
-          this.hiddenInputCountry = createDOMElement(
-            "input",
-            {
-              type: "hidden",
-              name: names.country
-            }
-          );
+          this.hiddenInputCountry = createDOMElement("input", {
+            type: "hidden",
+            name: names.country
+          });
           wrapper.appendChild(this.hiddenInputCountry);
         }
       }
@@ -1911,7 +1178,10 @@ var factoryOutput = (() => {
      */
     _appendListItems() {
       this.countries.forEach((country, index) => {
-        const extraClass = index === 0 ? buildElementClass(this.options.styles, "elementHighlightClass" /* Highlight */) : "";
+        const extraClass = index === 0 ? buildElementClass(
+          this.options.styles,
+          "elementHighlightClass" /* Highlight */
+        ) : "";
         const listItem = createDOMElement(
           "li",
           {
@@ -1926,12 +1196,12 @@ var factoryOutput = (() => {
         );
         country.nodeById[this.id] = listItem;
         if (this.options.showFlags) {
-          const flagBoxElement = createDOMElement(
-            "div",
-            {
-              class: buildElementClass(this.options.styles, "elementFlagBoxClass" /* FlagBox */)
-            }
-          );
+          const flagBoxElement = createDOMElement("div", {
+            class: buildElementClass(
+              this.options.styles,
+              "elementFlagBoxClass" /* FlagBox */
+            )
+          });
           createDOMElement(
             "div",
             {
@@ -1939,31 +1209,22 @@ var factoryOutput = (() => {
             },
             flagBoxElement
           );
-          listItem.insertAdjacentElement(
-            "beforeend",
-            flagBoxElement
-          );
+          listItem.insertAdjacentElement("beforeend", flagBoxElement);
         }
-        const content = createDOMElement(
-          "span",
-          {
-            class: buildElementClass(this.options.styles, "elementCountryNameClass" /* CountryName */)
-          }
-        );
-        content.insertAdjacentText(
-          "beforeend",
-          country.name
-        );
-        listItem.insertAdjacentElement(
-          "beforeend",
-          content
-        );
+        const content = createDOMElement("span", {
+          class: buildElementClass(
+            this.options.styles,
+            "elementCountryNameClass" /* CountryName */
+          )
+        });
+        content.insertAdjacentText("beforeend", country.name);
+        listItem.insertAdjacentElement("beforeend", content);
       });
     }
     /**
      * Set the initial state of the input value and the selected country by:
      * 1. Using explicit initialCountry
-     * @param overrideAutoCountry 
+     * @param overrideAutoCountry
      */
     _setInitialState(overrideAutoCountry = false) {
       const attributeValue = this.numberInput.getAttribute("value");
@@ -2018,7 +1279,10 @@ var factoryOutput = (() => {
      * Initialise the dropdown listeners.
      */
     _initDropdownListeners() {
-      const elementHideClass = buildElementClass(this.options.styles, "elementHideClass" /* Hide */);
+      const elementHideClass = buildElementClass(
+        this.options.styles,
+        "elementHideClass" /* Hide */
+      );
       this._handleLabelClick = (e) => {
         if (this.dropdownContent.classList.contains(elementHideClass)) {
           this.numberInput.focus();
@@ -2035,10 +1299,18 @@ var factoryOutput = (() => {
           this._openDropdown();
         }
       };
-      this.selectedCountry.addEventListener("click", this._handleClickSelectedCountry);
+      this.selectedCountry.addEventListener(
+        "click",
+        this._handleClickSelectedCountry
+      );
       this._handleCountryContainerKeydown = (e) => {
         const isDropdownHidden = this.dropdownContent.classList.contains(elementHideClass);
-        if (isDropdownHidden && ["ArrowUp" /* ArrowUp */, "ArrowDown" /* ArrowDown */, " " /* Space */, "Enter" /* Enter */].map((key) => key.toString()).includes(e.key)) {
+        if (isDropdownHidden && [
+          "ArrowUp" /* ArrowUp */,
+          "ArrowDown" /* ArrowDown */,
+          " " /* Space */,
+          "Enter" /* Enter */
+        ].map((key) => key.toString()).includes(e.key)) {
           e.preventDefault();
           e.stopPropagation();
           this._openDropdown();
@@ -2090,7 +1362,9 @@ var factoryOutput = (() => {
               const isValidIso2 = iso2Lower && this._getCountryData(iso2Lower, true);
               if (isValidIso2) {
                 InternationalNumberInput_default.autoCountry = iso2Lower;
-                setTimeout(() => forEachInstance("handleAutoCountry"));
+                setTimeout(
+                  () => forEachInstance("handleAutoCountry")
+                );
               } else {
                 this._setInitialState();
                 forEachInstance("rejectAutoCountryPromise");
@@ -2122,12 +1396,18 @@ var factoryOutput = (() => {
         const disableFormatOnSetNumber = e?.detail?.isSetNumber && !formatOnDisplay;
         if (formatAsYouType && !userOverrideFormatting && !disableFormatOnSetNumber) {
           const currentCaretPos = this.numberInput.selectionStart || 0;
-          const valueBeforeCaret = this.numberInput.value.substring(0, currentCaretPos);
+          const valueBeforeCaret = this.numberInput.value.substring(
+            0,
+            currentCaretPos
+          );
           const formattedValue = this._formatNumberAsYouType();
           this.numberInput.value = formattedValue;
         }
       };
-      this.numberInput.addEventListener("input", this._handleInputEvent);
+      this.numberInput.addEventListener(
+        "input",
+        this._handleInputEvent
+      );
       if (strictMode) {
         this._handleKeydownEvent = (e) => {
           if (e.key && e.key.length === 1 && !e.altKey && !e.ctrlKey && !e.metaKey) {
@@ -2136,9 +1416,16 @@ var factoryOutput = (() => {
               const isNumeric = /^[0-9]$/.test(e.key);
               const isAllowedChar = isInitialPlus || isNumeric;
               const fullNumber = this._getFullNumber();
-              const coreNumber = InternationalNumberInput_default.utils.getCoreNumber(fullNumber, this.selectedCountryData.iso2, this.options.numberType);
+              const coreNumber = InternationalNumberInput_default.utils.getCoreNumber(
+                fullNumber,
+                this.selectedCountryData.iso2,
+                this.options.numberType
+              );
               const hasReachedMaxLength = this.maxCoreNumberLength && coreNumber.length >= this.maxCoreNumberLength;
-              const selectedText = this.numberInput.value.substring(this.numberInput.selectionStart || 0, this.numberInput.selectionEnd || 0);
+              const selectedText = this.numberInput.value.substring(
+                this.numberInput.selectionStart || 0,
+                this.numberInput.selectionEnd || 0
+              );
               const hasSelectedDigit = /\d/.test(selectedText);
               if (!isAllowedChar || hasReachedMaxLength && !hasSelectedDigit) {
                 e.preventDefault();
@@ -2146,7 +1433,10 @@ var factoryOutput = (() => {
             }
           }
         };
-        this.numberInput.addEventListener("keydown", this._handleKeydownEvent);
+        this.numberInput.addEventListener(
+          "keydown",
+          this._handleKeydownEvent
+        );
       }
     }
     /**
@@ -2155,7 +1445,10 @@ var factoryOutput = (() => {
      * @returns The number limited to the max length allowed
      */
     _cap(number) {
-      const max = parseInt(this.numberInput.getAttribute("maxlength") || "", 10);
+      const max = parseInt(
+        this.numberInput.getAttribute("maxlength") || "",
+        10
+      );
       return max && number.length > max ? number.substring(0, max) : number;
     }
     /**
@@ -2179,7 +1472,9 @@ var factoryOutput = (() => {
       if (fixDropdownWidth) {
         this.dropdownContent.style.width = `${this.numberInput.offsetWidth}px`;
       }
-      this.dropdownContent.classList.remove(buildElementClass(this.options.styles, "elementHideClass" /* Hide */));
+      this.dropdownContent.classList.remove(
+        buildElementClass(this.options.styles, "elementHideClass" /* Hide */)
+      );
       this.selectedCountry.setAttribute("aria-expanded", "true");
       this._setDropdownPosition();
       if (countrySearch) {
@@ -2191,8 +1486,20 @@ var factoryOutput = (() => {
         this.searchInput.focus();
       }
       this._bindDropdownListeners();
-      this.dropdownArrow.classList.add(buildElementClass(this.options.styles, "elementArrowClass" /* Arrow */, "attributeUpClass" /* Up */));
-      this.dropdownArrow.classList.add(buildElementClass(this.options.styles, "elementArrowClass" /* Arrow */, "attributeDownClass" /* Down */));
+      this.dropdownArrow.classList.add(
+        buildElementClass(
+          this.options.styles,
+          "elementArrowClass" /* Arrow */,
+          "attributeUpClass" /* Up */
+        )
+      );
+      this.dropdownArrow.classList.add(
+        buildElementClass(
+          this.options.styles,
+          "elementArrowClass" /* Arrow */,
+          "attributeDownClass" /* Down */
+        )
+      );
       this._trigger("open:countrydropdown");
     }
     /**
@@ -2217,7 +1524,10 @@ var factoryOutput = (() => {
      * Binds listeners to the dropdown when it is opened.
      */
     _bindDropdownListeners() {
-      const countryClass = buildElementClass(this.options.styles, "elementCountryClass" /* Country */);
+      const countryClass = buildElementClass(
+        this.options.styles,
+        "elementCountryClass" /* Country */
+      );
       this._handleMouseoverCountryList = (e) => {
         const listItem = e.target?.closest(`.${countryClass}`);
         if (listItem) {
@@ -2234,7 +1544,10 @@ var factoryOutput = (() => {
           this._selectListItem(listItem);
         }
       };
-      this.countryList.addEventListener("click", this._handleClickCountryList);
+      this.countryList.addEventListener(
+        "click",
+        this._handleClickCountryList
+      );
       let isOpening = true;
       this._handleClickOffToClose = () => {
         if (!isOpening) {
@@ -2249,7 +1562,12 @@ var factoryOutput = (() => {
       let query = "";
       let queryTimer = null;
       this._handleKeydownOnDropdown = (e) => {
-        if (["ArrowUp" /* ArrowUp */, "ArrowDown" /* ArrowDown */, "Enter" /* Enter */, "Escape" /* Escape */].map((key) => key.toString()).includes(e.key)) {
+        if ([
+          "ArrowUp" /* ArrowUp */,
+          "ArrowDown" /* ArrowDown */,
+          "Enter" /* Enter */,
+          "Escape" /* Escape */
+        ].map((key) => key.toString()).includes(e.key)) {
           e.preventDefault();
           e.stopPropagation();
           if (e.key === "ArrowUp" /* ArrowUp */ || e.key === "ArrowDown" /* ArrowDown */) {
@@ -2292,8 +1610,14 @@ var factoryOutput = (() => {
             keyupTimer = null;
           }, 100);
         };
-        this.searchInput.addEventListener("input", this._handleSearchChange);
-        this.searchInput.addEventListener("click", (e) => e.stopPropagation());
+        this.searchInput.addEventListener(
+          "input",
+          this._handleSearchChange
+        );
+        this.searchInput.addEventListener(
+          "click",
+          (e) => e.stopPropagation()
+        );
       }
     }
     /**
@@ -2315,7 +1639,7 @@ var factoryOutput = (() => {
     /**
      * Country search enabled: Filter the countries according to the search query.
      * @param query The string to be queried.
-     * @param isReset 
+     * @param isReset
      */
     _filterCountries(query, isReset = false) {
       let noCountriesAddedYet = true;
@@ -2353,7 +1677,10 @@ var factoryOutput = (() => {
       } else if (count === 1) {
         searchText = i18n.oneSearchResult;
       } else {
-        searchText = i18n.multipleSearchResults?.replace("${count}", count.toString());
+        searchText = i18n.multipleSearchResults?.replace(
+          "${count}",
+          count.toString()
+        );
       }
       this.searchResultsA11yText.textContent = searchText || "";
     }
@@ -2413,7 +1740,10 @@ var factoryOutput = (() => {
      * @param shouldFocus Identifies if the item is to be focused.
      */
     _highlightListItem(listItem, shouldFocus) {
-      const elementHighlightClass = buildElementClass(this.options.styles, "elementHighlightClass" /* Highlight */);
+      const elementHighlightClass = buildElementClass(
+        this.options.styles,
+        "elementHighlightClass" /* Highlight */
+      );
       const prevItem = this.highlightedItem;
       if (prevItem) {
         prevItem.classList.remove(elementHighlightClass);
@@ -2424,9 +1754,15 @@ var factoryOutput = (() => {
         this.highlightedItem.classList.add(elementHighlightClass);
         this.highlightedItem.setAttribute("aria-selected", "true");
         const activeDescendant = this.highlightedItem.getAttribute("id") || "";
-        this.selectedCountry.setAttribute("aria-activedescendant", activeDescendant);
+        this.selectedCountry.setAttribute(
+          "aria-activedescendant",
+          activeDescendant
+        );
         if (this.options.countrySearch) {
-          this.searchInput.setAttribute("aria-activedescendant", activeDescendant);
+          this.searchInput.setAttribute(
+            "aria-activedescendant",
+            activeDescendant
+          );
         }
       }
       if (shouldFocus) {
@@ -2437,7 +1773,7 @@ var factoryOutput = (() => {
      * Find the country data for the given iso2 code
      * @param iso2 The country whose information is to be fetched.
      * @param allowFail Identifies if a gracious fail should be used, retuning null, or an exception should be thrown otherwise.
-     * @returns 
+     * @returns
      */
     _getCountryData(iso2, allowFail) {
       for (let i = 0; i < this.countries.length; i++) {
@@ -2499,11 +1835,7 @@ var factoryOutput = (() => {
      * Updates the input placeholder to an example number from the currently selected country.
      */
     _updatePlaceholder() {
-      const {
-        autoPlaceholder,
-        numberType,
-        customPlaceholder
-      } = this.options;
+      const { autoPlaceholder, numberType, customPlaceholder } = this.options;
       const shouldSetPlaceholder = autoPlaceholder === "agressive" /* Aggressive */ || !this.hadInitialPlaceholder && autoPlaceholder === "polite" /* Polite */;
       if (shouldSetPlaceholder && InternationalNumberInput_default.utils) {
         let placeholder = this.selectedCountryData?.iso2 ? InternationalNumberInput_default.utils.getExampleNumber(
@@ -2512,7 +1844,10 @@ var factoryOutput = (() => {
         ) : "";
         placeholder = this._beforeSetNumber(placeholder);
         if (typeof customPlaceholder === "function") {
-          placeholder = customPlaceholder(placeholder, this.selectedCountryData);
+          placeholder = customPlaceholder(
+            placeholder,
+            this.selectedCountryData
+          );
         }
         this.numberInput.setAttribute("placeholder", placeholder);
       }
@@ -2535,7 +1870,9 @@ var factoryOutput = (() => {
      * Closes the dropdown and unbinds any listeners.
      */
     _closeDropdown() {
-      this.dropdownContent.classList.add(buildElementClass(this.options.styles, "elementHideClass" /* Hide */));
+      this.dropdownContent.classList.add(
+        buildElementClass(this.options.styles, "elementHideClass" /* Hide */)
+      );
       this.selectedCountry.setAttribute("aria-expanded", "false");
       this.selectedCountry.removeAttribute("aria-activedescendant");
       if (this.highlightedItem) {
@@ -2544,10 +1881,19 @@ var factoryOutput = (() => {
       if (this.options.countrySearch) {
         this.searchInput.removeAttribute("aria-activedescendant");
       }
-      this.dropdownArrow.classList.remove(buildElementClass(this.options.styles, "elementArrowClass" /* Arrow */, "attributeUpClass" /* Up */));
+      this.dropdownArrow.classList.remove(
+        buildElementClass(
+          this.options.styles,
+          "elementArrowClass" /* Arrow */,
+          "attributeUpClass" /* Up */
+        )
+      );
       document.removeEventListener("keydown", this._handleKeydownOnDropdown);
       if (this.options.countrySearch) {
-        this.searchInput.removeEventListener("input", this._handleSearchChange);
+        this.searchInput.removeEventListener(
+          "input",
+          this._handleSearchChange
+        );
       }
       document.documentElement.removeEventListener(
         "click",
@@ -2557,7 +1903,10 @@ var factoryOutput = (() => {
         "mouseover",
         this._handleMouseoverCountryList
       );
-      this.countryList.removeEventListener("click", this._handleClickCountryList);
+      this.countryList.removeEventListener(
+        "click",
+        this._handleClickCountryList
+      );
       if (this.options.dropdownContainer) {
         if (!this.options.useFullscreenPopup) {
           window.removeEventListener("scroll", this._handleWindowScroll);
@@ -2618,11 +1967,15 @@ var factoryOutput = (() => {
      */
     _formatNumberAsYouType() {
       const val = this._getFullNumber();
-      const result = InternationalNumberInput_default.utils ? InternationalNumberInput_default.utils.formatNumberAsYouType(val, this.selectedCountryData?.iso2, this.options.numberType) : val;
+      const result = InternationalNumberInput_default.utils ? InternationalNumberInput_default.utils.formatNumberAsYouType(
+        val,
+        this.selectedCountryData?.iso2,
+        this.options.numberType
+      ) : val;
       return result;
     }
     //**************************
-    //*  SECRET PUBLIC METHODS
+    //*	SECRET PUBLIC METHODS
     //**************************
     /**
      * Handles the geoip call return.
@@ -2630,7 +1983,9 @@ var factoryOutput = (() => {
     handleAutoCountry() {
       if (this.options.initialCountry === "auto" && InternationalNumberInput_default.autoCountry) {
         this.defaultCountry = InternationalNumberInput_default.autoCountry;
-        const hasSelectedCountryOrGlobe = this.selectedCountryData?.iso2 || this.selectedCountryInner.classList.contains(buildElementClass(this.options.styles, "elementGlobeClass" /* Globe */));
+        const hasSelectedCountryOrGlobe = this.selectedCountryData?.iso2 || this.selectedCountryInner.classList.contains(
+          buildElementClass(this.options.styles, "elementGlobeClass" /* Globe */)
+        );
         if (!hasSelectedCountryOrGlobe) {
           this.setCountry(this.defaultCountry);
         }
@@ -2653,7 +2008,7 @@ var factoryOutput = (() => {
       this.resolveUtilsScriptPromise();
     }
     //********************
-    //*  PUBLIC METHODS
+    //*	PUBLIC METHODS
     //********************
     /**
      * Destroys the instance of the INI.
@@ -2679,9 +2034,15 @@ var factoryOutput = (() => {
       if (this._handleHiddenInputSubmit && form) {
         form.removeEventListener("submit", this._handleHiddenInputSubmit);
       }
-      this.numberInput.removeEventListener("input", this._handleInputEvent);
+      this.numberInput.removeEventListener(
+        "input",
+        this._handleInputEvent
+      );
       if (this._handleKeydownEvent) {
-        this.numberInput.removeEventListener("keydown", this._handleKeydownEvent);
+        this.numberInput.removeEventListener(
+          "keydown",
+          this._handleKeydownEvent
+        );
       }
       this.numberInput.removeAttribute("data-ini-id" /* InputId */);
       const wrapper = this.numberInput.parentNode;
@@ -2719,10 +2080,16 @@ var factoryOutput = (() => {
     getValidationError() {
       if (InternationalNumberInput_default.utils) {
         const { iso2 } = this.selectedCountryData;
-        return InternationalNumberInput_default.utils.isValidNumber(this._getFullNumber(), iso2, this.options.numberType);
+        return InternationalNumberInput_default.utils.isValidNumber(
+          this._getFullNumber(),
+          iso2,
+          this.options.numberType
+        );
       }
-      return { isValid: false, error: new ValidationError("An unknown error occurred") };
-      ;
+      return {
+        isValid: false,
+        error: new ValidationError("An unknown error occurred")
+      };
     }
     /**
      * Validates the currently entered number.
@@ -2730,7 +2097,11 @@ var factoryOutput = (() => {
      */
     isValidNumber() {
       const val = this._getFullNumber();
-      return InternationalNumberInput_default.utils ? InternationalNumberInput_default.utils.isValidNumber(val, this.selectedCountryData?.iso2, this.options.numberType).isValid : false;
+      return InternationalNumberInput_default.utils ? InternationalNumberInput_default.utils.isValidNumber(
+        val,
+        this.selectedCountryData?.iso2,
+        this.options.numberType
+      ).isValid : false;
     }
     /**
      * Update the selected country, and update the input val accordingly.
@@ -2776,7 +2147,10 @@ var factoryOutput = (() => {
     (input, options) => {
       const ini = new Ini(input, options);
       ini._init();
-      input.setAttribute("data-international-number-input-id", ini.id.toString());
+      input.setAttribute(
+        "data-international-number-input-id",
+        ini.id.toString()
+      );
       internationalNumberInput.instances[ini.id] = ini;
       return ini;
     },
@@ -2788,7 +2162,9 @@ var factoryOutput = (() => {
       getCountryData: () => data_default,
       //* A getter for the plugin instance.
       getInstance: (input) => {
-        const id = input.getAttribute("data-international-number-input-id");
+        const id = input.getAttribute(
+          "data-international-number-input-id"
+        );
         return id ? internationalNumberInput.instances[id] : null;
       },
       //* A map from instance ID to instance object.

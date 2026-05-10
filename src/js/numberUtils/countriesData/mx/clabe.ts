@@ -22,10 +22,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Mexican Standardized Bank Code',
 	localName: 'Clave Bancaria Estandarizada',
 	abbreviation: 'CLABE',
 	
+	maxLength: 18,
+	minLength: 18,
+	countryPrefix: 'MX',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

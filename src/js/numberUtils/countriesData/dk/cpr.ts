@@ -61,10 +61,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Danish Citizen Number',
 	localName: 'Personnummer',
 	abbreviation: 'CPR',
 	
+	maxLength: 10,
+	minLength: 10,
+	countryPrefix: 'DK',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

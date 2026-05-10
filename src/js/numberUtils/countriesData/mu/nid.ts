@@ -33,10 +33,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Mauritian National Identifier',
 	localName: 'National Identifier',
 	abbreviation: 'NID',
 	
+	maxLength: 14,
+	minLength: 14,
+	countryPrefix: 'MU',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

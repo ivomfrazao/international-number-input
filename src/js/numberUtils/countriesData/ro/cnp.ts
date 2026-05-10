@@ -11,7 +11,7 @@
  */
 
 import * as exceptions from '../../../exceptions';
-import { isValidDateCompactYYYYMMDD, strings, weightedSum } from '../util';
+import { isValidDateCompactYYYYMMDD, strings, weightedSum } from '../../libraries';
 import { StandardNumberUtils, ValidateReturn, NumberType } from '../../../types';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
@@ -88,10 +88,14 @@ const COUNTIES: Record<string, string> = {
 const VALID_COUNTIES = Object.keys(COUNTIES);
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Romanian Numerical Personal Code',
 	localName: 'Cod Numeric Personal',
 	abbreviation: 'CNP',
 	
+	maxLength: 13,
+	minLength: 13,
+	countryPrefix: 'RO',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

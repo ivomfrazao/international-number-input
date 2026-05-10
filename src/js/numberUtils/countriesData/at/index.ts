@@ -1,4 +1,17 @@
-export * as businessid from './businessid';
-export * as tin from './tin';
-export * as uid from './uid';
-export * as vnr from './vnr';
+import { CountryStandardNumberUtils } from '../../../types';
+import businessid from './businessid';
+import tin from './tin';
+import uid from './uid';
+import vnr from './vnr';
+
+const countryNumberUtils: CountryStandardNumberUtils = {
+	iso2: "AT",
+	numberUtils: [
+		businessid,
+		tin,
+		uid,
+		vnr
+	]
+}
+
+export default countryNumberUtils;

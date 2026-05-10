@@ -21,10 +21,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.TaxpayerIdentificationNumber,
     name: 'Azerbaijani Tax Identification Number',
     localName: 'Vergi Identifikasiya Nömrəsi',
     abbreviation: 'VÖEN',
 
+    maxLength: 10,
+    minLength: 10,
+    countryPrefix: 'AZ',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

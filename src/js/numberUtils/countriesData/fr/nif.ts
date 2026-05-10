@@ -22,10 +22,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'French Tax Identification Number',
 	localName: "Numéro d'Immatriculation Fiscale",
 	abbreviation: 'NIF',
 	
+	maxLength: 13,
+	minLength: 13,
+	countryPrefix: 'FR',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

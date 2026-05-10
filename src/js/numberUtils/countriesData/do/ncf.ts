@@ -61,10 +61,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Dominican Republic Receipt Number',
 	localName: 'Números de Comprobante Fiscal',
 	abbreviation: 'NCF',
 	
+	maxLength: 19,
+	minLength: 11,
+	countryPrefix: 'DO',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 

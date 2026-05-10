@@ -81,11 +81,15 @@ const VALID_TVA_CODES = ['A', 'P', 'B', 'D', 'N'];
 const VALID_CATEGORY_CODES = ['M', 'P', 'C', 'N', 'E'];
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'Tunisia tax number',
 	localName: 'Matricule Fiscal',
 	abbreviation: 'MF',
 
 	
+	maxLength: 13,
+	minLength: 3,
+	countryPrefix: 'TN',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, error] = compactImpl(input);
 

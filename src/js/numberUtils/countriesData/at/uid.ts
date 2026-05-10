@@ -18,7 +18,7 @@ import {
     ValidateReturn,
     NumberType,
 } from '../../../types';
-import { luhnChecksumValue } from '../util/checksum';
+import { luhnChecksumValue } from '../../libraries/checksum';
 
 function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
     const [value, err] = strings.cleanUnicode(input, ' -./');
@@ -34,10 +34,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+    type: NumberType.TaxpayerIdentificationNumber,
     name: 'Austrian VAT Number',
     localName: 'Umsatzsteuer-Identifikationsnummer',
     abbreviation: 'UID',
 
+    maxLength: 9,
+    minLength: 9,
+    countryPrefix: 'AT',
     compact(input: string, includeCountryPrefix: boolean): string {
         const [value, err] = clean(input);
 

@@ -22,10 +22,14 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.NationalIdentificationNumber,
 	name: 'Uruguayan Foreigners Identification Number',
 	localName: 'Número de Identidad de Extranjero',
 	abbreviation: 'NIE',
 	
+	maxLength: 9,
+	minLength: 9,
+	countryPrefix: 'UY',
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);
 
