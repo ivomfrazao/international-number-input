@@ -2101,6 +2101,17 @@ var factoryOutput = (() => {
       }
       return "";
     }
+    getCompactNumber() {
+      if (InternationalNumberInput_default.utils) {
+        const { iso2 } = this.selectedCountryData;
+        return InternationalNumberInput_default.utils.getCoreNumber(
+          this._getFullNumber(),
+          iso2,
+          this.options.numberType
+        );
+      }
+      return "";
+    }
     /**
      * Gets the country data for the currently selected country.
      * @returns The data of the selected country.
@@ -3098,6 +3109,7 @@ var factoryOutput = (() => {
     },
     format(input, includeCountryPrefix) {
       const [value] = clean3(input);
+      if (value.length <= 8) return value;
       const [a, b] = strings_exports.splitAt(value, 8);
       return `${a} ${b}`;
     },
@@ -3405,8 +3417,9 @@ var factoryOutput = (() => {
     },
     format(input, includeCountryPrefix) {
       const [value] = clean7(input);
+      if (value.length <= 2) return value;
       const [a, b, c] = strings_exports.splitAt(value, 2, 5);
-      return `${a}-${b}/${c}`;
+      return `${a}-${b}${c ? "/" + c : ""}`;
     },
     validate(input) {
       const [value, error] = clean7(input);
@@ -4417,8 +4430,9 @@ var factoryOutput = (() => {
     },
     format(input, includeCountryPrefix) {
       const [value] = clean23(input);
+      if (value.length <= 2) return value;
       const [a, b, c, d, e] = strings_exports.splitAt(value, 2, 5, 8, 12);
-      return `${a}.${b}.${c}/${d}-${e}`;
+      return `${a}.${b}${c ? "." + c : ""}${d ? "/" + d : ""}${e ? "-" + e : ""}`;
     },
     validate(input) {
       const [value, error] = clean23(input);
@@ -4473,8 +4487,9 @@ var factoryOutput = (() => {
     },
     format(input, includeCountryPrefix) {
       const [value] = clean24(input);
-      const [a, b, c, d] = strings_exports.splitAt(value, 3, 6, input.length - 2);
-      return `${a}.${b}.${c}-${d}`;
+      if (value.length <= 3) return value;
+      const [a, b, c, d] = strings_exports.splitAt(value, 3, 6, value.length - 2);
+      return `${a}.${b}${c ? "." + c : ""}${d ? "-" + d : ""}`;
     },
     validate(input) {
       const [value, error] = clean24(input);
@@ -5038,8 +5053,9 @@ var factoryOutput = (() => {
     },
     format(input, includeCountryPrefix) {
       const [value] = clean34(input);
+      if (value.length < 4) return value;
       const [a, b, c, d] = strings_exports.splitAt(value, 3, 6, 9);
-      return `${a}-${b}.${c}.${d}`;
+      return `${a}-${b}${c ? "." + c : ""}${d ? "." + d : ""}`;
     },
     validate(input) {
       const [value, error] = clean34(input);
@@ -5091,8 +5107,9 @@ var factoryOutput = (() => {
     },
     format(input, includeCountryPrefix) {
       const [value] = clean35(input);
+      if (value.length < 4) return value;
       const [a, b, c, d, e] = strings_exports.splitAt(value, 3, 6, 9, 12);
-      return `${a}-${b}.${c}.${d} ${e}`;
+      return `${a}-${b}${c ? "." + c : ""}${d ? "." + d : ""}${e ? " " + e : ""}`;
     },
     validate(input) {
       const [value, error] = clean35(input);
@@ -5159,8 +5176,9 @@ var factoryOutput = (() => {
     },
     format(input, includeCountryPrefix) {
       const [value] = clean36(input);
+      if (value.length <= 2) return value;
       const [a, b, c, d] = strings_exports.splitAt(value, 2, 5, 8);
-      return `${a}.${b}.${c}-${d}`;
+      return `${a}.${b}${c ? "." + c : ""}${d ? "-" + d : ""}`;
     },
     /**
      * Check if the number is a valid RUT number.
@@ -9312,8 +9330,9 @@ var factoryOutput = (() => {
     },
     format(input, includeCountryPrefix) {
       const [value] = clean90(input);
+      if (value.length <= 2) return value;
       const [a, b, c, d, e, f] = strings_exports.splitAt(value, 2, 5, 8, 9, 12);
-      return `${a}.${b}.${c}.${d}-${e}.${f}`;
+      return `${a}.${b}${c ? "." + c : ""}${d ? "." + d : ""}${e ? "-" + e : ""}${f ? "." + f : ""}`;
     },
     validate(input) {
       const [value, error] = clean90(input);
@@ -16203,8 +16222,9 @@ var factoryOutput = (() => {
     // 123456789
     format(input, includeCountryPrefix) {
       const [value] = clean176(input);
+      if (value.length <= 1) return value;
       const [a, b, c, d] = strings_exports.splitAt(value, 1, 4, 7);
-      return `${a}.${b}.${c}-${d}`;
+      return `${a}.${b}${c ? "." + c : ""}${d ? "-" + d : ""}`;
     },
     validate(input) {
       const [value, error] = clean176(input);
@@ -16256,8 +16276,9 @@ var factoryOutput = (() => {
     },
     format(input, includeCountryPrefix) {
       const [value] = clean177(input);
+      if (value.length <= 2) return value;
       const [a, b, c, d] = strings_exports.splitAt(value, 2, 5, 8);
-      return `${a}.${b}.${c}-${d}`;
+      return `${a}.${b}${c ? "." + c : ""}${d ? "-" + d : ""}`;
     },
     validate(input) {
       const [value, error] = clean177(input);

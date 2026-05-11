@@ -2066,6 +2066,17 @@ var factoryOutput = (() => {
       }
       return "";
     }
+    getCompactNumber() {
+      if (InternationalNumberInput_default.utils) {
+        const { iso2 } = this.selectedCountryData;
+        return InternationalNumberInput_default.utils.getCoreNumber(
+          this._getFullNumber(),
+          iso2,
+          this.options.numberType
+        );
+      }
+      return "";
+    }
     /**
      * Gets the country data for the currently selected country.
      * @returns The data of the selected country.

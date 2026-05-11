@@ -46,6 +46,9 @@ const validator: StandardNumberUtils = {
 
     format(input: string, includeCountryPrefix: boolean): string {
         const [value] = clean(input);
+
+        if (value.length <= 8) return value;
+
         const [a, b] = strings.splitAt(value, 8);
 
         return `${a} ${b}`;

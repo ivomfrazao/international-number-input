@@ -56,9 +56,11 @@ const validator: StandardNumberUtils = {
     format(input: string, includeCountryPrefix: boolean): string {
         const [value] = clean(input);
 
-        const [a, b, c, d] = strings.splitAt(value, 3, 6, input.length - 2);
+        if (value.length <= 3) return value;
 
-        return `${a}.${b}.${c}-${d}`;
+        const [a, b, c, d] = strings.splitAt(value, 3, 6, value.length - 2);
+
+        return `${a}.${b}${c ? '.' + c : ''}${d ? '-' + d : ''}`;
     },
 
     validate(input: string): ValidateReturn {

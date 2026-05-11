@@ -1688,6 +1688,18 @@ export class Ini {
         return '';
     }
 
+    getCompactNumber(): string {
+        if (internationalNumberInput.utils) {
+            const { iso2 } = this.selectedCountryData;
+            return internationalNumberInput.utils.getCoreNumber(
+                this._getFullNumber(),
+                iso2,
+                this.options.numberType,
+            );
+        }
+        return '';
+    }
+
     /**
      * Gets the country data for the currently selected country.
      * @returns The data of the selected country.
