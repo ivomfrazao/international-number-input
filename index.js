@@ -1,2 +1,2 @@
 /* global module */
-module.exports = require("./build/js/input/InternationalNumberInput.class");
+module.exports = require("./build/js/input/InternationalNumberInput");
