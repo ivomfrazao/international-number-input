@@ -15,13 +15,14 @@
         "formatting",
         "typescript"
     ],
-    "main": "index.js",
-    "types": "index.d.ts",
+    "main": "./build/cjs/input/InternationalNumberInput.cjs",
+    "module": "./build/esm/input/InternationalNumberInput.mjs",
+    "types": "./build/js/internationalNumberInput.d.ts",
     "exports": {
         ".": {
-            "types": "./index.d.ts",
-            "require": "./index.js",
-            "default": "./index.js"
+            "types": "./build/js/internationalNumberInput.d.ts",
+            "import": "./build/esm/input/InternationalNumberInput.mjs",
+            "require": "./build/cjs/input/InternationalNumberInput.cjs"
         }
     },
     "license": "MIT",
@@ -67,9 +68,7 @@
         "LICENSE",
         "package.json",
         "package-lock.json",
-        "README.md",
-        "index.js",
-        "index.d.ts"
+        "README.md"
     ],
     "repository": {
         "type": "git",

@@ -60,7 +60,8 @@ body {
 .demo-container {
   max-width: 1400px;
   margin: 0 auto;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -71,6 +72,8 @@ body {
   gap: var(--spacing-xl);
   padding: var(--spacing-xl);
   flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 /* Sidebar */
@@ -79,10 +82,6 @@ body {
   border-radius: var(--radius);
   padding: var(--spacing-lg);
   box-shadow: 0 1px 3px var(--color-shadow);
-  height: fit-content;
-  position: sticky;
-  top: var(--spacing-xl);
-  max-height: calc(100vh - var(--spacing-xl) * 2);
   overflow-y: auto;
 }
 
@@ -214,6 +213,8 @@ fieldset legend {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
+  overflow-y: auto;
+  min-height: 0;
 }
 
 /* Sections */
@@ -404,13 +405,22 @@ fieldset legend {
 
 /* Responsive */
 @media (max-width: 1024px) {
+  .demo-container {
+    height: auto;
+    overflow: visible;
+  }
+
   .demo-content {
     grid-template-columns: 1fr;
+    overflow: visible;
   }
 
   .demo-sidebar {
-    position: static;
-    max-height: none;
+    overflow-y: visible;
+  }
+
+  .demo-main {
+    overflow-y: visible;
   }
 }
 

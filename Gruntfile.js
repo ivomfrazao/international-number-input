@@ -14,7 +14,7 @@ module.exports = function (grunt) {
 	// just images
 	grunt.registerTask('img', ['responsive_images:retina', 'exec:evenizer', 'responsive_images:regular', 'sprite', 'imagemin', 'generate-scss-metadata', 'shell:webp']);
 	// just javascript
-	grunt.registerTask('js', ['shell:eslint', 'shell:genTsDeclaration', 'shell:buildJs', 'replace', 'replace:removeImport']);
+	grunt.registerTask('js', ['shell:eslint', 'shell:genTsDeclaration', 'shell:buildJs']);
 
 	// bump version number in 3 files, rebuild js to update headers, then commit, tag and push
 	grunt.registerTask('version', ['shell:test', 'bump-only', 'js', 'bump-commit']);
