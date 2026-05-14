@@ -1,9 +1,5 @@
 import validator from './pvn';
-import {
-	InvalidLength,
-	InvalidChecksum,
-	InvalidComponent,
-} from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('lv/pvn', () => {
 	it('format:LV 4000 3521 600', () => {

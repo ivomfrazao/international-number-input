@@ -1,5 +1,5 @@
 import validator from './stnr';
-import { InvalidComponent, InvalidFormat, InvalidLength } from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('de/stnr', () => {
     it('format:18181508155', () => {

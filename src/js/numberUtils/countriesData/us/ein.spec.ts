@@ -1,4 +1,4 @@
-import { InvalidComponent, InvalidLength } from '../exceptions';
+import * as exceptions from '../../../exceptions';
 import validator from './ein';
 
 describe('us/tin', () => {

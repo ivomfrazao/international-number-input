@@ -194,7 +194,7 @@ const validator: StandardNumberUtils = {
 		if (!/^[A-Z]{4}[0-9]{6}[A-Z]{6}[0-9A-Z][0-9]$/.test(value)) {
 			return { isValid: false, error: new exceptions.InvalidFormat() };
 		}
-		if (!isValidDateCompactYYMMDD(value.substring(4, 6), true)) {
+		if (!isValidDateCompactYYMMDD(value.substring(4, 10), true)) {
 			return { isValid: false, error: new exceptions.InvalidComponent() };
 		}
 		if (nameBlacklist.has(value.substring(0, 4))) {
@@ -203,7 +203,7 @@ const validator: StandardNumberUtils = {
 		if (!['H', 'M', 'X'].includes(value[10])) {
 			return { isValid: false, error: new exceptions.InvalidComponent() };
 		}
-		if (!validStates.has(value.substring(11, 2))) {
+		if (!validStates.has(value.substring(11, 13))) {
 			return { isValid: false, error: new exceptions.InvalidComponent() };
 		}
 
@@ -216,7 +216,7 @@ const validator: StandardNumberUtils = {
 			);
 
 		const checkStr = String((10 - (check % 10)) % 10);
-		if (checkStr !== value.substring(17, 1)) {
+		if (checkStr !== value[17]) {
 			return { isValid: false, error: new exceptions.InvalidChecksum() };
 		}
 
@@ -244,7 +244,7 @@ function getBirthDateImpl(value: string): Date | null {
 //	CURP X = gender neutral (X)
 //
 export function getGender(input: string): 'M' | 'F' | 'X' {
-	const value = impl.compact(input)[10];
+	const value = validator.compact(input, false)[10];
 
 	if (value === 'X') {
 		return 'X';
@@ -255,7 +255,7 @@ export function getGender(input: string): 'M' | 'F' | 'X' {
 }
 
 export function getBirthDate(input: string): Date | null {
-	const value = impl.compact(input);
+	const value = validator.compact(input, false);
 
 	const date = getBirthDateImpl(value);
 

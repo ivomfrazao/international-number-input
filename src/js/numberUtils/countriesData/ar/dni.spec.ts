@@ -1,5 +1,5 @@
 import validator from './dni';
-import { InvalidLength } from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('ar/dni', () => {
     it('format:20123456', () => {

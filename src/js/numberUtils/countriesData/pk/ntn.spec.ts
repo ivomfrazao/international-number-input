@@ -1,5 +1,5 @@
 import validator from './ntn';
-import { InvalidLength } from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('pk/ntn', () => {
 	it('format:1234567', () => {

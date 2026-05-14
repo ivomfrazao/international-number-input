@@ -1,5 +1,5 @@
 import validator from './peid';
-import { InvalidLength } from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('li/peid', () => {
 	it('format:1234567', () => {

@@ -1,9 +1,5 @@
 import validator from './idnr';
-import {
-	InvalidLength,
-	InvalidChecksum,
-	InvalidComponent,
-} from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('th/idnr', () => {
 	it('format:1112034563562', () => {

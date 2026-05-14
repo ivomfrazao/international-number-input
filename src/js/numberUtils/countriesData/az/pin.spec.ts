@@ -1,5 +1,5 @@
 import validator from './pin';
-import { InvalidLength } from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('az/pin', () => {
     it('format:123 123 3', () => {

@@ -26,7 +26,7 @@ describe('ch/uid', () => {
         expect(result.error).toBeInstanceOf(exceptions.InvalidLength);
     });
 
-    it('validate:CHE-100.155.212', () => {
+    it('validate:CHE-100.155.211', () => {
         const result = validator.validate('CHE-100.155.211');
 
         expect(result.error).toBeInstanceOf(exceptions.InvalidChecksum);

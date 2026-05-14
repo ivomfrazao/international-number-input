@@ -1,5 +1,5 @@
-import { validate } from './inn';
-import { InvalidChecksum } from '../exceptions';
+import validator from './inn';
+import * as exceptions from '../../../exceptions';
 
 describe('ru/inn', () => {
 	it('validate:123456789047', () => {

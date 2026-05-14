@@ -1,4 +1,4 @@
-import { validate } from './emso';
+import validator from './emso';
 
 describe('si/emso', () => {
 	test.each([

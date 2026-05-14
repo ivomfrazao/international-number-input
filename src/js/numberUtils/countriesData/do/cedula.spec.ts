@@ -1,5 +1,5 @@
 import validator from './cedula';
-import { InvalidLength, InvalidFormat, InvalidChecksum } from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('do/cedula', () => {
 	it('format:00113918205', () => {

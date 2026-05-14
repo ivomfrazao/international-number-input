@@ -1,5 +1,5 @@
 import validator from './uen';
-import { InvalidLength } from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('sg/uen', () => {
 	it('format:T01FC6132D', () => {

@@ -71,10 +71,10 @@ const validator: StandardNumberUtils = {
 		if (parseInt(value.substring(0, 2), 10) > 21 || value.substring(0, 2) === '00') {
 			return { isValid: false, error: new exceptions.InvalidComponent() };
 		}
-		if (value.substring(2, 6) === '000000') {
+		if (value.substring(2, 8) === '000000') {
 			return { isValid: false, error: new exceptions.InvalidComponent() };
 		}
-		if (value.substring(8, 3) !== '001') {
+		if (value.substring(8, 11) !== '001') {
 			return { isValid: false, error: new exceptions.InvalidComponent() };
 		}
 

@@ -1,9 +1,5 @@
 import validator from './vnr';
-import {
-    InvalidLength,
-    InvalidChecksum,
-    InvalidComponent,
-} from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('at/vnr', () => {
     it('format:1237010180', () => {

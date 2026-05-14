@@ -1,9 +1,5 @@
 import validator from './uid';
-import {
-    InvalidLength,
-    InvalidChecksum,
-    InvalidComponent,
-} from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('at/uid', () => {
     it('format:AT U13585627', () => {

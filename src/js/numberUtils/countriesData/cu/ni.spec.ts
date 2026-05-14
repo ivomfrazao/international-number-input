@@ -1,5 +1,5 @@
 import validator from './ni';
-import { InvalidLength, InvalidComponent, InvalidFormat } from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('cu/ni', () => {
     it('format:91021027775', () => {

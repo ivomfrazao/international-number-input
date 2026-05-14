@@ -1,9 +1,5 @@
 import validator from './tin';
-import {
-    InvalidLength,
-    InvalidChecksum,
-    InvalidComponent,
-} from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('at/tin', () => {
     it('format:591199013', () => {

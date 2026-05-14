@@ -1,5 +1,5 @@
 import validator from './pst';
-import { InvalidLength } from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('ca/pst', () => {
 	it('format:PST12345678', () => {

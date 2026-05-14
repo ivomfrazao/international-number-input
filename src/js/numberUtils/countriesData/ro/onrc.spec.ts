@@ -1,5 +1,5 @@
 import validator from './onrc';
-import { InvalidComponent } from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('ro/onrc', () => {
 	it('format:J52/750/2012', () => {

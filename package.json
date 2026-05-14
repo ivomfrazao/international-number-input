@@ -59,6 +59,7 @@
         "region-flags": "https://github.com/fonttools/region-flags/archive/refs/tags/1.2.1.tar.gz",
         "sass": "^1.74.1",
         "time-grunt": "^2.0.0",
+        "ts-jest": "^29.4.9",
         "typescript": "^5.5.3"
     },
     "files": [

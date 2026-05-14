@@ -1,5 +1,5 @@
 import validator from './ce';
-import { InvalidLength } from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('pe/cui', () => {
 	it('format:001766062', () => {

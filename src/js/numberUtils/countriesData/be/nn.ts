@@ -55,7 +55,7 @@ const validator: StandardNumberUtils = {
         return value;
     },
     validate(input: string): ValidateReturn {
-        const value = impl.compact(input);
+        const value = validator.compact(input, false);
 
         if (!strings.isDigits(value) || parseInt(value, 10) <= 0) {
             return { isValid: false, error: new exceptions.InvalidFormat() };

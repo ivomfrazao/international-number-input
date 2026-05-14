@@ -1,9 +1,5 @@
 import validator from './kennitala';
-import {
-	InvalidLength,
-	InvalidChecksum,
-	InvalidComponent,
-} from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('is/kennitala', () => {
 	it('format:4504013150', () => {

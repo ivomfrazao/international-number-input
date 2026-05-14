@@ -1,9 +1,5 @@
 import validator from './ssn';
-import {
-    InvalidLength,
-    InvalidChecksum,
-    InvalidComponent,
-} from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('ch/ssn', () => {
     it('format:7569217076985', () => {

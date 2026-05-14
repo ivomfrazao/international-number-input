@@ -1,5 +1,5 @@
 import validator from './cnic';
-import { InvalidComponent, InvalidLength } from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('pk/cnic', () => {
 	it('format:5410498905786', () => {

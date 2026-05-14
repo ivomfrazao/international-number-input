@@ -1,5 +1,5 @@
 import validator from './vsk';
-import { InvalidLength } from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('is/vsk', () => {
 	it('format:IS 00621', () => {

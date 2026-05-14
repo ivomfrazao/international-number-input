@@ -1,5 +1,5 @@
 import validator from './pan';
-import { InvalidLength, InvalidFormat, InvalidComponent } from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('in/pan', () => {
 	it('format:AAPPV8261K', () => {

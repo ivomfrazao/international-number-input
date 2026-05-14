@@ -48,7 +48,7 @@ const validator: StandardNumberUtils = {
 		if (!strings.isDigits(value)) {
 			return { isValid: false, error: new exceptions.InvalidFormat() };
 		}
-		const code = parseInt(value.substring(7, 3), 10);
+		const code = parseInt(value.substring(7, 10), 10);
 		if (!(code >= 1 && code <= 100) && ![120, 121, 888, 999].includes(code)) {
 			return { isValid: false, error: new exceptions.InvalidComponent() };
 		}

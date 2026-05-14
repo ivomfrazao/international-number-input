@@ -1,5 +1,5 @@
 import validator from './mf';
-import { InvalidComponent, InvalidFormat } from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('tn/mf', () => {
 	it('format:1496298 T P N 000', () => {

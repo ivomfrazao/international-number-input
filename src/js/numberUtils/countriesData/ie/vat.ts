@@ -84,7 +84,7 @@ const validator: StandardNumberUtils = {
 			}
 		} else if ('ABCDEFGHIJKLMNOPQRSTUVWXYZ+*'.includes(value[1])) {
 			// old system, second character is number
-			if (value[7] !== calcCheckDigit(`${value.substring(2, 5)}${value[0]}`)) {
+			if (value[7] !== calcCheckDigit(`${value.substring(2, 7)}${value[0]}`)) {
 				return { isValid: false, error: new exceptions.InvalidChecksum() };
 			}
 		} else {

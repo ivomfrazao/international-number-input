@@ -55,7 +55,7 @@ const validator: StandardNumberUtils = {
 		if (!r.isValid) {
 			return r;
 		}
-		if (value.substring(2, 3) !== '000') {
+		if (value.substring(2, 5) !== '000') {
 			return { isValid: false, error: new exceptions.InvalidComponent() };
 		}
 

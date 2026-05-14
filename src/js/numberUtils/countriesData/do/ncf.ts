@@ -98,7 +98,7 @@ const validator: StandardNumberUtils = {
 			if (!strings.isDigits(value.substring(1))) {
 				return { isValid: false, error: new exceptions.InvalidComponent() };
 			}
-			if (!ecfTypes.includes(value.substring(1, 2))) {
+			if (!ecfTypes.includes(value.substring(1, 3))) {
 				return { isValid: false, error: new exceptions.InvalidComponent() };
 			}
 		} else if (value.length === 11) {
@@ -108,7 +108,7 @@ const validator: StandardNumberUtils = {
 			if (!strings.isDigits(value.substring(1))) {
 				return { isValid: false, error: new exceptions.InvalidComponent() };
 			}
-			if (!ncfTypes.includes(value.substring(1, 2))) {
+			if (!ncfTypes.includes(value.substring(1, 3))) {
 				return { isValid: false, error: new exceptions.InvalidComponent() };
 			}
 		} else if (value.length === 19) {
@@ -118,7 +118,7 @@ const validator: StandardNumberUtils = {
 			if (!strings.isDigits(value.substring(2))) {
 				return { isValid: false, error: new exceptions.InvalidComponent() };
 			}
-			if (!ncfTypes.includes(value.substring(9, 2))) {
+			if (!ncfTypes.includes(value.substring(9, 11))) {
 				return { isValid: false, error: new exceptions.InvalidComponent() };
 			}
 		} else {

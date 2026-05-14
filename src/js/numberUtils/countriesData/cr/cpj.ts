@@ -103,7 +103,7 @@ const validator: StandardNumberUtils = {
         if (!items) {
             return { isValid: false, error: new exceptions.InvalidComponent() };
         }
-        if (!items.includes(value.substring(1, 3))) {
+        if (!items.includes(value.substring(1, 4))) {
             return { isValid: false, error: new exceptions.InvalidComponent() };
         }
 

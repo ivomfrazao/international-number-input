@@ -11,7 +11,7 @@ describe('se/personnummer', () => {
 		['20200901-0000', '200901-0000'], // 4digit year, hyphen
 		['202009010000', '200901-0000'], // 4digit year, no hyphen
 	])('format:%s', (given, want) => {
-		const result = validator.format(given);
+		const result = validator.format(given, false);
 
 		expect(result).toEqual(want);
 	});

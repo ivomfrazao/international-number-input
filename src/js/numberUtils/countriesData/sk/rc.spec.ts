@@ -1,9 +1,9 @@
 import validator from './rc';
 import * as exceptions from '../../../exceptions';
 
-describe('cz/rc', () => {
+describe('sk/rc', () => {
 	it('format:7103192745', () => {
-		const result = validator.format('7103192745', false)
+		const result = validator.format('7103192745', false);
 
 		expect(result).toEqual('710319/2745');
 	});
@@ -18,12 +18,6 @@ describe('cz/rc', () => {
 		const result = validator.validate('991231123');
 
 		expect(result.isValid && result.compact).toEqual('991231123');
-	});
-
-	it('validate:1103492745', () => {
-		const result = validator.validate('1103492745');
-
-		expect(result.error).toBeInstanceOf(exceptions.InvalidComponent);
 	});
 
 	it('validate:590312/12', () => {

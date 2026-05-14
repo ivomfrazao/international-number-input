@@ -1,4 +1,4 @@
-import { InvalidChecksum, InvalidLength } from '../exceptions';
+import * as exceptions from '../../../exceptions';
 import validator from './pib';
 
 describe('me/pib', () => {

@@ -1,5 +1,5 @@
 import validator from './nif';
-import { InvalidComponent, InvalidLength } from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('fr/nif', () => {
 	it('format:0701987765432', () => {

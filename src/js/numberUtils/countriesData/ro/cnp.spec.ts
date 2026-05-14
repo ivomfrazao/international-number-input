@@ -1,9 +1,5 @@
 import validator from './cnp';
-import {
-	InvalidLength,
-	InvalidChecksum,
-	InvalidComponent,
-} from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('ro/cnp', () => {
 	it('format:1630615123457', () => {

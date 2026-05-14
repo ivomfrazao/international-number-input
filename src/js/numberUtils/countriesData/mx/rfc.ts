@@ -134,14 +134,14 @@ const validator: StandardNumberUtils = {
 			if (nameBlacklist.has(value.substring(0, 4))) {
 				return { isValid: false, error: new exceptions.InvalidComponent() };
 			}
-			if (!isValidDateCompactYYMMDD(value.substring(4, 6), true)) {
+			if (!isValidDateCompactYYMMDD(value.substring(4, 10), true)) {
 				return { isValid: false, error: new exceptions.InvalidComponent() };
 			}
 		} else if (value.length === 12) {
 			if (!/^[A-Z&Ñ]{3}[0-9]{6}[0-9A-Z]{3}$/.test(value)) {
 				return { isValid: false, error: new exceptions.InvalidComponent() };
 			}
-			if (!isValidDateCompactYYMMDD(value.substring(3, 6))) {
+			if (!isValidDateCompactYYMMDD(value.substring(3, 9))) {
 				return { isValid: false, error: new exceptions.InvalidComponent() };
 			}
 		} else {

@@ -1,5 +1,5 @@
-import { InvalidComponent } from '../exceptions';
-import { format, getBirthDate, validate } from './cpr';
+import * as exceptions from '../../../exceptions';
+import validator, { getBirthDate } from './cpr';
 
 describe('dk/cpr', () => {
 	it('format:2110625629', () => {
@@ -11,7 +11,7 @@ describe('dk/cpr', () => {
 	it('getBirthDate("511062-0629")', () => {
 		expect(() => {
 			getBirthDate('511062-0629');
-		}).toThrow(InvalidComponent);
+		}).toThrow(exceptions.InvalidComponent);
 	});
 
 	it('getBirthDate("010180-1234")', () => {

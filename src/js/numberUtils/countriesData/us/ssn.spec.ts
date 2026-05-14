@@ -1,4 +1,4 @@
-import { InvalidComponent, InvalidLength } from '../exceptions';
+import * as exceptions from '../../../exceptions';
 import validator from './ssn';
 
 describe('us/ssn', () => {

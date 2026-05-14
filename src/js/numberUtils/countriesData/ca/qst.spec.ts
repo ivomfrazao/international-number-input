@@ -1,9 +1,5 @@
 import validator from './qst';
-import {
-	InvalidLength,
-	InvalidChecksum,
-	InvalidComponent,
-} from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('ca/qst', () => {
 	it('format:1224002901 TQ 0001', () => {

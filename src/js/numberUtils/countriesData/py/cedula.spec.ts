@@ -1,5 +1,5 @@
 import validator from './cedula';
-import { InvalidComponent, InvalidLength } from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('py/ci', () => {
 	it('format:6.001.234', () => {

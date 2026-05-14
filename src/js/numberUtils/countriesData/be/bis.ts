@@ -63,7 +63,7 @@ const validator: StandardNumberUtils = {
         return value;
     },
     validate(input: string): ValidateReturn {
-        const number = impl.compact(input);
+        const number = validator.compact(input, false);
 
         if (!strings.isDigits(number) || parseInt(number, 10) <= 0) {
             return { isValid: false, error: new exceptions.InvalidFormat() };

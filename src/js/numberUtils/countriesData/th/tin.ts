@@ -42,9 +42,9 @@ const validator: StandardNumberUtils = {
 
 	format(input: string, includeCountryPrefix: boolean): string {
 		if (idnr.validate(input).isValid) {
-			return idnr.format(input);
+			return idnr.format(input, false);
 		}
-		return moa.format(input);
+		return moa.format(input, false);
 	},
 
 	validate(input: string): ValidateReturn {

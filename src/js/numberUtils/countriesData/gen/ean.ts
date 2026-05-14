@@ -15,9 +15,13 @@ function clean(input: string): ReturnType<typeof strings.cleanUnicode> {
 }
 
 const validator: StandardNumberUtils = {
+	type: NumberType.TaxpayerIdentificationNumber,
 	name: 'International Article Number',
 	localName: 'International Article Number',
 	abbreviation: 'EAN',
+	maxLength: 14,
+	minLength: 8,
+	countryPrefix: '',
 	
 	compact(input: string, includeCountryPrefix: boolean): string {
 		const [value, err] = clean(input);

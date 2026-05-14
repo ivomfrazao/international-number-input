@@ -1,5 +1,5 @@
 import validator from './businessid';
-import { InvalidFormat } from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('at/businessid', () => {
     it('format:800280610', () => {

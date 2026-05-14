@@ -1,9 +1,5 @@
 import validator from './rut';
-import {
-    InvalidLength,
-    InvalidChecksum,
-    InvalidComponent,
-} from '../exceptions';
+import * as exceptions from '../../../exceptions';
 
 describe('cl/rut', () => {
     it('format:800280610', () => {

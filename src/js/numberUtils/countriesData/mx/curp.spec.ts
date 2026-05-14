@@ -1,4 +1,4 @@
-import { validate, getBirthDate, getGender } from './curp';
+import validator, { getBirthDate, getGender } from './curp';
 
 describe('mx/curp', () => {
 	test.each([
@@ -17,7 +17,9 @@ describe('mx/curp', () => {
 	it('getBirthDate:BOXW310820HNERXN09', () => {
 		const result = getBirthDate('BOXW310820HNERXN09');
 
-		expect(result?.toISOString().substring(0, 10)).toEqual('1931-08-20');
+		expect(result?.getFullYear()).toEqual(1931);
+		expect(result?.getMonth()).toEqual(7);
+		expect(result?.getDate()).toEqual(20);
 	});
 
 	it('getGender:BOXW310820HNERXN09', () => {

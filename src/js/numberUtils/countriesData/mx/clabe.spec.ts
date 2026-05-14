@@ -1,4 +1,4 @@
-import { validate } from './clabe';
+import validator from './clabe';
 import * as exceptions from '../../../exceptions';
 
 describe('mx/clabe', () => {
