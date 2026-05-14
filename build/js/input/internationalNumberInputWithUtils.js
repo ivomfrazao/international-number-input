@@ -3946,7 +3946,7 @@ var factoryOutput = (() => {
       return value;
     },
     validate(input) {
-      const number = impl.compact(input);
+      const number = validator16.compact(input, false);
       if (!strings_exports.isDigits(number) || parseInt(number, 10) <= 0) {
         return { isValid: false, error: new InvalidFormat() };
       }
@@ -3993,7 +3993,7 @@ var factoryOutput = (() => {
       return value;
     },
     validate(input) {
-      const value = impl.compact(input);
+      const value = validator17.compact(input, false);
       if (!strings_exports.isDigits(value) || parseInt(value, 10) <= 0) {
         return { isValid: false, error: new InvalidFormat() };
       }
@@ -4851,17 +4851,17 @@ var factoryOutput = (() => {
   var ca_default = countryNumberUtils13;
 
   // src/js/numberUtils/countriesData/gen/ean.ts
-  var ean_exports = {};
-  __export(ean_exports, {
-    default: () => ean_default
-  });
   function clean32(input) {
     return cleanUnicode(input, " -");
   }
   var validator32 = {
+    type: "TIN" /* TaxpayerIdentificationNumber */,
     name: "International Article Number",
     localName: "International Article Number",
     abbreviation: "EAN",
+    maxLength: 14,
+    minLength: 8,
+    countryPrefix: "",
     compact(input, includeCountryPrefix) {
       const [value, err] = clean32(input);
       if (err) {
@@ -4940,7 +4940,7 @@ var factoryOutput = (() => {
       if (!value.startsWith("756")) {
         return { isValid: false, error: new InvalidComponent() };
       }
-      if (!ean_exports.validate(value).isValid) {
+      if (!ean_default.validate(value).isValid) {
         return { isValid: false, error: new InvalidChecksum() };
       }
       return {
@@ -5495,7 +5495,7 @@ var factoryOutput = (() => {
       if (!items) {
         return { isValid: false, error: new InvalidComponent() };
       }
-      if (!items.includes(value.substring(1, 3))) {
+      if (!items.includes(value.substring(1, 4))) {
         return { isValid: false, error: new InvalidComponent() };
       }
       return {
@@ -6760,7 +6760,7 @@ var factoryOutput = (() => {
         if (!strings_exports.isDigits(value.substring(1))) {
           return { isValid: false, error: new InvalidComponent() };
         }
-        if (!ecfTypes.includes(value.substring(1, 2))) {
+        if (!ecfTypes.includes(value.substring(1, 3))) {
           return { isValid: false, error: new InvalidComponent() };
         }
       } else if (value.length === 11) {
@@ -6770,7 +6770,7 @@ var factoryOutput = (() => {
         if (!strings_exports.isDigits(value.substring(1))) {
           return { isValid: false, error: new InvalidComponent() };
         }
-        if (!ncfTypes.includes(value.substring(1, 2))) {
+        if (!ncfTypes.includes(value.substring(1, 3))) {
           return { isValid: false, error: new InvalidComponent() };
         }
       } else if (value.length === 19) {
@@ -6780,7 +6780,7 @@ var factoryOutput = (() => {
         if (!strings_exports.isDigits(value.substring(2))) {
           return { isValid: false, error: new InvalidComponent() };
         }
-        if (!ncfTypes.includes(value.substring(9, 2))) {
+        if (!ncfTypes.includes(value.substring(9, 11))) {
           return { isValid: false, error: new InvalidComponent() };
         }
       } else {
@@ -9344,7 +9344,7 @@ var factoryOutput = (() => {
           return { isValid: false, error: new InvalidChecksum() };
         }
       } else if ("ABCDEFGHIJKLMNOPQRSTUVWXYZ+*".includes(value[1])) {
-        if (value[7] !== calcCheckDigit2(`${value.substring(2, 5)}${value[0]}`)) {
+        if (value[7] !== calcCheckDigit2(`${value.substring(2, 7)}${value[0]}`)) {
           return { isValid: false, error: new InvalidChecksum() };
         }
       } else {
@@ -10152,7 +10152,7 @@ var factoryOutput = (() => {
       if (!strings_exports.isDigits(value)) {
         return { isValid: false, error: new InvalidFormat() };
       }
-      const code = parseInt(value.substring(7, 3), 10);
+      const code = parseInt(value.substring(7, 10), 10);
       if (!(code >= 1 && code <= 100) && ![120, 121, 888, 999].includes(code)) {
         return { isValid: false, error: new InvalidComponent() };
       }
@@ -10930,7 +10930,7 @@ var factoryOutput = (() => {
       if (!r.isValid) {
         return r;
       }
-      if (value.substring(2, 3) !== "000") {
+      if (value.substring(2, 5) !== "000") {
         return { isValid: false, error: new InvalidComponent() };
       }
       return {
@@ -12167,7 +12167,7 @@ var factoryOutput = (() => {
       if (!/^[A-Z]{4}[0-9]{6}[A-Z]{6}[0-9A-Z][0-9]$/.test(value)) {
         return { isValid: false, error: new InvalidFormat() };
       }
-      if (!isValidDateCompactYYMMDD(value.substring(4, 6), true)) {
+      if (!isValidDateCompactYYMMDD(value.substring(4, 10), true)) {
         return { isValid: false, error: new InvalidComponent() };
       }
       if (nameBlacklist.has(value.substring(0, 4))) {
@@ -12176,7 +12176,7 @@ var factoryOutput = (() => {
       if (!["H", "M", "X"].includes(value[10])) {
         return { isValid: false, error: new InvalidComponent() };
       }
-      if (!validStates.has(value.substring(11, 2))) {
+      if (!validStates.has(value.substring(11, 13))) {
         return { isValid: false, error: new InvalidComponent() };
       }
       const check = value.substring(0, 17).split("").reduce(
@@ -12184,7 +12184,7 @@ var factoryOutput = (() => {
         0
       );
       const checkStr = String((10 - check % 10) % 10);
-      if (checkStr !== value.substring(17, 1)) {
+      if (checkStr !== value[17]) {
         return { isValid: false, error: new InvalidChecksum() };
       }
       return {
@@ -12287,14 +12287,14 @@ var factoryOutput = (() => {
         if (nameBlacklist2.has(value.substring(0, 4))) {
           return { isValid: false, error: new InvalidComponent() };
         }
-        if (!isValidDateCompactYYMMDD(value.substring(4, 6), true)) {
+        if (!isValidDateCompactYYMMDD(value.substring(4, 10), true)) {
           return { isValid: false, error: new InvalidComponent() };
         }
       } else if (value.length === 12) {
         if (!/^[A-Z&Ñ]{3}[0-9]{6}[0-9A-Z]{3}$/.test(value)) {
           return { isValid: false, error: new InvalidComponent() };
         }
-        if (!isValidDateCompactYYMMDD(value.substring(3, 6))) {
+        if (!isValidDateCompactYYMMDD(value.substring(3, 9))) {
           return { isValid: false, error: new InvalidComponent() };
         }
       } else {
@@ -15177,9 +15177,9 @@ var factoryOutput = (() => {
     },
     format(input, includeCountryPrefix) {
       if (idnr_default3.validate(input).isValid) {
-        return idnr_default3.format(input);
+        return idnr_default3.format(input, false);
       }
-      return moa_default.format(input);
+      return moa_default.format(input, false);
     },
     validate(input) {
       const v1 = idnr_default3.validate(input);
@@ -16281,10 +16281,10 @@ var factoryOutput = (() => {
       if (parseInt(value.substring(0, 2), 10) > 21 || value.substring(0, 2) === "00") {
         return { isValid: false, error: new InvalidComponent() };
       }
-      if (value.substring(2, 6) === "000000") {
+      if (value.substring(2, 8) === "000000") {
         return { isValid: false, error: new InvalidComponent() };
       }
-      if (value.substring(8, 3) !== "001") {
+      if (value.substring(8, 11) !== "001") {
         return { isValid: false, error: new InvalidComponent() };
       }
       const [front, check] = strings_exports.splitAt(value, 11);

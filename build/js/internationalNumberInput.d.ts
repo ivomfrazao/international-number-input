@@ -1384,6 +1384,7 @@ declare module "input/InternationalNumberInput.class" {
          * @returns The number formatted.
          */
         getNumber(format?: number): string;
+        getCompactNumber(): string;
         /**
          * Gets the country data for the currently selected country.
          * @returns The data of the selected country.
