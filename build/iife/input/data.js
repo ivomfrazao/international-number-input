@@ -4,16 +4,7 @@
  * Licensed under the MIT license
  */
 
-// UMD
-(function(factory) {
-  if (typeof module === 'object' && module.exports) {
-    module.exports = factory();
-  } else {
-    window.allCountries = factory();
-  }
-}(() => {
-
-var factoryOutput = (() => {
+var allCountries = (() => {
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
@@ -360,7 +351,4 @@ var factoryOutput = (() => {
   var data_default = allCountries;
   return __toCommonJS(data_exports);
 })();
-
-// UMD
-  return factoryOutput.default;
-}));
+allCountries = allCountries.default;
