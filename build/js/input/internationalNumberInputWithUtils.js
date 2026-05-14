@@ -14,15 +14,10 @@
 }(() => {
 
 var factoryOutput = (() => {
-  var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
-  var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
-  var __commonJS = (cb, mod) => function __require() {
-    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
-  };
   var __export = (target, all) => {
     for (var name in all)
       __defProp(target, name, { get: all[name], enumerable: true });
@@ -35,78 +30,7 @@ var factoryOutput = (() => {
     }
     return to;
   };
-  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-    // If the importer is in node compatibility mode or this is not an ESM
-    // file that has been converted to a CommonJS file using a Babel-
-    // compatible transform (i.e. "__esModule" has not been set), then set
-    // "default" to the CommonJS "module.exports" for node compatibility.
-    isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-    mod
-  ));
   var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-
-  // node_modules/guid-typescript/dist/guid.js
-  var require_guid = __commonJS({
-    "node_modules/guid-typescript/dist/guid.js"(exports) {
-      "use strict";
-      exports.__esModule = true;
-      var Guid2 = (
-        /** @class */
-        function() {
-          function Guid3(guid) {
-            if (!guid) {
-              throw new TypeError("Invalid argument; `value` has no value.");
-            }
-            this.value = Guid3.EMPTY;
-            if (guid && Guid3.isGuid(guid)) {
-              this.value = guid;
-            }
-          }
-          Guid3.isGuid = function(guid) {
-            var value = guid.toString();
-            return guid && (guid instanceof Guid3 || Guid3.validator.test(value));
-          };
-          Guid3.create = function() {
-            return new Guid3([Guid3.gen(2), Guid3.gen(1), Guid3.gen(1), Guid3.gen(1), Guid3.gen(3)].join("-"));
-          };
-          Guid3.createEmpty = function() {
-            return new Guid3("emptyguid");
-          };
-          Guid3.parse = function(guid) {
-            return new Guid3(guid);
-          };
-          Guid3.raw = function() {
-            return [Guid3.gen(2), Guid3.gen(1), Guid3.gen(1), Guid3.gen(1), Guid3.gen(3)].join("-");
-          };
-          Guid3.gen = function(count) {
-            var out = "";
-            for (var i = 0; i < count; i++) {
-              out += ((1 + Math.random()) * 65536 | 0).toString(16).substring(1);
-            }
-            return out;
-          };
-          Guid3.prototype.equals = function(other) {
-            return Guid3.isGuid(other) && this.value === other.toString();
-          };
-          Guid3.prototype.isEmpty = function() {
-            return this.value === Guid3.EMPTY;
-          };
-          Guid3.prototype.toString = function() {
-            return this.value;
-          };
-          Guid3.prototype.toJSON = function() {
-            return {
-              value: this.value
-            };
-          };
-          Guid3.validator = new RegExp("^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$", "i");
-          Guid3.EMPTY = "00000000-0000-0000-0000-000000000000";
-          return Guid3;
-        }()
-      );
-      exports.Guid = Guid2;
-    }
-  });
 
   // src/js/input/internationalNumberInputWithUtils.ts
   var internationalNumberInputWithUtils_exports = {};
@@ -518,9 +442,6 @@ var factoryOutput = (() => {
   }
   var data_default = allCountries;
 
-  // src/js/input/InternationalNumberInput.class.ts
-  var import_guid_typescript = __toESM(require_guid());
-
   // src/js/input/i18n/en/countries.ts
   var countries_default = {
     ad: "Andorra",
@@ -892,7 +813,7 @@ var factoryOutput = (() => {
   // src/js/input/InternationalNumberInput.class.ts
   var Ini = class {
     constructor(input, customOptions = {}) {
-      this.id = import_guid_typescript.Guid.create().toString();
+      this.id = crypto.randomUUID();
       this.numberInput = input;
       this.highlightedItem = null;
       this.options = Object.assign({}, InternationalNumberInputOptions_default_default, customOptions);

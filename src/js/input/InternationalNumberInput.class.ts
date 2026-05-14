@@ -1,4 +1,3 @@
-import { Guid } from 'guid-typescript';
 import defaultEnglishStrings from './i18n/en';
 import { NumberType, ValidateReturn } from '../types';
 import { SomeOptions, AllOptions } from './InternationalNumberInputOptions';
@@ -76,7 +75,7 @@ export class Ini {
     private rejectUtilsScriptPromise: (reason?: unknown) => void;
 
     constructor(input: HTMLInputElement, customOptions: SomeOptions = {}) {
-        this.id = Guid.create().toString();
+        this.id = crypto.randomUUID();
         this.numberInput = input;
 
         this.highlightedItem = null;

@@ -16,8 +16,6 @@ module.exports = function (grunt) {
 	// just javascript
 	grunt.registerTask('js', ['shell:eslint', 'shell:genTsDeclaration', 'shell:buildJs', 'replace', 'replace:removeImport']);
 
-	// Travis CI
-	grunt.registerTask('travis', ['jasmine']);
 	// bump version number in 3 files, rebuild js to update headers, then commit, tag and push
 	grunt.registerTask('version', ['shell:test', 'bump-only', 'js', 'bump-commit']);
 	grunt.registerTask('version:minor', ['shell:test', 'bump-only:minor', 'js', 'bump-commit']);
