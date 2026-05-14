@@ -18,11 +18,22 @@
     "main": "./build/cjs/input/InternationalNumberInput.cjs",
     "module": "./build/esm/input/InternationalNumberInput.mjs",
     "types": "./build/types/internationalNumberInput.d.ts",
+    "sideEffects": false,
     "exports": {
         ".": {
             "types": "./build/types/internationalNumberInput.d.ts",
             "import": "./build/esm/input/InternationalNumberInput.mjs",
             "require": "./build/cjs/input/InternationalNumberInput.cjs"
+        },
+        "./data": {
+            "types": "./build/types/data.d.ts",
+            "import": "./build/esm/input/data.mjs",
+            "require": "./build/cjs/input/data.cjs"
+        },
+        "./with-utils": {
+            "types": "./build/types/internationalNumberInput.d.ts",
+            "import": "./build/esm/input/internationalNumberInputWithUtils.mjs",
+            "require": "./build/cjs/input/internationalNumberInputWithUtils.cjs"
         }
     },
     "license": "MIT",

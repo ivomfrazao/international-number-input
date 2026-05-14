@@ -146,3 +146,15 @@ build({
 	minify: false,
 	outfile: "build/iife/input/internationalNumberInputWithUtils.js",
 });
+
+//* build/iife/input/internationalNumberInputWithUtils.min.js
+build({
+	...sharedBase,
+	format: "iife",
+	globalName: "internationalNumberInput",
+	banner: { js: licenseHeader },
+	footer: iifeUnwrapFooter("internationalNumberInput"),
+	entryPoints: withUtilsEntry,
+	minify: true,
+	outfile: "build/iife/input/internationalNumberInputWithUtils.min.js",
+});
