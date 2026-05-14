@@ -17,10 +17,10 @@
     ],
     "main": "./build/cjs/input/InternationalNumberInput.cjs",
     "module": "./build/esm/input/InternationalNumberInput.mjs",
-    "types": "./build/js/internationalNumberInput.d.ts",
+    "types": "./build/types/internationalNumberInput.d.ts",
     "exports": {
         ".": {
-            "types": "./build/js/internationalNumberInput.d.ts",
+            "types": "./build/types/internationalNumberInput.d.ts",
             "import": "./build/esm/input/InternationalNumberInput.mjs",
             "require": "./build/cjs/input/InternationalNumberInput.cjs"
         }
