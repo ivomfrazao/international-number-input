@@ -82,7 +82,7 @@
     "files": [
         "build/*",
         "CHANGELOG.md",
-        "LICENSE",
+        "LICENSE.md",
         "package.json",
         "README.md"
     ],

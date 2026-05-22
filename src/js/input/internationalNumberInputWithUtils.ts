@@ -7,10 +7,10 @@ const utilsTmp: IniUtils = {
 	formatNumberAsYouType: utils.formatNumberAsYouType,
 	getCoreNumber: utils.getCoreNumber,
 	getExampleNumber: utils.getExampleNumber,
-	getValidationError: utils.getValidationError,
-	isPossibleNumber: utils.isPossibleNumber,
+	getFullNumber: utils.getFullNumber,
 	isValidNumber: utils.isValidNumber,
 	getMaxLength: utils.getMaxLength,
+	getMinLength: utils.getMinLength,
 
 	numberType: NumberType.NationalIdentificationNumber,
 }

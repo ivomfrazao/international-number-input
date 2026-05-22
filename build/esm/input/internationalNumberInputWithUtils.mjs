@@ -16696,6 +16696,14 @@ function getCoreNumber(number, countryISO2, numberType) {
     return number;
   }
 }
+function getFullNumber(number, countryISO2, numberType, includeFormatting) {
+  try {
+    const numberUtils = getNumberUtils(countryISO2, numberType);
+    return includeFormatting ? numberUtils.format(number, true) : numberUtils.compact(number, true);
+  } catch (e) {
+    return number;
+  }
+}
 function isValidNumber(number, countryISO2, numberType) {
   try {
     const numberUtils = getNumberUtils(countryISO2, numberType);
@@ -16717,6 +16725,14 @@ function getMaxLength(countryISO2, numberType) {
     return 0;
   }
 }
+function getMinLength(countryISO2, numberType) {
+  try {
+    const numberUtils = getNumberUtils(countryISO2, numberType);
+    return numberUtils.minLength;
+  } catch (e) {
+    return 0;
+  }
+}
 
 // src/js/input/internationalNumberInputWithUtils.ts
 var utilsTmp = {
@@ -16724,10 +16740,10 @@ var utilsTmp = {
   formatNumberAsYouType,
   getCoreNumber,
   getExampleNumber,
-  getValidationError: void 0,
-  isPossibleNumber: void 0,
+  getFullNumber,
   isValidNumber,
   getMaxLength,
+  getMinLength,
   numberType: "NIN" /* NationalIdentificationNumber */
 };
 internationalNumberInput.utils = utilsTmp;
