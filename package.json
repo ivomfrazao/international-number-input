@@ -84,7 +84,6 @@
         "CHANGELOG.md",
         "LICENSE",
         "package.json",
-        "package-lock.json",
         "README.md"
     ],
     "repository": {
