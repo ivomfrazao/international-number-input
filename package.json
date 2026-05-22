@@ -13,7 +13,13 @@
         "html",
         "validation",
         "formatting",
-        "typescript"
+        "typescript",
+        "national-id",
+        "nin",
+        "tin",
+        "ssn",
+        "tax-id",
+        "id-validation"
     ],
     "main": "./build/cjs/input/InternationalNumberInput.cjs",
     "module": "./build/esm/input/InternationalNumberInput.mjs",
