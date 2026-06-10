@@ -12,7 +12,7 @@ module.exports = function (grunt) {
 	// just CSS
 	grunt.registerTask('css', ['sass', 'cssmin']);
 	// just images
-	grunt.registerTask('img', ['responsive_images:retina', 'exec:evenizer', 'responsive_images:regular', 'sprite', 'imagemin', 'generate-scss-metadata', 'shell:webp']);
+	grunt.registerTask('img', ['shell:resizeRetina', 'exec:evenizer', 'shell:resizeRegular', 'shell:spriteMain', 'shell:spriteRetina', 'shell:optimizeSprites', 'generate-scss-metadata', 'shell:webp']);
 	// just javascript
 	grunt.registerTask('js', ['shell:eslint', 'shell:genTsDeclaration', 'shell:buildJs']);
 
