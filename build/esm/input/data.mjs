@@ -1,5 +1,5 @@
 /*
- * International Number Input v0.1.0
+ * International Number Input v0.1.1
  * https://github.com/ivomfrazao/international-number-input.git
  * Licensed under the MIT license
  */

@@ -1,5 +1,5 @@
 /*
- * International Number Input v0.1.0
+ * International Number Input v0.1.1
  * https://github.com/ivomfrazao/international-number-input.git
  * Licensed under the MIT license
  */
@@ -2109,7 +2109,7 @@ var internationalNumberInput = Object.assign(
     //* A map from instance ID to instance object.
     instances: {},
     loadUtils,
-    version: "0.1.0"
+    version: "0.1.1"
   }
 );
 var InternationalNumberInput_default = internationalNumberInput;
