@@ -365,7 +365,7 @@ fieldset legend {
   transition: border-color var(--transition);
 }
 
-/* Override plugin colours and image paths to match dark/light theme */
+/* Override plugin colours to match dark/light theme */
 .ini {
   display: block;
   width: 100%;
@@ -375,11 +375,6 @@ fieldset legend {
   --ini-hover-color:    var(--color-surface-hover);
   --ini-arrow-color:    var(--color-text-secondary);
   --ini-dialcode-color: var(--color-text-secondary);
-  /* Explicit paths relative to this CSS file, bypassing any custom-property URL resolution quirks */
-  --ini-path-flags-1x: url("../build/img/flags.webp");
-  --ini-path-flags-2x: url("../build/img/flags@2x.webp");
-  --ini-path-globe-1x: url("../build/img/globe.webp");
-  --ini-path-globe-2x: url("../build/img/globe@2x.webp");
 }
 
 #numberInput:focus {
