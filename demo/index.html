@@ -22,179 +22,175 @@
         </div>
     </header>
 
-    <div class="demo-container">
-        <div class="demo-content">
-            <!-- Sidebar: Settings -->
-            <aside class="demo-sidebar">
-                <h2>Settings</h2>
+    <!-- Sidebar: Settings -->
+    <aside class="demo-sidebar">
+        <h2>Settings</h2>
 
-                <!-- Number Type -->
-                <div class="setting-group">
-                    <label for="numberType">Number Type</label>
-                    <select id="numberType">
-                        <option value="NIN">NIN — National ID</option>
-                        <option value="TIN" selected>TIN — Tax ID</option>
-                        <option value="SSN">SSN — Social Security</option>
-                    </select>
-                    <small>Filters the available countries</small>
-                </div>
-
-                <!-- Initial Country -->
-                <div class="setting-group">
-                    <label for="initialCountry">Initial Country</label>
-                    <input type="text" id="initialCountry" placeholder="pt" maxlength="2">
-                    <small>ISO 3166-1 alpha-2 (e.g. pt, us, gb)</small>
-                </div>
-
-                <!-- Toggle Options -->
-                <fieldset class="setting-group">
-                    <legend>Behavior</legend>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="allowDropdown" checked>
-                        Allow Dropdown
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="showFlags" checked>
-                        Show Flags
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="formatAsYouType" checked>
-                        Format As You Type
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="formatOnDisplay" checked>
-                        Format On Display
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="countrySearch" checked>
-                        Country Search
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="strictMode">
-                        Strict Mode
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="useFullscreenPopup">
-                        Fullscreen Popup
-                    </label>
-                </fieldset>
-
-                <!-- Auto Placeholder -->
-                <div class="setting-group">
-                    <label for="autoPlaceholder">Auto Placeholder</label>
-                    <select id="autoPlaceholder">
-                        <option value="Off">Off</option>
-                        <option value="Polite" selected>Polite</option>
-                        <option value="Aggressive">Aggressive</option>
-                    </select>
-                    <small>Show example number as placeholder</small>
-                </div>
-
-                <!-- Country Filtering -->
-                <div class="setting-group">
-                    <label for="onlyCountries">Only Countries</label>
-                    <textarea id="onlyCountries" placeholder="comma-separated, e.g. pt,es,fr" rows="2"></textarea>
-                    <small>Empty = all countries</small>
-                </div>
-
-                <div class="setting-group">
-                    <label for="countryOrder">Country Order</label>
-                    <textarea id="countryOrder" placeholder="comma-separated, e.g. pt,es" rows="2"></textarea>
-                    <small>Pinned at top, rest alphabetical</small>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="setting-group button-group">
-                    <button id="applyBtn" class="btn btn-primary">Apply</button>
-                    <button id="resetBtn" class="btn btn-secondary">Reset</button>
-                </div>
-            </aside>
-
-            <!-- Main Area: Input & Results -->
-            <main class="demo-main">
-                <!-- Examples -->
-                <section class="demo-section examples-section">
-                    <h3>Quick Examples</h3>
-                    <div class="examples-grid">
-                        <button class="example-btn" data-example="pt-nid">
-                            <strong>PT NID</strong>
-                            <small>Portuguese ID</small>
-                        </button>
-                        <button class="example-btn" data-example="us-ssn">
-                            <strong>US SSN</strong>
-                            <small>Social Security</small>
-                        </button>
-                        <button class="example-btn" data-example="ch-vat">
-                            <strong>CH VAT</strong>
-                            <small>Swiss Tax ID</small>
-                        </button>
-                        <button class="example-btn" data-example="gb-vat">
-                            <strong>GB VAT</strong>
-                            <small>UK Tax ID</small>
-                        </button>
-                        <button class="example-btn" data-example="es-nif">
-                            <strong>ES NIF</strong>
-                            <small>Spanish Tax ID</small>
-                        </button>
-                        <button class="example-btn" data-example="ca-ssn">
-                            <strong>CA SIN</strong>
-                            <small>Canadian SSN</small>
-                        </button>
-                    </div>
-                </section>
-
-                <!-- Input Section -->
-                <section class="demo-section">
-                    <h3>Number Input</h3>
-                    <div class="input-wrapper">
-                        <input type="tel" id="numberInput" placeholder="Enter number">
-                        <div id="inputError" class="input-error hidden"></div>
-                    </div>
-                </section>
-
-                <!-- Validation Results -->
-                <section class="demo-section results-section">
-                    <h3>Validation Results</h3>
-
-                    <div class="result-grid">
-                        <div class="result-item">
-                            <strong>Valid?</strong>
-                            <div id="validResult" class="result-value">—</div>
-                        </div>
-                        <div class="result-item">
-                            <strong>Error</strong>
-                            <div id="errorResult" class="result-value">—</div>
-                        </div>
-                        <div class="result-item">
-                            <strong>Country</strong>
-                            <div id="countryResult" class="result-value">—</div>
-                        </div>
-                        <div class="result-item">
-                            <strong>Type</strong>
-                            <div id="typeResult" class="result-value">—</div>
-                        </div>
-                    </div>
-
-                    <div class="result-outputs">
-                        <div class="output-item">
-                            <strong>Formatted</strong>
-                            <code id="formattedOutput">—</code>
-                        </div>
-                        <div class="output-item">
-                            <strong>Compact</strong>
-                            <code id="compactOutput">—</code>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Configuration Display -->
-                <section class="demo-section config-section">
-                    <h3>Current Configuration</h3>
-                    <pre id="configDisplay" class="config-display">Loading...</pre>
-                </section>
-            </main>
+        <!-- Number Type -->
+        <div class="setting-group">
+            <label for="numberType">Number Type</label>
+            <select id="numberType">
+                <option value="NIN">NIN — National ID</option>
+                <option value="TIN" selected>TIN — Tax ID</option>
+                <option value="SSN">SSN — Social Security</option>
+            </select>
+            <small>Filters the available countries</small>
         </div>
-    </div>
+
+        <!-- Initial Country -->
+        <div class="setting-group">
+            <label for="initialCountry">Initial Country</label>
+            <input type="text" id="initialCountry" placeholder="pt" maxlength="2">
+            <small>ISO 3166-1 alpha-2 (e.g. pt, us, gb)</small>
+        </div>
+
+        <!-- Toggle Options -->
+        <fieldset class="setting-group">
+            <legend>Behavior</legend>
+            <label class="checkbox-label">
+                <input type="checkbox" id="allowDropdown" checked>
+                Allow Dropdown
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" id="showFlags" checked>
+                Show Flags
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" id="formatAsYouType" checked>
+                Format As You Type
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" id="formatOnDisplay" checked>
+                Format On Display
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" id="countrySearch" checked>
+                Country Search
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" id="strictMode">
+                Strict Mode
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" id="useFullscreenPopup">
+                Fullscreen Popup
+            </label>
+        </fieldset>
+
+        <!-- Auto Placeholder -->
+        <div class="setting-group">
+            <label for="autoPlaceholder">Auto Placeholder</label>
+            <select id="autoPlaceholder">
+                <option value="Off">Off</option>
+                <option value="Polite" selected>Polite</option>
+                <option value="Aggressive">Aggressive</option>
+            </select>
+            <small>Show example number as placeholder</small>
+        </div>
+
+        <!-- Country Filtering -->
+        <div class="setting-group">
+            <label for="onlyCountries">Only Countries</label>
+            <textarea id="onlyCountries" placeholder="comma-separated, e.g. pt,es,fr" rows="2"></textarea>
+            <small>Empty = all countries</small>
+        </div>
+
+        <div class="setting-group">
+            <label for="countryOrder">Country Order</label>
+            <textarea id="countryOrder" placeholder="comma-separated, e.g. pt,es" rows="2"></textarea>
+            <small>Pinned at top, rest alphabetical</small>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="setting-group button-group">
+            <button id="applyBtn" class="btn btn-primary">Apply</button>
+            <button id="resetBtn" class="btn btn-secondary">Reset</button>
+        </div>
+    </aside>
+
+    <!-- Main Area: Input & Results -->
+    <main class="demo-main">
+        <!-- Examples -->
+        <section class="demo-section examples-section">
+            <h3>Quick Examples</h3>
+            <div class="examples-grid">
+                <button class="example-btn" data-example="pt-nid">
+                    <strong>PT NID</strong>
+                    <small>Portuguese ID</small>
+                </button>
+                <button class="example-btn" data-example="us-ssn">
+                    <strong>US SSN</strong>
+                    <small>Social Security</small>
+                </button>
+                <button class="example-btn" data-example="ch-vat">
+                    <strong>CH VAT</strong>
+                    <small>Swiss Tax ID</small>
+                </button>
+                <button class="example-btn" data-example="gb-vat">
+                    <strong>GB VAT</strong>
+                    <small>UK Tax ID</small>
+                </button>
+                <button class="example-btn" data-example="es-nif">
+                    <strong>ES NIF</strong>
+                    <small>Spanish Tax ID</small>
+                </button>
+                <button class="example-btn" data-example="ca-ssn">
+                    <strong>CA SIN</strong>
+                    <small>Canadian SSN</small>
+                </button>
+            </div>
+        </section>
+
+        <!-- Input Section -->
+        <section class="demo-section">
+            <h3>Number Input</h3>
+            <div class="input-wrapper">
+                <input type="tel" id="numberInput" placeholder="Enter number">
+                <div id="inputError" class="input-error hidden"></div>
+            </div>
+        </section>
+
+        <!-- Validation Results -->
+        <section class="demo-section results-section">
+            <h3>Validation Results</h3>
+
+            <div class="result-grid">
+                <div class="result-item">
+                    <strong>Valid?</strong>
+                    <div id="validResult" class="result-value">—</div>
+                </div>
+                <div class="result-item">
+                    <strong>Error</strong>
+                    <div id="errorResult" class="result-value">—</div>
+                </div>
+                <div class="result-item">
+                    <strong>Country</strong>
+                    <div id="countryResult" class="result-value">—</div>
+                </div>
+                <div class="result-item">
+                    <strong>Type</strong>
+                    <div id="typeResult" class="result-value">—</div>
+                </div>
+            </div>
+
+            <div class="result-outputs">
+                <div class="output-item">
+                    <strong>Formatted</strong>
+                    <code id="formattedOutput">—</code>
+                </div>
+                <div class="output-item">
+                    <strong>Compact</strong>
+                    <code id="compactOutput">—</code>
+                </div>
+            </div>
+        </section>
+
+        <!-- Configuration Display -->
+        <section class="demo-section config-section">
+            <h3>Current Configuration</h3>
+            <pre id="configDisplay" class="config-display">Loading...</pre>
+        </section>
+    </main>
 
     <!-- Scripts -->
     <script src="../build/iife/input/internationalNumberInputWithUtils.js"></script>
