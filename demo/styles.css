@@ -36,7 +36,6 @@
   --transition: 180ms ease;
 
   --sidebar-width: 300px;
-  --max-width: 1280px;
 }
 
 @media (prefers-color-scheme: light) {
@@ -62,9 +61,17 @@
   padding: 0;
 }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  height: 100%;
+}
 
 body {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  height: 100dvh;
+  overflow: hidden;
   background-color: var(--color-bg);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
@@ -75,13 +82,12 @@ body {
 
 /* ── Header ── */
 .demo-header {
+  grid-column: 1 / -1;
   border-bottom: 1px solid var(--color-border);
-  padding: var(--space-10) 0 var(--space-8);
+  padding: var(--space-8) 0;
 }
 
 .demo-header__inner {
-  max-width: var(--max-width);
-  margin: 0 auto;
   padding: 0 var(--space-8);
 }
 
@@ -112,30 +118,12 @@ body {
 }
 .demo-header a:hover { opacity: 0.75; }
 
-/* ── Page layout — sidebar + content, natural page scroll ── */
-.demo-container {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: var(--space-8);
-}
-
-.demo-content {
-  display: grid;
-  grid-template-columns: var(--sidebar-width) 1fr;
-  gap: var(--space-8);
-  align-items: start;
-}
-
 /* ── Sidebar ── */
 .demo-sidebar {
-  position: sticky;
-  top: var(--space-8);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: var(--space-6);
-  max-height: calc(100vh - var(--space-8) * 2);
   overflow-y: auto;
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  padding: var(--space-6);
 }
 
 .demo-sidebar h2 {
@@ -283,8 +271,10 @@ fieldset legend {
   color: var(--color-text-primary);
 }
 
-/* ── Main content area — NO overflow constraints (lets dropdown render freely) ── */
+/* ── Main content area ── */
 .demo-main {
+  overflow-y: auto;
+  padding: var(--space-8);
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
@@ -476,25 +466,33 @@ fieldset legend {
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
-  .demo-content {
+  body {
     grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
   }
 
-  .demo-sidebar {
-    position: static;
-    max-height: none;
-  }
-
-  .demo-container {
-    padding: var(--space-4);
+  .demo-header {
+    grid-column: 1;
+    padding: var(--space-6) 0 var(--space-5);
   }
 
   .demo-header__inner {
     padding: 0 var(--space-4);
   }
 
-  .demo-header {
-    padding: var(--space-6) 0 var(--space-5);
+  .demo-sidebar {
+    overflow-y: visible;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-4);
+  }
+
+  .demo-main {
+    overflow-y: visible;
+    padding: var(--space-4);
   }
 }
 
