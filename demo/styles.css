@@ -352,7 +352,10 @@ fieldset legend {
 
 #numberInput {
   width: 100%;
-  padding: var(--space-3) var(--space-4);
+  padding-top: var(--space-3);
+  padding-right: var(--space-4);
+  padding-bottom: var(--space-3);
+  /* padding-left is controlled by the plugin to clear the country button */
   background: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
