@@ -183,16 +183,16 @@ function updateResults() {
  * Clear all results to initial state
  */
 function clearResults() {
-  document.getElementById('validResult').textContent = '-';
+  document.getElementById('validResult').textContent = '—';
   document.getElementById('validResult').className = 'result-value';
-  document.getElementById('errorResult').textContent = '-';
+  document.getElementById('errorResult').textContent = '—';
   document.getElementById('errorResult').className = 'result-value';
-  document.getElementById('countryResult').textContent = '-';
+  document.getElementById('countryResult').textContent = '—';
   document.getElementById('countryResult').className = 'result-value';
-  document.getElementById('typeResult').textContent = '-';
+  document.getElementById('typeResult').textContent = '—';
   document.getElementById('typeResult').className = 'result-value';
-  document.getElementById('formattedOutput').textContent = '-';
-  document.getElementById('compactOutput').textContent = '-';
+  document.getElementById('formattedOutput').textContent = '—';
+  document.getElementById('compactOutput').textContent = '—';
 }
 
 /**
