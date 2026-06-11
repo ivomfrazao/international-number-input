@@ -118,6 +118,34 @@ body {
 }
 .demo-header a:hover { opacity: 0.75; }
 
+/* ── Scrollbars ── */
+.demo-sidebar,
+.demo-main {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+.demo-sidebar::-webkit-scrollbar,
+.demo-main::-webkit-scrollbar {
+  width: 6px;
+}
+
+.demo-sidebar::-webkit-scrollbar-track,
+.demo-main::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.demo-sidebar::-webkit-scrollbar-thumb,
+.demo-main::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 3px;
+}
+
+.demo-sidebar::-webkit-scrollbar-thumb:hover,
+.demo-main::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-text-secondary);
+}
+
 /* ── Sidebar ── */
 .demo-sidebar {
   overflow-y: auto;
