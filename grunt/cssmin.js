@@ -2,7 +2,7 @@ module.exports = function(grunt) {
   return {
     target: {
       files: {
-        'build/css/intlTelInput.min.css': 'build/css/intlTelInput.css'
+        'build/css/InternationalNumberInput.min.css': 'build/css/InternationalNumberInput.css'
       }
     }
   };
